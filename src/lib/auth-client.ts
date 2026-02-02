@@ -5,4 +5,14 @@ export const authClient = createAuthClient({
   fetchOptions: {
     credentials: "include",
   },
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        required: true,
+        defaultValue: "student",
+        input: true,
+      },
+    },
+  },
 });

@@ -13,7 +13,11 @@ import { useNotificationProvider } from "./components/refine-ui/notification/use
 import { ThemeProvider } from "./components/refine-ui/theme/theme-provider";
 import { dataProvider } from "./providers/data";
 
-import Dashboard from "./pages/dashboard";
+import Protected from "./components/Protected";
+import Login from "./pages/auth/Login";
+import { authProvider } from "./providers/auth";
+import RoleRedirect from "./components/RoleRedirect";
+import Admin from "./pages/admin/admin";
 
 function App() {
   return (
@@ -23,6 +27,7 @@ function App() {
           <DevtoolsProvider>
             <Refine
               dataProvider={dataProvider}
+              authProvider={authProvider}
               notificationProvider={useNotificationProvider()}
               routerProvider={routerProvider}
               options={{
@@ -32,7 +37,15 @@ function App() {
               }}
             >
               <Routes>
-                <Route path="/" element={<Dashboard />}/>
+                <Route path="/login" element={<Login />}/>
+                <Route element = {<Protected />}>
+                  <Route path="/" element={<RoleRedirect />}/>
+                    <Route path="/admin" element = {<Admin/>}/>
+                    <Route path="/teacher" element={<div>TEACHER</div>}/>
+                    <Route path="/student" element={<div>STUDENT</div>}/>
+                    <Route path="/parent" element={<div>PARENT</div>}/>
+
+                </Route>
               </Routes>
               <Toaster />
               <RefineKbar />
