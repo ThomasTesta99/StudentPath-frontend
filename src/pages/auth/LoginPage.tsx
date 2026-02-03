@@ -4,14 +4,14 @@ import { useIsAuthenticated } from '@refinedev/core'
 import React from 'react'
 import { Navigate } from 'react-router';
 
-const Login = () => {
+const LoginPage = () => {
   const {data: isAuthenticated, isLoading} = useIsAuthenticated();
   if(isLoading) return <div>Loading...</div>
 
-  if(isAuthenticated){
+  if(isAuthenticated?.authenticated){
     return <Navigate to="/" replace/>
   }
-  
+
   return (
     <div>
       <SignInForm />
@@ -19,4 +19,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default LoginPage

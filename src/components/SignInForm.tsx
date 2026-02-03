@@ -73,7 +73,6 @@ const SignInForm = () => {
                                         <FormControl>
                                             <InputPassword
                                                 id="password"
-                                                type="password"
                                                 placeholder=""
                                                 {...field}
                                             />
@@ -87,7 +86,7 @@ const SignInForm = () => {
                                 {isLoggingIn ? "Signing in..." : "Sign in"}
                             </Button>
 
-                            <Link to="/forgot-password" className="forgot-link ">
+                            <Link to="/forgot-password" className="w-full flex flex-row space-x-3">
                                 <span>Forgot password</span>
                                 <CircleHelp />
                             </Link>

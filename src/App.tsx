@@ -17,8 +17,8 @@ import Protected from "./components/Protected";
 import { authProvider } from "./providers/auth";
 import RoleRedirect from "./components/RoleRedirect";
 import Admin from "./pages/admin/Admin";
-import Login from "./pages/auth/login";
 import { RequireRole } from "./components/RequireRole";
+import LoginPage from "./pages/auth/LoginPage";
 
 function App() {
   return (
@@ -38,7 +38,8 @@ function App() {
               }}
             >
               <Routes>
-                <Route path="/login" element={<Login />}/>
+                <Route path="/login" element={<LoginPage
+                />}/>
                 <Route element = {<Protected />}>
                   <Route path="/" element={<RoleRedirect />}/>
                   <Route element = {<RequireRole allow = {["admin"]} />}>
