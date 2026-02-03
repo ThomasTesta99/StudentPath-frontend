@@ -18,6 +18,7 @@ import { authProvider } from "./providers/auth";
 import RoleRedirect from "./components/RoleRedirect";
 import Admin from "./pages/admin/Admin";
 import Login from "./pages/auth/login";
+import { RequireRole } from "./components/RequireRole";
 
 function App() {
   return (
@@ -40,11 +41,22 @@ function App() {
                 <Route path="/login" element={<Login />}/>
                 <Route element = {<Protected />}>
                   <Route path="/" element={<RoleRedirect />}/>
+                  <Route element = {<RequireRole allow = {["admin"]} />}>
                     <Route path="/admin" element = {<Admin/>}/>
-                    <Route path="/teacher" element={<div>TEACHER</div>}/>
-                    <Route path="/student" element={<div>STUDENT</div>}/>
-                    <Route path="/parent" element={<div>PARENT</div>}/>
+                  </Route>
 
+                  <Route element = {<RequireRole allow = {["teacher"]} />}>
+                    <Route path="/teacher" element={<div>TEACHER</div>}/>
+                    
+                  </Route>
+
+                  <Route element = {<RequireRole allow = {["student"]} />}>
+                    <Route path="/student" element={<div>STUDENT</div>}/>
+                  </Route>
+
+                  <Route element = {<RequireRole allow = {["parent"]} />}>
+                    <Route path="/parent" element={<div>PARENT</div>}/>
+                  </Route>
                 </Route>
               </Routes>
               <Toaster />
