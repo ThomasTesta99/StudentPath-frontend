@@ -6,13 +6,12 @@ import { useLogin } from '@refinedev/core';
 import React from 'react'
 
 const Login = () => {
-  const email = "ttesta99@yahoo.com";
-  const password = "12345678";
+
 
   const { mutate: login } = useLogin();
 
   const signin = async () => {
-    login({email, password});
+    //login({email, password});
   }
   
   const check = async () => {
@@ -21,7 +20,7 @@ const Login = () => {
 
   return (
     <div>
-      <Button onClick={signin}>sign up</Button>
+      <Button onClick={signin}>sign in</Button>
       <Button onClick={check}>Check</Button>
     </div>
   )

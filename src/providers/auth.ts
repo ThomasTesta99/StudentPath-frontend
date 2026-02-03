@@ -5,13 +5,13 @@ import { AuthProvider } from "@refinedev/core";
 export const authProvider: AuthProvider = { 
   login: async ({email, password} : {email: string, password: string}) => {
       try {
-          const {data, error} = await authClient.signIn.email({
+          const {error} = await authClient.signIn.email({
               email, 
               password,
           });
   
           if(error){
-              console.error("Login error from auth client" + error);
+              console.error("Login error from auth client: ", error);
               return {
                   success: false, 
                   error: {
@@ -20,8 +20,6 @@ export const authProvider: AuthProvider = {
                   }
               }
           }
-  
-          console.log(data.user);
   
           return {
               success: true, 
@@ -51,8 +49,6 @@ export const authProvider: AuthProvider = {
         },
       };
     }
-
-    localStorage.removeItem("user");
 
     return {
       success: true,
