@@ -14,10 +14,11 @@ import { ThemeProvider } from "./components/refine-ui/theme/theme-provider";
 import { dataProvider } from "./providers/data";
 
 import Protected from "./components/Protected";
-import Login from "./pages/auth/Login";
 import { authProvider } from "./providers/auth";
 import RoleRedirect from "./components/RoleRedirect";
-import Admin from "./pages/admin/admin";
+import Admin from "./pages/admin/Admin";
+import { RequireRole } from "./components/RequireRole";
+import LoginPage from "./pages/auth/LoginPage";
 
 function App() {
   return (
@@ -37,14 +38,26 @@ function App() {
               }}
             >
               <Routes>
-                <Route path="/login" element={<Login />}/>
+                <Route path="/login" element={<LoginPage
+                />}/>
                 <Route element = {<Protected />}>
                   <Route path="/" element={<RoleRedirect />}/>
+                  <Route element = {<RequireRole allow = {["admin"]} />}>
                     <Route path="/admin" element = {<Admin/>}/>
-                    <Route path="/teacher" element={<div>TEACHER</div>}/>
-                    <Route path="/student" element={<div>STUDENT</div>}/>
-                    <Route path="/parent" element={<div>PARENT</div>}/>
+                  </Route>
 
+                  <Route element = {<RequireRole allow = {["teacher"]} />}>
+                    <Route path="/teacher" element={<div>TEACHER</div>}/>
+                    
+                  </Route>
+
+                  <Route element = {<RequireRole allow = {["student"]} />}>
+                    <Route path="/student" element={<div>STUDENT</div>}/>
+                  </Route>
+
+                  <Route element = {<RequireRole allow = {["parent"]} />}>
+                    <Route path="/parent" element={<div>PARENT</div>}/>
+                  </Route>
                 </Route>
               </Routes>
               <Toaster />

@@ -34,7 +34,7 @@
         @apply flex flex-col gap-3 sm:flex-row sm:gap-2 w-full sm:w-auto;
     }
 
-    .sign-up {
+    .sign-in {
         @apply flex flex-col items-center justify-center px-6 py-8 min-h-svh;
 
         .logo {
@@ -54,7 +54,7 @@
         }
 
         .title {
-            @apply text-3xl font-semibold;
+            @apply text-3xl font-semibold text-center;
         }
 
         .description {
