@@ -1,19 +1,9 @@
-import { UserAvatar } from "@/components/refine-ui/layout/user-avatar";
 import { ThemeToggle } from "@/components/refine-ui/theme/theme-toggle";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import {
-  useActiveAuthProvider,
-  useLogout,
   useRefineOptions,
 } from "@refinedev/core";
-import { LogOutIcon } from "lucide-react";
 
 export const Header = () => {
   const { isMobile } = useSidebar();
@@ -41,7 +31,6 @@ function DesktopHeader() {
       )}
     >
       <ThemeToggle />
-      <UserDropdown />
     </header>
   );
 }
@@ -117,37 +106,37 @@ function MobileHeader() {
   );
 }
 
-const UserDropdown = () => {
-  const { mutate: logout, isPending: isLoggingOut } = useLogout();
+// const UserDropdown = () => {
+//   const { mutate: logout, isPending: isLoggingOut } = useLogout();
 
-  const authProvider = useActiveAuthProvider();
+//   const authProvider = useActiveAuthProvider();
 
-  if (!authProvider?.getIdentity) {
-    return null;
-  }
+//   if (!authProvider?.getIdentity) {
+//     return null;
+//   }
 
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger>
-        <UserAvatar />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem
-          onClick={() => {
-            logout();
-          }}
-        >
-          <LogOutIcon
-            className={cn("text-destructive", "hover:text-destructive")}
-          />
-          <span className={cn("text-destructive", "hover:text-destructive")}>
-            {isLoggingOut ? "Logging out..." : "Logout"}
-          </span>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-};
+//   return (
+//     <DropdownMenu>
+//       <DropdownMenuTrigger className="cursor-pointer">
+//         <UserAvatar />
+//       </DropdownMenuTrigger>
+//       <DropdownMenuContent align="end">
+//         <DropdownMenuItem
+//           onClick={() => {
+//             logout();
+//           }}
+//         >
+//           <LogOutIcon
+//             className={cn("text-destructive cursor-pointer", "hover:text-destructive")}
+//           />
+//           <span className={cn("text-destructive cursor-pointer", "hover:text-destructive")}>
+//             {isLoggingOut ? "Logging out..." : "Logout"}
+//           </span>
+//         </DropdownMenuItem>
+//       </DropdownMenuContent>
+//     </DropdownMenu>
+//   );
+// };
 
 Header.displayName = "Header";
 MobileHeader.displayName = "MobileHeader";
