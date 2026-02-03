@@ -14,10 +14,10 @@ import { ThemeProvider } from "./components/refine-ui/theme/theme-provider";
 import { dataProvider } from "./providers/data";
 
 import Protected from "./components/Protected";
-import Login from "./pages/auth/Login";
 import { authProvider } from "./providers/auth";
 import RoleRedirect from "./components/RoleRedirect";
-import Admin from "./pages/admin/admin";
+import Admin from "./pages/admin/Admin";
+import Login from "./pages/auth/login";
 
 function App() {
   return (

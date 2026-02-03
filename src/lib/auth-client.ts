@@ -1,6 +1,6 @@
 import { createAuthClient } from "better-auth/react";
 
-const BACKEND = import.meta.env.BACKEND_AUTH_URL;
+const BACKEND = import.meta.env.VITE_BACKEND_AUTH_URL;
 
 if(!BACKEND){
   throw new Error("BACKEND AUTH URL not set")
