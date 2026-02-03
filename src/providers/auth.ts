@@ -37,23 +37,34 @@ export const authProvider: AuthProvider = {
       }
     },
   logout: async () => {
-    const { error } = await authClient.signOut();
+    try {
+      const { error } = await authClient.signOut();
 
-    if (error) {
-      console.error("Logout error:", error);
+      if (error) {
+        console.error("Logout error:", error);
+        return {
+          success: false,
+          error: {
+            name: "Logout failed",
+            message: "Unable to log out. Please try again.",
+          },
+        };
+      }
+
       return {
-        success: false,
-        error: {
-          name: "Logout failed",
-          message: "Unable to log out. Please try again.",
-        },
+        success: true,
+        redirectTo: "/login",
       };
+    } catch (error) {
+      console.error("Logout exception: ", error);
+      return {
+        success: false, 
+        error: {
+          name: "Logout failed", 
+          message: "Unable to log out. Please try again"
+        }
+      }
     }
-
-    return {
-      success: true,
-      redirectTo: "/login",
-    };
   },
   onError: async (error) => {
     if (error.response?.status === 401) {
@@ -65,16 +76,29 @@ export const authProvider: AuthProvider = {
     return { error };
   },
   check: async () => {
-    const session = await authClient.getSession();
+    const {data: session, error} = await authClient.getSession();
     
-    if(!session?.data?.user){
+    if(error){
+      console.error("Session check error: ", error);
+      return {
+        authenticated: false, 
+        logout: true,
+        redirectTo: "/login", 
+        error: {
+          name: "Unauthorized", 
+          message: "Session check failed"
+        }
+      }
+    }
+
+    if(!session?.user){
       return {
       authenticated: false,
       logout: true,
       redirectTo: "/login",
       error: {
         name: "Unauthorized",
-        message: "Check failed",
+        message: "Session check failed",
       },
     };
     }
@@ -83,8 +107,14 @@ export const authProvider: AuthProvider = {
       authenticated: true,
     };
   },
+
   getIdentity: async () => {
-    const {data: session} = await authClient.getSession();
+    const {data: session, error} = await authClient.getSession();
+
+    if(error){
+      console.error("Get identity error: ", error);
+      return null;
+    }
 
     if(!session || !session.user){
       return null;
