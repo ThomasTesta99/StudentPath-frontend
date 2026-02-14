@@ -1,4 +1,5 @@
 import { createAuthClient } from "better-auth/react";
+import { adminClient } from "better-auth/client/plugins"
 
 const BACKEND = import.meta.env.VITE_BACKEND_AUTH_URL;
 
@@ -13,7 +14,7 @@ export const authClient = createAuthClient({
   },
   user: {
     additionalFields: {
-      role: {
+      profileRole: {
         type: "string",
         required: true,
         defaultValue: "student",
@@ -21,4 +22,7 @@ export const authClient = createAuthClient({
       },
     },
   },
+  plugins: [
+    adminClient(), 
+  ]
 });
