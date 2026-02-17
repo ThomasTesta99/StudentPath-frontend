@@ -1,3 +1,4 @@
+import { Breadcrumb } from "@/components/refine-ui/layout/breadcrumb";
 import { useShow } from "@refinedev/core";
 import React from "react";
 
@@ -16,6 +17,7 @@ const TermsShow = () => {
 
   return (
     <div>
+        <Breadcrumb />
       <div>{term?.termName}</div>
       <div>{term?.schoolId}</div>
       <div>{start ? start.toDateString() : ""}</div>
