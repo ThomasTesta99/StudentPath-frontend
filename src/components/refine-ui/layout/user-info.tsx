@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { User } from "@/types";
 import { useGetIdentity } from "@refinedev/core";
 
-function initials(name? :string | null, email?: string | null): string{
+export function initials(name? :string | null, email?: string | null): string{
   const base = (name?.trim() || "").split(/\s+/).filter(Boolean);
   if (base.length >= 2) return (base[0][0] + base[base.length - 1][0]).toUpperCase();
   if (base.length === 1) return base[0].slice(0, 2).toUpperCase();
