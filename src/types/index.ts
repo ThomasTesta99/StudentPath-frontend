@@ -38,4 +38,11 @@ export type GetOneResponse<T = unknown> = {
     data?: T;
 };
 
-
+export type TermDetails = {
+    id: string;
+    schoolId: string;
+    termName: string;
+    startDate: Date;
+    endDate: Date;
+    isActive: boolean;
+}

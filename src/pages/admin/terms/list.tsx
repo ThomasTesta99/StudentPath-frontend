@@ -10,6 +10,7 @@ import { Search } from 'lucide-react'
 import { Badge } from "@/components/ui/badge";
 import React, { useMemo, useState } from 'react'
 import { formatDate } from '@/lib/utils'
+import { ShowButton } from '@/components/refine-ui/buttons/show'
 
 const TermsList = () => {
   const [searchQuery, setsearchQuery] = useState('');
@@ -62,6 +63,12 @@ const TermsList = () => {
           );
         },
       },
+      {
+          id: 'details',
+          size: 140,
+          header: () => <p className="column-title">Details</p>,
+          cell: ({ row }) => <ShowButton resource="terms" recordItemId={row.original.id} variant="outline" size="sm">View</ShowButton>
+        }
     ], []), 
     refineCoreProps : {
       resource: "terms",
