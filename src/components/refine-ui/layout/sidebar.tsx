@@ -22,17 +22,35 @@ import {
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import {
+  useGetIdentity,
   useLink,
+  useLogout,
   useMenu,
   useRefineOptions,
   type TreeMenuItem,
 } from "@refinedev/core";
-import { ChevronRight, ListIcon } from "lucide-react";
+import { ChevronRight, ListIcon, LogOut } from "lucide-react";
 import React from "react";
+import { UserInfo } from "./user-info";
 
+type ProfileRole = "admin" | "teacher" | "student" | "parent";
+type Identity = { profileRole?: ProfileRole };
 export function Sidebar() {
   const { open } = useShadcnSidebar();
   const { menuItems, selectedKey } = useMenu();
+
+  const { data: identity, isLoading } = useGetIdentity<Identity>();
+  const role = identity?.profileRole;
+
+  const filteredMenuItems = React.useMemo(() => {
+    if(!role) return [];
+    return menuItems.filter((item) => {
+      const roles = item.meta?.roles as ProfileRole[] | undefined;
+      return !roles || roles.includes(role);
+    })
+  }, [menuItems, role]);
+
+  if(isLoading) return null;
 
   return (
     <ShadcnSidebar collapsible="icon" className={cn("border-none")}>
@@ -55,13 +73,14 @@ export function Sidebar() {
           }
         )}
       >
-        {menuItems.map((item: TreeMenuItem) => (
+        {filteredMenuItems.map((item: TreeMenuItem) => (
           <SidebarItem
             key={item.key || item.name}
             item={item}
             selectedKey={selectedKey}
           />
         ))}
+        <SidebarFooter />
       </ShadcnSidebarContent>
     </ShadcnSidebar>
   );
@@ -362,5 +381,32 @@ function SidebarButton({
     </Button>
   );
 }
+
+function SidebarFooter(){
+  const {open} = useShadcnSidebar();
+  const {mutate: logout} = useLogout();
+
+  return (
+    <div className="mt-auto mb-4 flex flex-row items-center">
+      <div className={cn(
+          "flex items-center",
+          open ? "gap-2 px-1" : "justify-center px-0"
+        )}>
+        <UserInfo />
+
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className={cn("shrink-0")}
+          onClick={() => logout()}
+        >
+          <LogOut className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
+  )
+}
+
 
 Sidebar.displayName = "Sidebar";

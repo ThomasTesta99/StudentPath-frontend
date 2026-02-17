@@ -3,7 +3,8 @@ export type User = {
     email: string;
     name: string;
     image?: string | null;
-    role: Role;
+    role: "admin" | "user";
+    profileRole: Role;
 }
 
 export type Role = "student" | "teacher" | "parent" | "admin"

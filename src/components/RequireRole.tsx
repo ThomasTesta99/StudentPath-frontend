@@ -1,8 +1,8 @@
+import { User } from "@/types";
 import { useGetIdentity } from "@refinedev/core";
 import { Navigate, Outlet } from "react-router";
 
 type Role = "student" | "teacher" | "parent" | "admin";
-type Identity = {profileRole? : Role};
 
 const roleHome: Record<Role, string> = {
   admin: "/admin",
@@ -12,7 +12,7 @@ const roleHome: Record<Role, string> = {
 };
 
 export const RequireRole = ({allow} : {allow : Role[]}) => {
-    const {data: user, isLoading} = useGetIdentity<Identity>();
+    const {data: user, isLoading} = useGetIdentity<User>();
     if(isLoading) return <div>Loading...</div>
 
     if(!user?.profileRole){
