@@ -110,7 +110,6 @@ export const authProvider: AuthProvider = {
 
   getIdentity: async () => {
     const {data: session, error} = await authClient.getSession();
-
     if(error){
       console.error("Get identity error: ", error);
       return null;
