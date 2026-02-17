@@ -1,13 +1,10 @@
+import { User } from '@/types';
 import { useGetIdentity } from '@refinedev/core';
 import React from 'react'
 import { Navigate } from 'react-router';
 
-type Identity = {
-    profileRole?: 'admin' | 'teacher' | 'student' | 'parent';
-};
-
 const RoleRedirect = () => {
-    const {data: user, isLoading} = useGetIdentity<Identity>();
+    const {data: user, isLoading} = useGetIdentity<User>();
     if(isLoading) return <div>Loading...</div>
 
     if(!user?.profileRole) return <Navigate to="/login" replace />

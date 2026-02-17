@@ -1,13 +1,8 @@
 import { UserAvatar } from "@/components/refine-ui/layout/user-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { User } from "@/types";
 import { useGetIdentity } from "@refinedev/core";
-
-type Identity = {
-  name: string
-  email: string;
-  image?: string;
-};
 
 function initials(name? :string | null, email?: string | null): string{
   const base = (name?.trim() || "").split(/\s+/).filter(Boolean);
@@ -18,7 +13,7 @@ function initials(name? :string | null, email?: string | null): string{
 }
 
 export function UserInfo() {
-  const { data: user, isLoading: userIsLoading } = useGetIdentity<Identity>();
+  const { data: user, isLoading: userIsLoading } = useGetIdentity<User>();
 
   if (userIsLoading || !user) {
     return (
