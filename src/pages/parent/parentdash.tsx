@@ -1,11 +1,9 @@
 "use client"
 
 import { Button } from '@/components/ui/button';
-import { useLogout } from '@refinedev/core';
 import React from 'react'
 
 const Parentdash = () => {
-  const {mutate: logout} = useLogout();
 
   async function testTeacherPOST() {
     try {
@@ -26,13 +24,9 @@ const Parentdash = () => {
     }
   }
 
-  const handleLogout = async () => {
-    logout(); 
-  }
   return (
     <div>
       WELCOME TO PARENT
-      <Button onClick = {() => handleLogout()}>logout</Button>
       <Button onClick = {() => testTeacherPOST()}>test</Button>
       
     </div>
