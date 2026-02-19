@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { useShow } from "@refinedev/core";
+import { useCustomMutation, useNotification, useShow } from "@refinedev/core";
 import React from "react";
+import { BACKEND_BASE_URL } from "@/constants";
 
 function formatDate(d: Date | null) {
   if (!d) return "—";
@@ -26,6 +27,10 @@ const TermsShow = () => {
     resource: "terms",
   });
 
+  const {mutate: customMutate, mutation} = useCustomMutation();
+  const isToggling = mutation.isPending;
+  const {open} = useNotification();
+
   const term = query.data?.data;
 
   if (query.isLoading) return <div className="p-6">Loading...</div>;
@@ -36,6 +41,35 @@ const TermsShow = () => {
   const end = term.endDate ? new Date(term.endDate) : null;
 
   const isActive = Boolean(term.isActive);
+
+  const handleToggleActive = () => {
+    const action = isActive ? "deactivate" : "activate";
+
+    customMutate(
+      {
+        url: `${BACKEND_BASE_URL}admin/terms/${term.id}/${action}`, 
+        method: "patch", 
+        values: {},
+      },
+      {
+        onSuccess: () => {
+          open?.({
+            type: "success", 
+            message: `Term ${isActive ? "deactivated" : "activated"} successfully`,
+          })
+
+          query.refetch();
+        },
+        onError: (error) => {
+          open?.({
+            type: "error", 
+            message: "Action failed", 
+            description: error?.message ?? "Could not update term"
+          })
+        }
+      }
+    )
+  }
 
   return (
     <div className="w-full">
@@ -122,8 +156,10 @@ const TermsShow = () => {
                   <Button
                     variant={isActive ? "outline" : "default"}
                     className="w-full"
+                    onClick={handleToggleActive}
+                    disabled={isToggling}
                   >
-                    {isActive ? "Deactivate" : "Activate"}
+                    {isToggling ? "Saving" : isActive ? "Deactivate" : "Activate"}
                   </Button>
                 </CardContent>
               </Card>

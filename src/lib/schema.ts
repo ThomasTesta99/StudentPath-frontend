@@ -8,3 +8,18 @@ export const termSchema = z.object({
   message: "Start date must be before end date",
   path: ["startDate"],
 });
+
+export const editTermSchema = z.object({
+  termName: z.string().optional(), 
+  startDate: z.coerce.date().optional(),
+    endDate: z.coerce.date().optional(),
+}).refine(
+    (d) => {
+      if (!d.startDate || !d.endDate) return true;
+      return d.startDate <= d.endDate;
+    },
+    {
+      message: "Start date must be before (or the same as) end date",
+      path: ["startDate"],
+    }
+  );

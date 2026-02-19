@@ -78,6 +78,7 @@ const TermsList = () => {
       },
       sorters: {
         initial: [
+          { field: "isActive", order: "desc" },
           {field: 'id', order: "desc"}
         ]
       },
