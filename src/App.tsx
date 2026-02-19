@@ -25,7 +25,8 @@ import TermsCreate from "./pages/admin/terms/create";
 import AdminLayout from "./components/Layouts/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import { allResources } from "./lib/resources";
-import Show from "./pages/admin/terms/show";
+import TermsShow from "./pages/admin/terms/show";
+import EditTerm from "./pages/admin/terms/edit";
 
 function App() {
   return (
@@ -66,7 +67,8 @@ function App() {
                           <Route path="terms">
                             <Route index element={<TermsList />} />
                             <Route path="create" element={<TermsCreate />} />
-                            <Route path="show/:id" element={<Show />} />
+                            <Route path="show/:id" element={<TermsShow />} />
+                            <Route path="edit/:id" element={<EditTerm />} />
                           </Route>
                         
                         </Route>

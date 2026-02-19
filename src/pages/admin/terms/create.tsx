@@ -51,7 +51,7 @@ const TermsCreate = () => {
   return (
     <CreateView className='class-view'>
       <Breadcrumb />
-
+      
       <h1 className="page-title">Create a Term</h1>
       <div className="intro-row">
         <p>Provide the required information to create a term below.</p>
