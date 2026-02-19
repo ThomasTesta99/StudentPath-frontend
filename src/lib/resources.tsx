@@ -22,7 +22,7 @@ export const allResources: IResourceItem[] = [
         create: "/admin/departments/create", 
         edit: "/admin/departments/edit/:id", 
         show: "/admin/departments/show/:id", 
-        meta: {label: "Departments", icon: <Building2 />, roles: ["admin"]}, 
+        meta: {label: "Departments", icon: <Building2 />, roles: ["admin"], path: "admin/departments"}, 
     },
     {
         name: "courses", 

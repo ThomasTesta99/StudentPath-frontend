@@ -27,6 +27,10 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import { allResources } from "./lib/resources";
 import TermsShow from "./pages/admin/terms/show";
 import EditTerm from "./pages/admin/terms/edit";
+import DepartmentsList from "./pages/admin/departments/list";
+import DepartmentsCreate from "./pages/admin/departments/create";
+import DepartmentsShow from "./pages/admin/departments/show";
+import EditDepartments from "./pages/admin/departments/edit";
 
 function App() {
   return (
@@ -69,6 +73,12 @@ function App() {
                             <Route path="create" element={<TermsCreate />} />
                             <Route path="show/:id" element={<TermsShow />} />
                             <Route path="edit/:id" element={<EditTerm />} />
+                          </Route>
+                          <Route path="departments">
+                            <Route index element={<DepartmentsList />} />
+                            <Route path="create" element={<DepartmentsCreate />} />
+                            <Route path="show/:id" element={<DepartmentsShow />} />
+                            <Route path="edit/:id" element={<EditDepartments />} />
                           </Route>
                         
                         </Route>

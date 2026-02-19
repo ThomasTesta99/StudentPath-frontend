@@ -13,7 +13,7 @@ import { formatDate } from '@/lib/utils'
 import { ShowButton } from '@/components/refine-ui/buttons/show'
 
 const TermsList = () => {
-  const [searchQuery, setsearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState("");
 
   useEffect(() => {
@@ -108,7 +108,7 @@ const TermsList = () => {
               placeholder='Search by term name...' 
               className='pl-10 w-full'
               value = {searchQuery}
-              onChange={(e) => setsearchQuery(e.target.value)}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
 

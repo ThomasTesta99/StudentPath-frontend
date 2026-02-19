@@ -46,3 +46,11 @@ export type TermDetails = {
     endDate: Date;
     isActive: boolean;
 }
+
+export type Department = {
+    id: string;
+    name: string;
+    createdAt: Date;
+    updatedAt: Date;
+    schoolId: string;
+}
