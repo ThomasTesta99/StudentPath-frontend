@@ -8,15 +8,21 @@ import { useTable } from "@refinedev/react-table";
 import { ColumnDef } from '@tanstack/react-table'
 import { Search } from 'lucide-react'
 import { Badge } from "@/components/ui/badge";
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { formatDate } from '@/lib/utils'
 import { ShowButton } from '@/components/refine-ui/buttons/show'
 
 const TermsList = () => {
   const [searchQuery, setsearchQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState("");
 
-  const searchFilters = searchQuery ? [
-    {field: 'termName', operator: "contains" as const, value: searchQuery}
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedQuery(searchQuery), 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery])
+
+  const searchFilters = debouncedQuery ? [
+    {field: 'termName', operator: "contains" as const, value: debouncedQuery}
   ] : [];
 
   const termTable = useTable<Terms>({

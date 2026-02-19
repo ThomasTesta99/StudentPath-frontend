@@ -77,7 +77,7 @@ const EditTerm = () => {
         <EditViewHeader resource='terms' title='Edit Term' />
         <Separator />
 
-        <div className="mx-auto w-full max-w-3xl space-7-6">
+        <div className="mx-auto w-full max-w-3xl space-y-6">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between gap-4">
               <div className="space-y-1">
@@ -103,7 +103,9 @@ const EditTerm = () => {
                     render = {({field}) => (
                       <FormItem>
                         <FormLabel>Term Name</FormLabel>
-                        <Input {...field}/>
+                        <FormControl>
+                          <Input {...field}/>
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}

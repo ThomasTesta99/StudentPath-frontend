@@ -47,7 +47,7 @@ const TermsShow = () => {
 
     customMutate(
       {
-        url: `${BACKEND_BASE_URL}admin/terms/${term.id}/${action}`, 
+        url: `${BACKEND_BASE_URL}/admin/terms/${term.id}/${action}`, 
         method: "patch", 
         values: {},
       },
@@ -102,7 +102,7 @@ const TermsShow = () => {
                 <CardContent className="gap-6 space-y-6">
                   <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     <Field label="School ID" value={term.schoolId ?? "—"} />
-                    <Field label="School Name" value={term.school.schoolName ?? "—"} />
+                    <Field label="School Name" value={term.school?.schoolName ?? "—"} />
                     
                   </div>
                   <Field label="Term ID" value={term.id ?? "—"} />
