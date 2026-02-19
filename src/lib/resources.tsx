@@ -14,7 +14,7 @@ export const allResources: IResourceItem[] = [
         create: "/admin/terms/create", 
         edit: "/admin/terms/edit/:id", 
         show: "/admin/terms/show/:id", 
-        meta: {label: "Terms", icon: <CalendarRange />, roles: ["admin"]}, 
+        meta: {label: "Terms", icon: <CalendarRange />, roles: ["admin"], path: "admin/terms"}, 
     },
     {
         name: "departments", 

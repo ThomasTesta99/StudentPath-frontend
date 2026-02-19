@@ -3,6 +3,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useGetIdentity } from "@refinedev/core";
 
+function initials(name? :string | null, email?: string | null): string{
+  const base = (name?.trim() || "").split(/\s+/).filter(Boolean);
+  if (base.length >= 2) return (base[0][0] + base[base.length - 1][0]).toUpperCase();
+  if (base.length === 1) return base[0].slice(0, 2).toUpperCase();
+  const e = (email || "").trim();
+  return e ? e.slice(0, 2).toUpperCase() : "??";
+}
+
+
 type Identity = {
   name: string
   email: string;
@@ -16,24 +25,15 @@ export function UserAvatar() {
     return <Skeleton className={cn("h-10", "w-10", "rounded-full")} />;
   }
 
-  const { name, image } = user;
+  const { name, email, image } = user;
 
   return (
     <Avatar className={cn("h-10", "w-10")}>
       {image && <AvatarImage src={image} alt={name} />}
-      <AvatarFallback>{getInitials(name)}</AvatarFallback>
+      <AvatarFallback>{initials(name, email)}</AvatarFallback>
     </Avatar>
   );
 }
 
-const getInitials = (name = "") => {
-  const names = name.split(" ");
-  let initials = names[0].substring(0, 1).toUpperCase();
-
-  if (names.length > 1) {
-    initials += names[names.length - 1].substring(0, 1).toUpperCase();
-  }
-  return initials;
-};
 
 UserAvatar.displayName = "UserAvatar";
