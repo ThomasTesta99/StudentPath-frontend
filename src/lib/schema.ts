@@ -25,5 +25,5 @@ export const editTermSchema = z.object({
   );
 
 export const departmentSchema = z.object({
-  name: z.string().min(2, "Department name must be more than two characters"), 
+  name: z.string().min(2, "Department name must be at least 2 characters"), 
 });

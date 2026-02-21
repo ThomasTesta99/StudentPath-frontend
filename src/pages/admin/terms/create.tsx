@@ -3,7 +3,7 @@ import { CreateView } from '@/components/refine-ui/views/create-view';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { useBack } from '@refinedev/core';
+import { useBack, useNotification } from '@refinedev/core';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {useForm} from "@refinedev/react-hook-form"
 import { termSchema } from '@/lib/schema';
@@ -24,6 +24,7 @@ import z from 'zod';
 
 const TermsCreate = () => {
   const back = useBack();
+  const {open} = useNotification();
 
   const form = useForm({
     resolver: zodResolver(termSchema), 
@@ -41,7 +42,14 @@ const TermsCreate = () => {
   const {refineCore: {onFinish}, handleSubmit, formState: {isSubmitting}, control} = form;
 
   const onSubmit = async (values: z.infer<typeof termSchema>) => {
-    await onFinish(values);
+    try {
+      await onFinish(values);
+    } catch (error) {
+      open?.({
+        type: "error", 
+        message: "There was an error creating the term: " + error , 
+      })
+    }
   }
 
   return (

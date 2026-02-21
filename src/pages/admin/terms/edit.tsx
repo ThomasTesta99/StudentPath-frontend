@@ -23,10 +23,12 @@ import { Button } from '@/components/ui/button'
 import { cn, formatDate } from '@/lib/utils'
 import { CalendarIcon } from 'lucide-react'
 import { Calendar } from '@/components/ui/calendar'
+import { useNotification } from '@refinedev/core'
 
 const EditTerm = () => {
 
   const {id} = useParams();
+  const {open} = useNotification();
   
   const form = useForm({
     resolver: zodResolver(editTermSchema), 
@@ -62,7 +64,14 @@ const EditTerm = () => {
   }, [query?.data?.data, reset]);
 
   const onSubmit = async (values: z.infer<typeof editTermSchema>) => {
-    await onFinish(values);
+    try {
+      await onFinish(values);
+    } catch (error) {
+      open?.({
+        type: "error", 
+        message: "There was an error edit the term: " + error , 
+      })
+    }
   }
 
   const term = query?.data?.data;

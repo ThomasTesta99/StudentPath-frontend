@@ -31,7 +31,7 @@ const DepartmentsList = () => {
                 id: "name", 
                 accessorKey: "name", 
                 size: 200, 
-                header: () => <p className='column-title justifyu'>Department Name</p>,
+                header: () => <p className='column-title'>Department Name</p>,
                 cell: ({getValue}) => <span className='font-semibold text-center'>{getValue<string>().toUpperCase()}</span>
             },
             {
@@ -68,7 +68,7 @@ const DepartmentsList = () => {
             <Breadcrumb />
             <h1 className="page-title">Departments</h1>
             <div className="intro-row">
-                Manage departments for your shool.
+                Manage departments for your school.
 
                 <div className="actions-row">
                     <div className="search-field">

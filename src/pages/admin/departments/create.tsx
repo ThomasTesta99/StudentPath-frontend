@@ -3,7 +3,7 @@ import { CreateView } from '@/components/refine-ui/views/create-view'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { useBack } from '@refinedev/core'
+import { useBack, useNotification } from '@refinedev/core'
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react'
 
@@ -23,6 +23,7 @@ import { departmentSchema } from '@/lib/schema'
 
 const DepartmentsCreate = () => {
   const back = useBack();
+  const {open} = useNotification();
 
   const form = useForm({
     resolver: zodResolver(departmentSchema), 
@@ -43,7 +44,14 @@ const DepartmentsCreate = () => {
   } = form;
 
   const onSubmit = async (values: z.infer<typeof departmentSchema>) => {
-    await onFinish(values);
+    try {
+      await onFinish(values);
+    } catch (error) {
+      open?.({
+        type: "error", 
+        message: "There was an error creating the department: " + error , 
+      })
+    }
   }
   return (
     <CreateView>
@@ -51,7 +59,7 @@ const DepartmentsCreate = () => {
 
       <h1 className="page-title">Create a Department</h1>
       <div className="intro-row">
-        <p>Provide the required information to create a term below.</p>
+        <p>Provide the required information to create a departmnet below.</p>
         <Button onClick={back}>Go Back</Button>
       </div>
 

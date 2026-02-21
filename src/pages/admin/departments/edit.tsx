@@ -18,11 +18,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { useNotification } from '@refinedev/core';
 
 const EditDepartments = () => {
   const {id} = useParams();
+  const {open} = useNotification();
 
-  // When more fields are added to departmnet, this will need an edit department schema
+  // When more fields are added to department, this will need an edit department schema
   const form = useForm({
     resolver: zodResolver(departmentSchema),
     refineCoreProps: {
@@ -53,7 +55,14 @@ const EditDepartments = () => {
   }, [query?.data?.data, reset]);
 
   const onSubmit = async (values: z.infer<typeof departmentSchema>) => {
-    await onFinish(values);
+    try {
+      await onFinish(values);
+    } catch (error) {
+      open?.({
+        type: "error", 
+        message: "There was an error editing the department: " + error , 
+      })
+    }
   }
 
   return (

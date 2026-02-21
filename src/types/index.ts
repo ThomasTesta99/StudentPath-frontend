@@ -64,16 +64,16 @@ export type Course = {
     id: string;
     name: string;
     schoolId: string;
-    description: string;
+    description?: string;
     code: string;
     termId: string;
     teacherId: string;
     departmentId: string;
     gradeLevel: string;
-    school: {
+    school?: {
         schoolName: string;
     };
-    term: TermDetails;
-    department: Department; 
-    teacher: User;
+    term?: TermDetails;
+    department?: Department; 
+    teacher?: User;
 }
