@@ -58,9 +58,12 @@ const EditDepartments = () => {
     try {
       await onFinish(values);
     } catch (error) {
+      const message = error instanceof Error
+        ? error.message
+        : (error as {message?:string})?.message ?? String(error)
       open?.({
         type: "error", 
-        message: "There was an error editing the department: " + error , 
+        message: "There was an error editing the department: " + message , 
       })
     }
   }
