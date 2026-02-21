@@ -64,14 +64,20 @@ export const SignInForm = () => {
         "min-h-svh"
       )}
     >
-      <div className={cn("flex", "items-center", "justify-center")}>
-        {title.icon && (
-          <div
-            className={cn("text-foreground", "[&>svg]:w-12", "[&>svg]:h-12")}
-          >
-            {title.icon} 
-          </div>
-        )}
+     <div className={cn("flex", "flex-col", "items-center", "gap-2")}>
+        <div className={cn("flex", "items-center", "gap-3")}>
+          {title.icon && (
+            <div className={cn("text-foreground", "[&>svg]:h-10", "[&>svg]:w-10")}>
+              {title.icon}
+            </div>
+          )}
+
+          <h1 className={cn("text-3xl", "font-bold", "tracking-tight")}>
+            {title.text}
+          </h1>
+        </div>
+
+        
       </div>
 
       <Card className={cn("sm:w-[456px]", "p-12", "mt-6")}>
