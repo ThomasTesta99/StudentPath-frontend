@@ -19,7 +19,7 @@ import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CalendarIcon, Loader2 } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
-import { cn, formatDate } from '@/lib/utils';
+import { cn, formatDate } from '@/lib/utils.ts';
 import z from 'zod';
 
 const TermsCreate = () => {
@@ -41,11 +41,7 @@ const TermsCreate = () => {
   const {refineCore: {onFinish}, handleSubmit, formState: {isSubmitting}, control} = form;
 
   const onSubmit = async (values: z.infer<typeof termSchema>) => {
-    try {
-      await onFinish(values);
-    } catch (error) {
-      console.log("Error creating new term: ", error);
-    }
+    await onFinish(values);
   }
 
   return (

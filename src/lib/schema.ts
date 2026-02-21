@@ -23,3 +23,7 @@ export const editTermSchema = z.object({
       path: ["startDate"],
     }
   );
+
+export const departmentSchema = z.object({
+  name: z.string().min(2, "Department name must be more than two characters"), 
+});

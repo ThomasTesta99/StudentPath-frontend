@@ -31,8 +31,8 @@ const DepartmentsList = () => {
                 id: "name", 
                 accessorKey: "name", 
                 size: 200, 
-                header: () => <p className='column-title'>Department Name</p>,
-                cell: ({getValue}) => <span className='font-semibold'>{getValue<string>().toUpperCase()}</span>
+                header: () => <p className='column-title justifyu'>Department Name</p>,
+                cell: ({getValue}) => <span className='font-semibold text-center'>{getValue<string>().toUpperCase()}</span>
             },
             {
                 id: "createdAt", 

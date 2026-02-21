@@ -62,11 +62,7 @@ const EditTerm = () => {
   }, [query?.data?.data, reset]);
 
   const onSubmit = async (values: z.infer<typeof editTermSchema>) => {
-    try {
-      await onFinish(values);
-    } catch (error) {
-      console.log("Error editing the term: ", error);
-    }
+    await onFinish(values);
   }
 
   const term = query?.data?.data;
