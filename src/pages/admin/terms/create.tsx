@@ -3,7 +3,7 @@ import { CreateView } from '@/components/refine-ui/views/create-view';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { useBack } from '@refinedev/core';
+import { useBack, useNotification } from '@refinedev/core';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {useForm} from "@refinedev/react-hook-form"
 import { termSchema } from '@/lib/schema';
@@ -19,11 +19,12 @@ import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CalendarIcon, Loader2 } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
-import { cn, formatDate } from '@/lib/utils';
+import { cn, formatDate } from '@/lib/utils.ts';
 import z from 'zod';
 
 const TermsCreate = () => {
   const back = useBack();
+  const {open} = useNotification();
 
   const form = useForm({
     resolver: zodResolver(termSchema), 
@@ -44,7 +45,13 @@ const TermsCreate = () => {
     try {
       await onFinish(values);
     } catch (error) {
-      console.log("Error creating new term: ", error);
+      const message = error instanceof Error
+        ? error.message
+        : (error as {message?:string})?.message ?? String(error)
+      open?.({
+        type: "error", 
+        message: "There was an error creating the term: " + message , 
+      })
     }
   }
 

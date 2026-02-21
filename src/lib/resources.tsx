@@ -22,7 +22,7 @@ export const allResources: IResourceItem[] = [
         create: "/admin/departments/create", 
         edit: "/admin/departments/edit/:id", 
         show: "/admin/departments/show/:id", 
-        meta: {label: "Departments", icon: <Building2 />, roles: ["admin"]}, 
+        meta: {label: "Departments", icon: <Building2 />, roles: ["admin"], path: "admin/departments"}, 
     },
     {
         name: "courses", 
@@ -30,7 +30,7 @@ export const allResources: IResourceItem[] = [
         create: "/admin/courses/create", 
         edit: "/admin/courses/edit/:id", 
         show: "/admin/courses/show/:id", 
-        meta: {label: "Courses", icon: <BookOpen />, roles: ["admin"]}, 
+        meta: {label: "Courses", icon: <BookOpen />, roles: ["admin"], path: "admin/courses"}, 
     },
     {
         name: "enrollments", 
@@ -38,7 +38,7 @@ export const allResources: IResourceItem[] = [
         create: "/admin/enrollments/create", 
         edit: "/admin/enrollments/edit/:id", 
         show: "/admin/enrollments/show/:id", 
-        meta: {label: "Enrollments", icon: <UserPlus />, roles: ["admin"]}, 
+        meta: {label: "Enrollments", icon: <UserPlus />, roles: ["admin"], path: "admin/enrollments"}, 
     },
     {
         name: "teachers", 
@@ -46,7 +46,7 @@ export const allResources: IResourceItem[] = [
         create: "/admin/teachers/create", 
         edit: "/admin/teachers/edit/:id", 
         show: "/admin/teachers/show/:id", 
-        meta: {label: "Teachers", icon: <UserCog />, roles: ["admin"]}, 
+        meta: {label: "Teachers", icon: <UserCog />, roles: ["admin"], path: "admin/teachers"}, 
     },
     {
         name: "students", 
@@ -54,7 +54,7 @@ export const allResources: IResourceItem[] = [
         create: "/admin/students/create", 
         edit: "/admin/students/edit/:id", 
         show: "/admin/students/show/:id", 
-        meta: {label: "Students", icon: <UsersRound />, roles: ["admin"]}, 
+        meta: {label: "Students", icon: <UsersRound />, roles: ["admin"], path: "admin/students"}, 
     },
     {
         name: "parents", 
@@ -62,7 +62,7 @@ export const allResources: IResourceItem[] = [
         create: "/admin/parents/create", 
         edit: "/admin/parents/edit/:id", 
         show: "/admin/parents/show/:id", 
-        meta: {label: "Parents", icon: <Users />, roles: ["admin"]}, 
+        meta: {label: "Parents", icon: <Users />, roles: ["admin"], path: "admin/parents"}, 
     },
 
 ]

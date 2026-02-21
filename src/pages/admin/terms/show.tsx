@@ -6,11 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useCustomMutation, useNotification, useShow } from "@refinedev/core";
 import React from "react";
 import { BACKEND_BASE_URL } from "@/constants";
-
-function formatDate(d: Date | null) {
-  if (!d) return "—";
-  return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
-}
+import { formatDate } from "@/lib/utils.ts";
 
 function Field({ label, value }: { label: string; value: React.ReactNode }) {
   return (
@@ -33,9 +29,20 @@ const TermsShow = () => {
 
   const term = query.data?.data;
 
-  if (query.isLoading) return <div className="p-6">Loading...</div>;
-  if (query.isError) return <div className="p-6">Failed to load term</div>;
-  if (!term) return <div className="p-6">No term found.</div>;
+  if (query.isLoading || query.isError || !term) {
+    return (
+      <ShowView className="class-view">
+        <ShowViewHeader resource="terms" title="Term Details" />
+        <p className="text-sm text-muted-foreground">
+          {query.isLoading
+            ? "Loading term details..."
+            : query.isError
+            ? "Failed to load term details."
+            : "Term details not found."}
+        </p>
+      </ShowView>
+    );
+  }
 
   const start = term.startDate ? new Date(term.startDate) : null;
   const end = term.endDate ? new Date(term.endDate) : null;

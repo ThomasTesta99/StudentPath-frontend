@@ -16,3 +16,4 @@ export const formatDate = (value: unknown) => {
     day: "2-digit",
   }).format(d);
 };
+

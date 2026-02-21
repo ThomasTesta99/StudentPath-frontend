@@ -46,3 +46,34 @@ export type TermDetails = {
     endDate: Date;
     isActive: boolean;
 }
+
+export type Department = {
+    id: string;
+    name: string;
+    createdAt: Date;
+    updatedAt: Date;
+    schoolId: string;
+    school?:{
+        schoolName: string;
+    }
+}
+
+
+
+export type Course = {
+    id: string;
+    name: string;
+    schoolId: string;
+    description?: string;
+    code: string;
+    termId: string;
+    teacherId: string;
+    departmentId: string;
+    gradeLevel: string;
+    school?: {
+        schoolName: string;
+    };
+    term?: TermDetails;
+    department?: Department; 
+    teacher?: User;
+}
