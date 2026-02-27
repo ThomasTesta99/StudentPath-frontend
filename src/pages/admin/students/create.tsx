@@ -101,35 +101,19 @@ const StudentCreate = () => {
                                     )}
                                 />
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                     <FormField
-                                        control={control}
-                                        name='password'
-                                        render={({field}) => (
-                                            <FormItem>
-                                                <FormLabel>Temporary Password<span className="text-red-400">*</span></FormLabel>
-                                                <FormControl>
-                                                    <Input type='password' {...field}/>
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    /> 
-
-                                    <FormField
-                                        control={control}
-                                        name='confirmPassword'
-                                        render={({field}) => (
-                                            <FormItem>
-                                                <FormLabel>Confirm Password<span className="text-red-400">*</span></FormLabel>
-                                                <FormControl>
-                                                    <Input type='password' {...field}/>
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                </div>
+                                <FormField
+                                    control={control}
+                                    name='osis'
+                                    render={({field}) => (
+                                        <FormItem>
+                                            <FormLabel>OSIS (9-digits)<span className="text-red-400">*</span></FormLabel>
+                                            <FormControl>
+                                                <Input placeholder='215849712' {...field}/>
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                      <FormField
@@ -161,20 +145,36 @@ const StudentCreate = () => {
                                     />
                                 </div>
 
-                                <FormField
-                                    control={control}
-                                    name='osis'
-                                    render={({field}) => (
-                                        <FormItem>
-                                            <FormLabel>OSIS (9-digit Number)<span className="text-red-400">*</span></FormLabel>
-                                            <FormControl>
-                                                <Input placeholder='215849712' {...field}/>
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
 
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                     <FormField
+                                        control={control}
+                                        name='password'
+                                        render={({field}) => (
+                                            <FormItem>
+                                                <FormLabel>Temporary Password<span className="text-red-400">*</span></FormLabel>
+                                                <FormControl>
+                                                    <Input type='password' {...field}/>
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    /> 
+
+                                    <FormField
+                                        control={control}
+                                        name='confirmPassword'
+                                        render={({field}) => (
+                                            <FormItem>
+                                                <FormLabel>Confirm Password<span className="text-red-400">*</span></FormLabel>
+                                                <FormControl>
+                                                    <Input type='password' {...field}/>
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
                                 
 
                                 <Button type='submit' size="lg" className='w-full' disabled={isSubmitting}>

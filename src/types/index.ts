@@ -116,5 +116,39 @@ export type StudentProfile = {
     dob: string;
     gradeLevel: string;
     user: User;
-    school?: School;
+    school?: {
+        schoolName: string;
+    };
+}
+
+export type Enrollments = {
+    courseId: string;
+    createdAt: Date;
+    updatedAt: Date;
+    studentId: string;
+    course: Course;
+    teacher?: {
+        name: string;
+    }
+}
+
+export type ParentStudentLink = {
+    user: {
+        createdAt: Date;
+        updatedAt: Date;
+        id: string;
+        name: string;
+        email: string;
+        emailVerified: boolean;
+        image: string | null;
+        role: "admin" | "user";
+        profileRole: "student" | "admin" | "teacher" | "parent";
+        banned: boolean;
+        banReason: string | null;
+        banExpires: Date | null;
+    };
+    createdAt: Date;
+    updatedAt: Date;
+    parentId: string;
+    studentId: string;
 }
