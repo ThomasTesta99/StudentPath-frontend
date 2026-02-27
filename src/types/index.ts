@@ -112,7 +112,7 @@ export type StudentProfile = {
     updatedAt: Date;
     userId: string;
     schoolId: string;
-    osis: string;
+    osis: Date;
     dob: string;
     gradeLevel: string;
     user: User;

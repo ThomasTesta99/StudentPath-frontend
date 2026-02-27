@@ -2,7 +2,7 @@ import { CreateButton } from '@/components/refine-ui/buttons/create';
 import { ShowButton } from '@/components/refine-ui/buttons/show';
 import { DataTable } from '@/components/refine-ui/data-table/data-table';
 import { Breadcrumb } from '@/components/refine-ui/layout/breadcrumb';
-import { ListView } from '@/components/refine-ui/views/list-view';
+import { ListView} from '@/components/refine-ui/views/list-view';
 import { Input } from '@/components/ui/input';
 import { StudentProfile } from '@/types';
 import { useTable } from '@refinedev/react-table';
@@ -61,7 +61,7 @@ const StudentsList = () => {
                 id: "details", 
                 size: 100, 
                 header: () => <p className='column-title'>Details</p>,
-                cell: ({row}) => <ShowButton resource='teachers' recordItemId={row.original.userId} variant="outline" size="sm">View</ShowButton>
+                cell: ({row}) => <ShowButton resource='students' recordItemId={row.original.userId} variant="outline" size="sm">View</ShowButton>
             },
         ], []), 
         refineCoreProps: {
