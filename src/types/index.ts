@@ -1,10 +1,16 @@
 export type User = {
     id: string;
-    email: string;
     name: string;
-    image?: string | null;
-    role: "admin" | "user";
+    email: string;
+    emailVerified: boolean;
+    image: string | null;
+    role: "user" | "admin";
     profileRole: Role;
+    banned: boolean;
+    banReason: string | null;
+    banExpires: Date | null;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export type Role = "student" | "teacher" | "parent" | "admin"
@@ -76,4 +82,15 @@ export type Course = {
     term?: TermDetails;
     department?: Department; 
     teacher?: User;
+}
+
+export type TeacherProfile = {
+    createdAt: Date;
+    updatedAt: Date;
+    userId: string;
+    schoolId: string;
+    user: User
+    school?: {
+        schoolName: string
+    }
 }

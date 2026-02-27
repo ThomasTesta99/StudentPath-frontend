@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useNotification } from '@refinedev/core';
+import { HttpError, useNotification } from '@refinedev/core';
 
 const EditDepartments = () => {
   const {id} = useParams();
@@ -41,7 +41,7 @@ const EditDepartments = () => {
   const {
     refineCore: {onFinish, query}, 
     handleSubmit, 
-    formState: {isSubmitting}, 
+    formState: {isSubmitting, dirtyFields}, 
     control, 
     reset
   } = form;
@@ -55,15 +55,26 @@ const EditDepartments = () => {
   }, [query?.data?.data, reset]);
 
   const onSubmit = async (values: z.infer<typeof departmentSchema>) => {
+    const changedValues: Partial<z.infer<typeof departmentSchema>> = {};
+
+    if(dirtyFields.name){
+      changedValues.name = values.name;
+    }
+
+    if (Object.keys(changedValues).length === 0) {
+      open?.({
+        type: "error",
+        message: "No changes to save",
+      });
+      return;
+    }
     try {
-      await onFinish(values);
+      await onFinish(changedValues);
     } catch (error) {
-      const message = error instanceof Error
-        ? error.message
-        : (error as {message?:string})?.message ?? String(error)
+      const err = error as HttpError
       open?.({
         type: "error", 
-        message: "There was an error editing the department: " + message , 
+        message: "There was an error editing the department: " + err.message , 
       })
     }
   }

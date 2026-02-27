@@ -7,20 +7,14 @@ import { useCustomMutation, useNotification, useShow } from "@refinedev/core";
 import React from "react";
 import { BACKEND_BASE_URL } from "@/constants";
 import { formatDate } from "@/lib/utils.ts";
-
-function Field({ label, value }: { label: string; value: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-1">
-      <div className="text-sm text-muted-foreground">{label}</div>
-      <div className="text-base font-medium">{value}</div>
-    </div>
-  );
-}
+import { useParams } from "react-router";
+import { Field } from "@/lib/utilsTsx";
 
 const TermsShow = () => {
-
+  const {id} = useParams();
   const { query } = useShow({
     resource: "terms",
+    id: id,
   });
 
   const {mutate: customMutate, mutation} = useCustomMutation();

@@ -3,7 +3,7 @@ import { CreateView } from '@/components/refine-ui/views/create-view'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { useBack, useNotification } from '@refinedev/core'
+import { HttpError, useBack, useNotification } from '@refinedev/core'
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react'
 
@@ -47,12 +47,10 @@ const DepartmentsCreate = () => {
     try {
       await onFinish(values);
     } catch (error) {
-      const message = error instanceof Error
-        ? error.message
-        : (error as {message?:string})?.message ?? String(error)
+      const err = error as HttpError
       open?.({
         type: "error", 
-        message: "There was an error creating the department: " + message , 
+        message: "There was an error creating the department: " + err.message , 
       })
     }
   }
@@ -62,7 +60,7 @@ const DepartmentsCreate = () => {
 
       <h1 className="page-title">Create a Department</h1>
       <div className="intro-row">
-        <p>Provide the required information to create a departmnet below.</p>
+        <p>Provide the required information to create a department below.</p>
         <Button onClick={back}>Go Back</Button>
       </div>
 

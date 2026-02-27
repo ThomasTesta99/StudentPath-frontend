@@ -3,7 +3,7 @@ import { CreateView } from '@/components/refine-ui/views/create-view';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { useBack, useNotification } from '@refinedev/core';
+import { HttpError, useBack, useNotification } from '@refinedev/core';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {useForm} from "@refinedev/react-hook-form"
 import { termSchema } from '@/lib/schema';
@@ -45,12 +45,10 @@ const TermsCreate = () => {
     try {
       await onFinish(values);
     } catch (error) {
-      const message = error instanceof Error
-        ? error.message
-        : (error as {message?:string})?.message ?? String(error)
+      const err = error as HttpError
       open?.({
         type: "error", 
-        message: "There was an error creating the term: " + message , 
+        message: "There was an error creating the term: " + err.message , 
       })
     }
   }

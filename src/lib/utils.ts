@@ -17,3 +17,7 @@ export const formatDate = (value: unknown) => {
   }).format(d);
 };
 
+export function capitalizeFirst(value?: string | null) : string{
+    if(!value) return "";
+    return value.charAt(0).toUpperCase() + value.slice(1);
+}
