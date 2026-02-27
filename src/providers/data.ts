@@ -1,5 +1,5 @@
 import { BACKEND_BASE_URL } from "@/constants"
-import { CreateResponse, GetOneResponse, ListResponse } from "@/types";
+import { CreateResponse, DeleteOneRepsonse, GetOneResponse, ListResponse } from "@/types";
 import { HttpError } from "@refinedev/core";
 import {createDataProvider, CreateDataProviderOptions} from "@refinedev/rest"
 
@@ -83,6 +83,14 @@ const options: CreateDataProviderOptions = {
     mapResponse: async (response) => {
       if(!response.ok) throw await buildHttpError(response);
       const json: GetOneResponse = await response.json();
+      return json.data ?? {};
+    }
+  },
+  deleteOne: {
+    getEndpoint: ({resource, meta, id}) => meta?.path ? `${meta?.path}/${id}` : `${resource}/${id}`, 
+    mapResponse: async (response) => {
+      if(!response.ok) throw await buildHttpError(response);
+      const json: DeleteOneRepsonse = await response.json();
       return json.data ?? {};
     }
   }
