@@ -10,15 +10,7 @@ import { useParams } from 'react-router';
 import { ColumnDef } from '@tanstack/react-table'
 import { Badge } from '@/components/ui/badge';
 import { ShowButton } from '@/components/refine-ui/buttons/show';
-
-function Field({ label, value }: { label: string; value: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-1">
-      <div className="text-sm text-muted-foreground">{label}</div>
-      <div className="text-base font-medium">{value}</div>
-    </div>
-  );
-}
+import { Field } from '@/lib/utilsTsx';
 
 const DepartmentsShow = () => {
   const {id} = useParams();

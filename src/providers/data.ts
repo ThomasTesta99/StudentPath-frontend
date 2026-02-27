@@ -1,6 +1,24 @@
 import { BACKEND_BASE_URL } from "@/constants"
 import { CreateResponse, GetOneResponse, ListResponse } from "@/types";
+import { HttpError } from "@refinedev/core";
 import {createDataProvider, CreateDataProviderOptions} from "@refinedev/rest"
+
+const buildHttpError = async (response: Response): Promise<HttpError> => {
+  let message = 'Request failed.';
+
+  try {
+    const payload = (await response.json()) as {error:"string"};
+    if(payload?.error) message = payload.error;
+  } catch {
+    // Ignore errors
+  }
+
+  return {
+    message, 
+    statusCode: response.status,
+  }
+
+}
 
 const options: CreateDataProviderOptions = {
   getList: {
@@ -32,11 +50,13 @@ const options: CreateDataProviderOptions = {
       return params;
     },
     mapResponse: async (response) => {
+      if(!response.ok) throw await buildHttpError(response);
       const payload: ListResponse = await response.clone().json();
       return payload.data ?? [];
     },
 
     getTotalCount: async (response) => {
+      if(!response.ok) throw await buildHttpError(response);
       const payload: ListResponse = await response.clone().json();
       return payload.pagination?.total ?? payload.data?.length ?? 0;
     }
@@ -45,6 +65,7 @@ const options: CreateDataProviderOptions = {
     getEndpoint : ({resource, meta}) => meta?.path ?? resource, 
     buildBodyParams: async ({variables}) => variables,
     mapResponse: async (response) => {
+      if(!response.ok) throw await buildHttpError(response);
       const json: CreateResponse = await response.json();
       return json.data ?? {};
     }
@@ -52,6 +73,7 @@ const options: CreateDataProviderOptions = {
   getOne: {
     getEndpoint : ({resource, meta, id}) => meta?.path ? `${meta?.path}/${id}` : `${resource}/${id}`, 
     mapResponse: async (response) => {
+      if(!response.ok) throw await buildHttpError(response);
       const json: GetOneResponse = await response.json();
       return json.data ?? {};
     }
@@ -59,6 +81,7 @@ const options: CreateDataProviderOptions = {
   update: {
     getEndpoint: ({resource, meta, id}) => meta?.path ? `${meta?.path}/${id}` : `${resource}/${id}`, 
     mapResponse: async (response) => {
+      if(!response.ok) throw await buildHttpError(response);
       const json: GetOneResponse = await response.json();
       return json.data ?? {};
     }

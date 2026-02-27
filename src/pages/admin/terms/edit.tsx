@@ -23,7 +23,7 @@ import { Button } from '@/components/ui/button'
 import { cn, formatDate } from '@/lib/utils'
 import { CalendarIcon } from 'lucide-react'
 import { Calendar } from '@/components/ui/calendar'
-import { useNotification } from '@refinedev/core'
+import { HttpError, useNotification } from '@refinedev/core'
 
 const EditTerm = () => {
 
@@ -48,7 +48,7 @@ const EditTerm = () => {
   const {
     refineCore: {onFinish, query}, 
     handleSubmit, 
-    formState: {isSubmitting}, 
+    formState: {isSubmitting, dirtyFields}, 
     control, 
     reset, 
   } = form;
@@ -64,15 +64,34 @@ const EditTerm = () => {
   }, [query?.data?.data, reset]);
 
   const onSubmit = async (values: z.infer<typeof editTermSchema>) => {
+    const changedValues: Partial<z.infer<typeof editTermSchema>> = {};
+
+    if (dirtyFields.termName) {
+      changedValues.termName = values.termName;
+    }
+
+    if (dirtyFields.startDate) {
+      changedValues.startDate = values.startDate;
+    }
+
+    if (dirtyFields.endDate) {
+      changedValues.endDate = values.endDate;
+    }
+
+    if (Object.keys(changedValues).length === 0) {
+      open?.({
+        type: "error",
+        message: "No changes to save",
+      });
+      return;
+    }
     try {
       await onFinish(values);
     } catch (error) {
-      const message = error instanceof Error
-        ? error.message
-        : (error as {message?:string})?.message ?? String(error)
+      const err = error as HttpError
       open?.({
         type: "error", 
-        message: "There was an error edit the term: " + message , 
+        message: "There was an error editing the term: " + err.message , 
       })
     }
   }

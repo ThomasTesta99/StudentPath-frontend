@@ -90,4 +90,7 @@ export type TeacherProfile = {
     userId: string;
     schoolId: string;
     user: User
+    school?: {
+        schoolName: string
+    }
 }

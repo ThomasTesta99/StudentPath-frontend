@@ -34,7 +34,7 @@ export const SignInForm = () => {
 
   const { title } = useRefineOptions();
 
-  const { mutate: login } = useLogin();
+  const { mutate: login, isPending: isSubmitting } = useLogin();
 
 
   const form = useForm<SignInFormValues>({
@@ -170,8 +170,8 @@ export const SignInForm = () => {
               </Link>
             </div>
 
-            <Button type="submit" size="lg" className={cn("w-full", "mt-6")}>
-              Sign in
+            <Button type="submit" size="lg" className={cn("w-full", "mt-6")} disabled={isSubmitting}>
+              {isSubmitting ? "Signing in..." : "Sign In"}
             </Button>
           </form>
           </Form>
