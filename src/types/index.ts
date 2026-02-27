@@ -44,6 +44,11 @@ export type GetOneResponse<T = unknown> = {
     data?: T;
 };
 
+export type DeleteOneResponse<T = unknown> = {
+    data?: T;
+};
+
+
 export type TermDetails = {
     id: string;
     schoolId: string;

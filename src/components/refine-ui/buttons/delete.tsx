@@ -11,34 +11,20 @@ import { Loader2, Trash } from "lucide-react";
 import React from "react";
 
 type DeleteButtonProps = {
-  /**
-   * Resource name for API data interactions. `identifier` of the resource can be used instead of the `name` of the resource.
-   * @default Inferred resource name from the route
-   */
   resource?: string;
-  /**
-   * Data item identifier for the actions with the API
-   * @default Reads `:id` from the URL
-   */
   recordItemId?: BaseKey;
-  /**
-   * Access Control configuration for the button
-   * @default `{ enabled: true, hideIfUnauthorized: false }`
-   */
   accessControl?: {
     enabled?: boolean;
     hideIfUnauthorized?: boolean;
   };
-  /**
-   * `meta` property is used when creating the URL for the related action and path.
-   */
   meta?: Record<string, unknown>;
+  onSuccess?: () => void;
 } & React.ComponentProps<typeof Button>;
 
 export const DeleteButton = React.forwardRef<
   React.ComponentRef<typeof Button>,
   DeleteButtonProps
->(({ resource, recordItemId, accessControl, meta, children, ...rest }, ref) => {
+>(({ resource, recordItemId, accessControl, meta, onSuccess, children, ...rest }, ref) => {
   const {
     hidden,
     disabled,
@@ -53,17 +39,15 @@ export const DeleteButton = React.forwardRef<
     id: recordItemId,
     accessControl,
     meta,
+    onSuccess,
   });
+
   const [open, setOpen] = React.useState(false);
 
   const isDisabled = disabled || rest.disabled || loading;
   const isHidden = hidden || rest.hidden;
 
   if (isHidden) return null;
-
-  const confirmCancelText = defaultCancelLabel;
-  const confirmOkText = defaultConfirmOkLabel;
-  const confirmTitle = defaultConfirmTitle;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -85,12 +69,13 @@ export const DeleteButton = React.forwardRef<
           </Button>
         </span>
       </PopoverTrigger>
+
       <PopoverContent className="w-auto" align="start">
         <div className="flex flex-col gap-2">
-          <p className="text-sm">{confirmTitle}</p>
+          <p className="text-sm">{defaultConfirmTitle}</p>
           <div className="flex justify-end gap-2">
             <Button variant="outline" size="sm" onClick={() => setOpen(false)}>
-              {confirmCancelText}
+              {defaultCancelLabel}
             </Button>
             <Button
               variant="destructive"
@@ -103,7 +88,7 @@ export const DeleteButton = React.forwardRef<
                 setOpen(false);
               }}
             >
-              {confirmOkText}
+              {defaultConfirmOkLabel}
             </Button>
           </div>
         </div>

@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useCustomMutation, useNotification, useShow } from "@refinedev/core";
 import React from "react";
 import { BACKEND_BASE_URL } from "@/constants";
-import { formatDate } from "@/lib/utils.ts";
+import { formatDate } from "@/lib/utils";
 import { useParams } from "react-router";
 import { Field } from "@/lib/utilsTsx";
 

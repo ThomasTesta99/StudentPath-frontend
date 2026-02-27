@@ -19,7 +19,7 @@ import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CalendarIcon, Loader2 } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
-import { cn, formatDate } from '@/lib/utils.ts';
+import { cn, formatDate } from '@/lib/utils';
 import z from 'zod';
 
 const TermsCreate = () => {
