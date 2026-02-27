@@ -54,7 +54,7 @@ const TeacherList = () => {
       {
         id: "details", 
         size: 100, 
-        header: () => <p className='cloumn-title'>Details</p>,
+        header: () => <p className='column-title'>Details</p>,
         cell: ({row}) => <ShowButton resource='teachers' recordItemId={row.original.userId} variant="outline" size="sm">View</ShowButton>
       }
     ], []),

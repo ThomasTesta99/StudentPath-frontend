@@ -7,7 +7,7 @@ const buildHttpError = async (response: Response): Promise<HttpError> => {
   let message = 'Request failed.';
 
   try {
-    const payload = (await response.json()) as {error:"string"};
+    const payload = (await response.json()) as {error: string};
     if(payload?.error) message = payload.error;
   } catch {
     // Ignore errors

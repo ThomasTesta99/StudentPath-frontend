@@ -60,7 +60,7 @@ const DepartmentsCreate = () => {
 
       <h1 className="page-title">Create a Department</h1>
       <div className="intro-row">
-        <p>Provide the required information to create a departmnet below.</p>
+        <p>Provide the required information to create a department below.</p>
         <Button onClick={back}>Go Back</Button>
       </div>
 

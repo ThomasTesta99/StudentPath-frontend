@@ -64,7 +64,7 @@ const EditTeacher = () => {
             return;
         }
         try {
-            await onFinish(values);
+            await onFinish(changedValues);
         } catch (error) {
             const err = error as HttpError;
             open?.({

@@ -113,7 +113,7 @@ const TeacherCreate = () => {
                                     render={({field}) => (
                                         <FormItem>
                                             <FormLabel>Password<span className="text-red-400">*</span></FormLabel>
-                                            <p className='text-xs'>(This is a temperary password and will need to be reset)</p>
+                                            <p className='text-xs'>(This is a temporary password and will need to be reset)</p>
                                             <FormControl>
                                                 <Input type="password"  {...field} />
                                             </FormControl>
