@@ -35,6 +35,7 @@ import TeacherList from "./pages/admin/teachers/list";
 import TeacherCreate from "./pages/admin/teachers/create";
 import ShowTeacher from "./pages/admin/teachers/show";
 import EditTeacher from "./pages/admin/teachers/edit";
+import StudentsList from "./pages/admin/students/list";
 
 function App() {
   return (
@@ -86,6 +87,12 @@ function App() {
                           </Route>
                           <Route path="teachers">
                             <Route index element={<TeacherList />}/>
+                            <Route path="create" element={<TeacherCreate />} />
+                            <Route path="show/:id" element={<ShowTeacher />} />
+                            <Route path="edit/:id" element={<EditTeacher />} />
+                          </Route>
+                          <Route path="students">
+                            <Route index element={<StudentsList />}/>
                             <Route path="create" element={<TeacherCreate />} />
                             <Route path="show/:id" element={<ShowTeacher />} />
                             <Route path="edit/:id" element={<EditTeacher />} />

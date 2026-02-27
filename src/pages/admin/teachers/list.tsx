@@ -56,7 +56,7 @@ const TeacherList = () => {
         size: 100, 
         header: () => <p className='column-title'>Details</p>,
         cell: ({row}) => <ShowButton resource='teachers' recordItemId={row.original.userId} variant="outline" size="sm">View</ShowButton>
-      }
+      },
     ], []),
     refineCoreProps: {
       resource: "teachers", 
