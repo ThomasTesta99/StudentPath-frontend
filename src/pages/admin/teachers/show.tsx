@@ -108,7 +108,6 @@ const ShowTeacher = () => {
                                 <DeleteButton
                                     resource="teachers"
                                     recordItemId={teacher.userId}
-                                    meta={{ path: "admin/teachers" }}
                                     onSuccess={() => {
                                         go({
                                             to: {

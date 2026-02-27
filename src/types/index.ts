@@ -44,7 +44,7 @@ export type GetOneResponse<T = unknown> = {
     data?: T;
 };
 
-export type DeleteOneRepsonse<T = unknown> = {
+export type DeleteOneResponse<T = unknown> = {
     data?: T;
 };
 
