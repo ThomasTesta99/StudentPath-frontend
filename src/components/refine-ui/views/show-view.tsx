@@ -75,7 +75,7 @@ export const ShowViewHeader = ({
         )}
       >
         <div className="flex items-center gap-1">
-          <Button variant="ghost" size="icon" onClick={() => {
+          <Button variant="ghost" size="icon" aria-label={`Back to ${resourceName ?? "list"}`} onClick={() => {
             if(!resourceName) return;
             go({
               to: {

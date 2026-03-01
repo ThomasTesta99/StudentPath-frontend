@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { isStrictIsoDate } from "./utils";
 
 export const termSchema = z.object({
     termName: z.string().min(1, "Name is required"),
@@ -55,8 +56,7 @@ export const studentSchema = z.object({
     .min(1, "Date of birth is required")
     .regex(/^\d{4}-\d{2}-\d{2}$/, "Date of birth must be in YYYY-MM-DD format")
     .refine((value) => {
-      const date = new Date(value);
-      return !Number.isNaN(date.getTime());
+      isStrictIsoDate(value);
     }, {
       message: "Date of birth must be a valid date",
     }),
@@ -66,7 +66,7 @@ export const studentSchema = z.object({
 });;
 
 export const editStudentSchema = z.object({
-  name: z.string().min(1, "Name must be more than 1 character").optional(),
+  name: z.string().min(1, "Name is required").optional(),
   email: z.string().email("Invalid email").optional(),
   osis: z.string().regex(/^\d{9}$/, "OSIS must be exactly 9 digits").optional(),
   gradeLevel: z.string().min(1, "Grade level is required").max(2, "Must be a valid grade level").optional(),
@@ -76,8 +76,7 @@ export const editStudentSchema = z.object({
     .regex(/^\d{4}-\d{2}-\d{2}$/, "Date of birth must be in YYYY-MM-DD format")
     
     .refine((value) => {
-      const date = new Date(value);
-      return !Number.isNaN(date.getTime());
+      isStrictIsoDate(value)
     }, {
       message: "Date of birth must be a valid date",
     }).optional()

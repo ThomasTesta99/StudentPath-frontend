@@ -57,7 +57,7 @@ const StudentCreate = () => {
             <Breadcrumb />
             <h1 className="page-title">Create a Student</h1>
             <div className="intro-row">
-                <p>Provide the required information to create a new teacher below.</p>
+                <p>Provide the required information to create a new student below.</p>
                 <Button onClick={back}>Go Back</Button>
             </div>
 

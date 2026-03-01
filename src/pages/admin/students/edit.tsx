@@ -56,6 +56,14 @@ const EditStudent = () => {
     if(dirtyFields.osis) changedValues.osis = values.osis;
     if(dirtyFields.gradeLevel) changedValues.gradeLevel = values.gradeLevel;
 
+    if (Object.keys(changedValues).length === 0) {
+      open?.({
+        type: "error",
+        message: "No changes to save",
+      });
+      return;
+    }
+
     try {
       await onFinish(changedValues);
     } catch (error) {
@@ -79,7 +87,7 @@ const EditStudent = () => {
             <div className="space-y-1">
               <CardTitle className='text-2xl'>Student Info</CardTitle>
               <div className="text-sm text-muted-foreground">
-                Update the Instructor's information
+                Update the Student's information
               </div>
             </div>
           </CardHeader>

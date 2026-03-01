@@ -5,9 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { capitalizeFirst, formatDate } from '@/lib/utils';
 import { Field } from '@/lib/utilsTsx';
-import {  Enrollments, ParentStudentLink, StudentProfile } from '@/types';
+import {  Enrollment, ParentStudentLink, StudentProfile } from '@/types';
 import { useGo, useShow } from '@refinedev/core';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useParams } from 'react-router';
 import { useTable } from '@refinedev/react-table';
 import { ColumnDef } from '@tanstack/react-table';
@@ -24,21 +24,21 @@ const ShowStudent = () => {
   });
 
   const student = query?.data?.data;
-  const enrollments = useTable<Enrollments>({
-    columns: useMemo<ColumnDef<Enrollments>[]>(() => [
+  const enrollments = useTable<Enrollment>({
+    columns: useMemo<ColumnDef<Enrollment>[]>(() => [
       {
         id: "code", 
         accessorFn: (row) => row.course.code ?? "-",
         size: 80, 
         header: () => <p className='column-title'>Course Code</p>,
-        cell: ({row}) => <Badge>{row.original.course.code}</Badge>
+        cell: ({row}) => <Badge>{row.original.course.code ?? "-"}</Badge>
       },
       {
         id: "courseName", 
         accessorFn: (row) => row.course.name ?? "-",
         size: 100, 
         header: () => <p className='column-title'>Course Name</p>,
-        cell: ({row}) => <span>{row.original.course.name}</span>
+        cell: ({row}) => <span>{row.original.course.name ?? "-"}</span>
       },
       {
         id: "instructor", 
@@ -53,7 +53,7 @@ const ShowStudent = () => {
         id: "details", 
         size: 100,
         header: () => <p className="column-title">Details</p>,
-        cell: ({ row }) => <ShowButton resource="courses" recordItemId={row.original.courseId} variant="outline" size="sm">View</ShowButton>
+        cell: ({ row }) => <ShowButton resource="courses" recordItemId={row.original.courseId ?? "-"} variant="outline" size="sm">View</ShowButton>
       }
     ], []), 
     refineCoreProps: {
@@ -176,7 +176,7 @@ const ShowStudent = () => {
                 <CardTitle className="text-lg">Dates</CardTitle>
               </CardHeader>
 
-              <CardContent className="grid grid-cols-1 gap-2">
+              <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <Field label="Student Profile Created" value={formatDate(student.createdAt)} />
                 <Field label="Student Profile Updated" value={formatDate(student.updatedAt)} />
                 <Field label="User Created" value={formatDate(student.user.createdAt)} />

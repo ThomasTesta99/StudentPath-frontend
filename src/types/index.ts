@@ -112,7 +112,7 @@ export type StudentProfile = {
     updatedAt: Date;
     userId: string;
     schoolId: string;
-    osis: Date;
+    osis: string;
     dob: string;
     gradeLevel: string;
     user: User;
@@ -121,7 +121,7 @@ export type StudentProfile = {
     };
 }
 
-export type Enrollments = {
+export type Enrollment = {
     courseId: string;
     createdAt: Date;
     updatedAt: Date;
@@ -133,20 +133,7 @@ export type Enrollments = {
 }
 
 export type ParentStudentLink = {
-    user: {
-        createdAt: Date;
-        updatedAt: Date;
-        id: string;
-        name: string;
-        email: string;
-        emailVerified: boolean;
-        image: string | null;
-        role: "admin" | "user";
-        profileRole: "student" | "admin" | "teacher" | "parent";
-        banned: boolean;
-        banReason: string | null;
-        banExpires: Date | null;
-    };
+    user: User;
     createdAt: Date;
     updatedAt: Date;
     parentId: string;
