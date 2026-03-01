@@ -99,3 +99,43 @@ export type TeacherProfile = {
         schoolName: string
     }
 }
+
+export type School = {
+    createdAt: Date;
+    updatedAt: Date;
+    id: string;
+    schoolName: string;
+}
+
+export type StudentProfile = {
+    createdAt: Date;
+    updatedAt: Date;
+    userId: string;
+    schoolId: string;
+    osis: string;
+    dob: string;
+    gradeLevel: string;
+    user: User;
+    school?: {
+        schoolName: string;
+    };
+}
+
+export type Enrollment = {
+    courseId: string;
+    createdAt: Date;
+    updatedAt: Date;
+    studentId: string;
+    course: Course;
+    teacher?: {
+        name: string;
+    }
+}
+
+export type ParentStudentLink = {
+    user: User;
+    createdAt: Date;
+    updatedAt: Date;
+    parentId: string;
+    studentId: string;
+}
