@@ -1,4 +1,5 @@
 
+import ConnectStudent from '@/components/ConnectStudent';
 import { DeleteButton } from '@/components/refine-ui/buttons/delete';
 import { ShowButton } from '@/components/refine-ui/buttons/show';
 import { DataTable } from '@/components/refine-ui/data-table/data-table';
@@ -167,7 +168,7 @@ const ShowParent = () => {
         <Card>
           <CardHeader className='flex flex-row justify-between items-center'>
             <CardTitle className='text-xl'>Student Connections</CardTitle>
-            <Button>Connect Student</Button>
+            <ConnectStudent parentEmail={parent.user.email} />
           </CardHeader>
 
           <CardContent>

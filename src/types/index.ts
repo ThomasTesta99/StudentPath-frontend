@@ -147,3 +147,13 @@ export type ParentProfile = {
     userId: string;
     schoolId: string;
 }
+
+export type ParentInviteResult = {
+    inviteId: string;
+    studentId: string;
+    parentEmail: string;
+    token: string;
+    expiresAt: Date;
+}
+
+export type StudentSearchResult = StudentProfile;
