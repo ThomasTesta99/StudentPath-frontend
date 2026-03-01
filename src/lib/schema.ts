@@ -92,3 +92,8 @@ export const parentsSchema = z.object({
   message: "Passwords must match",
   path: ["confirmPassword"],
 });
+
+export const editParentSchema = z.object({
+  name: z.string().optional(), 
+  email: z.string().email().optional(), 
+});

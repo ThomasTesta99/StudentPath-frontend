@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { editTeacherSchema } from '@/lib/schema';
+import { editParentSchema } from '@/lib/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { HttpError, useNotification } from '@refinedev/core';
 import { useForm } from '@refinedev/react-hook-form';
@@ -17,12 +17,12 @@ const EditTeacher = () => {
     const {open} = useNotification();
 
     const form = useForm({
-        resolver: zodResolver(editTeacherSchema), 
+        resolver: zodResolver(editParentSchema), 
         refineCoreProps: {
-            resource: "teachers", 
+            resource: "parents", 
             action: "edit", 
             id: id,
-            meta: {path: "admin/teachers"}
+            meta: {path: "admin/parents"}
         }, 
         defaultValues: {
             name: "", 
@@ -39,16 +39,16 @@ const EditTeacher = () => {
     } = form;
 
     useEffect(() => {
-        const teacher = query?.data?.data
-        if(!teacher) return;
+        const parent = query?.data?.data
+        if(!parent) return;
         reset({
-            name: teacher.user.name ?? "-", 
-            email: teacher.user.email ?? "",
+            name: parent.user.name ?? "-", 
+            email: parent.user.email ?? "",
         })
     }, [query?.data?.data, reset]);
 
-    const onSubmit = async (values: z.infer<typeof editTeacherSchema>) => {
-        const changedValues: Partial<z.infer<typeof editTeacherSchema>> = {};
+    const onSubmit = async (values: z.infer<typeof editParentSchema>) => {
+        const changedValues: Partial<z.infer<typeof editParentSchema>> = {};
 
         if(dirtyFields.name){
             changedValues.name = values.name;
@@ -69,23 +69,23 @@ const EditTeacher = () => {
             const err = error as HttpError;
             open?.({
                 type:"error", 
-                message: "There was an error editing the instructors information: " + err.message
+                message: "There was an error editing the parent's information: " + err.message
             })
         }
     }
 
     return (
         <EditView>
-            <EditViewHeader resource='teachers' title='Edit Instructor' />
+            <EditViewHeader resource='parents' title='Edit Parent' />
             <Separator />
 
             <div className="mx-auto w-full max-w-3xl space-y-6">
                 <Card>
                     <CardHeader className='flex flex-row items-center justify-between gap-4'>
                         <div className="space-y-1">
-                            <CardTitle className='text-2xl'>Instructor Info</CardTitle>
+                            <CardTitle className='text-2xl'>Parent Info</CardTitle>
                             <div className="text-sm text-muted-foreground">
-                                Update the Instructor's information
+                                Update the Parent's information
                             </div>
                         </div>
                     </CardHeader>
