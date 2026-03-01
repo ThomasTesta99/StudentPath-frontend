@@ -42,7 +42,7 @@ const EditTeacher = () => {
         const parent = query?.data?.data
         if(!parent) return;
         reset({
-            name: parent.user.name ?? "-", 
+            name: parent.user.name ?? "", 
             email: parent.user.email ?? "",
         })
     }, [query?.data?.data, reset]);

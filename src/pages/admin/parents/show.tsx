@@ -5,7 +5,6 @@ import { ShowButton } from '@/components/refine-ui/buttons/show';
 import { DataTable } from '@/components/refine-ui/data-table/data-table';
 import { ShowView, ShowViewHeader } from '@/components/refine-ui/views/show-view';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { capitalizeFirst, formatDate } from '@/lib/utils';
@@ -47,7 +46,7 @@ const ShowParent = () => {
           id: "details", 
           size: 50, 
           header: () => <p className='column-title'>Details</p>,
-          cell: ({ row }) => <ShowButton resource="students" recordItemId={row.original.user.id} variant="outline" size="sm">View</ShowButton>
+          cell: ({ row }) => <ShowButton resource="students" recordItemId={row.original.studentId} variant="outline" size="sm">View</ShowButton>
   
         }
       ], []), 

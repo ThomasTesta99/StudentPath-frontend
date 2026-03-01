@@ -1,5 +1,5 @@
 import { ParentInviteResult, StudentSearchResult } from '@/types';
-import { HttpError, useCreate, useList, useNotification } from '@refinedev/core';
+import { useCreate, useList, useNotification } from '@refinedev/core';
 import React, { useEffect, useMemo, useState } from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { Input } from './ui/input';
@@ -85,10 +85,11 @@ const ConnectStudent = ({parentEmail} : {parentEmail: string}) => {
             return;
         }
 
-        try {
-            const createdInvites: ParentInviteResult[] = [];
+        const createdInvites: ParentInviteResult[] = [];
+        let failedCount = 0;
 
-            for(const studentId of selectedStudentIds){
+        for(const studentId of selectedStudentIds){
+            try {
                 const response = await createInvite({
                     resource: "parents", 
                     values: {
@@ -101,28 +102,24 @@ const ConnectStudent = ({parentEmail} : {parentEmail: string}) => {
                     successNotification: false, 
                     errorNotification: false, 
                 });
-
+        
                 if(response.data){
                     createdInvites.push(response.data);
                 }
-
+            } catch {
+                failedCount += 1;
             }
-            setInviteResults(createdInvites);
-
-            notify?.({
-                type: "success", 
-                message: 
-                    createdInvites.length === 1
-                        ? "Invite created successfully" 
-                        : `${createdInvites.length} invites created successfully.`
-            });
-        } catch (error) {
-            const err = error as HttpError;
-            notify?.({
-                type: "error",
-                message: err.message ?? "Failed to create invite"
-            })
         }
+        setInviteResults(createdInvites);
+        notify?.({
+            type: failedCount > 0 ? "error" : "success", 
+            message: 
+                failedCount > 0 
+                    ? `${createdInvites.length} invite(s) created, ${failedCount} failed.`
+                    : createdInvites.length === 1
+                    ? "Invite created successfully"
+                    : `${createdInvites.length} invites created successfully.`
+        })
     }
 
     const resetDialog = () => {
@@ -140,7 +137,7 @@ const ConnectStudent = ({parentEmail} : {parentEmail: string}) => {
             }}
             
         >
-            <DialogTrigger>
+            <DialogTrigger asChild>
                 <Button>Connect Student</Button>
             </DialogTrigger>
 
