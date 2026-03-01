@@ -40,6 +40,7 @@ import StudentCreate from "./pages/admin/students/create";
 import ShowStudent from "./pages/admin/students/show";
 import EditStudent from "./pages/admin/students/edit";
 import ParentsList from "./pages/admin/parents/list";
+import ParentCreate from "./pages/admin/parents/create";
 
 function App() {
   return (
@@ -103,6 +104,7 @@ function App() {
                           </Route>
                           <Route path="parents">
                             <Route index element={<ParentsList />} />
+                            <Route path="create" element={<ParentCreate />} />
                           </Route>
                         
                         </Route>
