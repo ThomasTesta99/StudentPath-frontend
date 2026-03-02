@@ -66,13 +66,13 @@ const StudentsList = () => {
         ], []), 
         refineCoreProps: {
             resource: "students",
-             pagination: {
-            pageSize: 10, 
-            mode: "server", 
-        }, 
-        filters: {
-            permanent: [...searchFilters]
-        }
+            pagination: {
+                pageSize: 10, 
+                mode: "server", 
+            }, 
+            filters: {
+                permanent: [...searchFilters]
+            }
         }
     })
 

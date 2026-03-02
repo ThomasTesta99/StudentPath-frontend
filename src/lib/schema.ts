@@ -81,4 +81,19 @@ export const editStudentSchema = z.object({
       message: "Date of birth must be a valid date",
     }).optional()
     ,
-})
+});
+
+export const parentsSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  confirmPassword: z.string().min(1, "Please confirm your password"),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords must match",
+  path: ["confirmPassword"],
+});
+
+export const editParentSchema = z.object({
+  name: z.string().optional(), 
+  email: z.string().email().optional(), 
+});

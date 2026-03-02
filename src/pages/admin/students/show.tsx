@@ -90,7 +90,7 @@ const ShowStudent = () => {
         id: "details", 
         size: 50, 
         header: () => <p className='column-title'>Details</p>,
-        cell: ({ row }) => <ShowButton resource="parents" recordItemId={row.original.user.id} variant="outline" size="sm">View</ShowButton>
+        cell: ({ row }) => <ShowButton resource="parents" recordItemId={row.original.parentId} variant="outline" size="sm">View</ShowButton>
 
       }
     ], []), 

@@ -139,3 +139,21 @@ export type ParentStudentLink = {
     parentId: string;
     studentId: string;
 }
+
+export type ParentProfile = {
+    user: User;
+    createdAt: Date;
+    updatedAt: Date;
+    userId: string;
+    schoolId: string;
+}
+
+export type ParentInviteResult = {
+    inviteId: string;
+    studentId: string;
+    parentEmail: string;
+    token: string;
+    expiresAt: Date;
+}
+
+export type StudentSearchResult = StudentProfile;

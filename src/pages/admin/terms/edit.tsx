@@ -48,20 +48,20 @@ const EditTerm = () => {
   const {
     refineCore: {onFinish, query}, 
     handleSubmit, 
-    formState: {isSubmitting, dirtyFields}, 
+    formState: {isSubmitting, dirtyFields, isDirty}, 
     control, 
     reset, 
   } = form;
 
   useEffect(() => {
     const term = query?.data?.data;
-    if(!term) return;
+    if(!term || isDirty) return;
     reset({
       termName: term.termName ?? "", 
       startDate: term.startDate ? new Date(term.startDate) : new Date(), 
       endDate: term.endDate ? new Date(term.endDate) : new Date(), 
     })
-  }, [query?.data?.data, reset]);
+  }, [query?.data?.data, reset, isDirty]);
 
   const onSubmit = async (values: z.infer<typeof editTermSchema>) => {
     const changedValues: Partial<z.infer<typeof editTermSchema>> = {};

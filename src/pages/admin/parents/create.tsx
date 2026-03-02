@@ -2,57 +2,49 @@ import { Breadcrumb } from '@/components/refine-ui/layout/breadcrumb'
 import { CreateView } from '@/components/refine-ui/views/create-view'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
-import { HttpError, useBack, useNotification } from '@refinedev/core'
-import React from 'react'
-
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { useForm } from '@refinedev/react-hook-form'
-import z from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { teacherSchema } from '@/lib/schema'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Separator } from '@/components/ui/separator'
+import { parentsSchema } from '@/lib/schema'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { HttpError, useBack, useNotification } from '@refinedev/core'
+import { useForm } from '@refinedev/react-hook-form'
+import React from 'react'
+import z from 'zod'
 
-const TeacherCreate = () => {
+const ParentCreate = () => {
     const back = useBack();
     const {open} = useNotification();
- 
+
     const form = useForm({
-        resolver: zodResolver(teacherSchema), 
+        resolver: zodResolver(parentsSchema), 
         refineCoreProps: {
-            resource: "teachers", 
-            action: "create", 
+            resource: "parents", 
+            action: "create",
         },
         defaultValues: {
             name: "", 
             email: "", 
             password: "", 
-            confirmPassword: "", 
+            confirmPassword: "",
         }
-    })
+    });
 
     const {
         refineCore: {onFinish}, 
+        control, 
         handleSubmit, 
         formState: {isSubmitting}, 
-        control, 
     } = form;
 
-    const onSubmit = async (values: z.infer<typeof teacherSchema>) => {
+    const onSubmit = async (values: z.infer<typeof parentsSchema>) => {
         try {
             await onFinish(values);
         } catch (error) {
-            const err = error as HttpError
+            const err = error as HttpError;
             open?.({
                 type: "error", 
-                message: "There was an error creating the teacher: " + err.message
+                message: "There was an error creating the parent: " + err.message
             })
         }
     }
@@ -60,31 +52,29 @@ const TeacherCreate = () => {
     return (
         <CreateView>
             <Breadcrumb />
-            <h1 className="page-title">Create a Teacher</h1>
+            <h1 className="page-title">Create a Parent</h1>
             <div className="intro-row">
-                <p>Provide the required information to create a new teacher below.</p>
+                <p>Provide the required information to create a parent</p>
                 <Button onClick={back}>Go Back</Button>
             </div>
-
             <Separator />
 
             <div className="my-4 flex items-center">
-                <Card className='class-form-card'>
+                <Card className = "class-form-card">
                     <CardHeader className='relative z-10'>
                         <CardTitle className='text-2xl pb-0 font-bold'>Fill out the form</CardTitle>
                     </CardHeader>
-
-                    <Separator />
+                    <Separator/>
 
                     <CardContent>
                         <Form {...form}>
                             <form onSubmit={handleSubmit(onSubmit)} className='space-y-5'>
                                 <FormField
                                     control={control}
-                                    name='name'
+                                    name="name"
                                     render={({field}) => (
                                         <FormItem>
-                                            <FormLabel>Name<span className="text-red-400">*</span></FormLabel>
+                                            <FormLabel>Name <span className="text-red-400">*</span></FormLabel>
                                             <FormControl>
                                                 <Input placeholder='John Doe' {...field}/>
                                             </FormControl>
@@ -92,13 +82,12 @@ const TeacherCreate = () => {
                                         </FormItem>
                                     )}
                                 />
-
-                                <FormField 
+                                <FormField
                                     control={control}
-                                    name='email'
+                                    name="email"
                                     render={({field}) => (
                                         <FormItem>
-                                            <FormLabel>Email<span className="text-red-400">*</span></FormLabel>
+                                            <FormLabel>Email <span className="text-red-400">*</span></FormLabel>
                                             <FormControl>
                                                 <Input placeholder='johndoe@email.com' {...field}/>
                                             </FormControl>
@@ -106,39 +95,35 @@ const TeacherCreate = () => {
                                         </FormItem>
                                     )}
                                 />
-                                
-                                <FormField 
+                                <FormField
                                     control={control}
-                                    name='password'
+                                    name="password"
                                     render={({field}) => (
                                         <FormItem>
-                                            <FormLabel>Temporary Password<span className="text-red-400">*</span></FormLabel>
+                                            <FormLabel>Temporary Password <span className="text-red-400">*</span></FormLabel>
                                             <FormControl>
-                                                <Input type="password"  {...field} />
+                                                <Input type='password' {...field}/>
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
                                     )}
                                 />
-
-                                <FormField 
+                                <FormField
                                     control={control}
-                                    name='confirmPassword'
+                                    name="confirmPassword"
                                     render={({field}) => (
                                         <FormItem>
-                                            <FormLabel>Re-enter Password<span className="text-red-400">*</span></FormLabel>
+                                            <FormLabel>Confirm Password <span className="text-red-400">*</span></FormLabel>
                                             <FormControl>
-                                                <Input type="password"  {...field} />
+                                                <Input type='password' {...field}/>
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
                                     )}
                                 />
-
-                                <Button type='submit' size="lg" variant="default" className='w-full' disabled={isSubmitting}>
-                                    {isSubmitting ? "Creating teacher..." : "Create Teacher"}
+                                <Button type='submit' size="lg" className='w-full' disabled={isSubmitting}>
+                                    {isSubmitting ? "Creating parent..." : "Create Parent"}
                                 </Button>
-                                
                             </form>
                         </Form>
                     </CardContent>
@@ -148,4 +133,4 @@ const TeacherCreate = () => {
     )
 }
 
-export default TeacherCreate
+export default ParentCreate
