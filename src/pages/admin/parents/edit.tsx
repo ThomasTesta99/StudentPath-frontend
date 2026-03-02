@@ -34,18 +34,18 @@ const EditTeacher = () => {
         refineCore: {onFinish, query},
         control, 
         handleSubmit, 
-        formState: {isSubmitting, dirtyFields},
+        formState: {isSubmitting, dirtyFields, isDirty},
         reset, 
     } = form;
 
     useEffect(() => {
         const parent = query?.data?.data
-        if(!parent) return;
+        if(!parent || isDirty) return;
         reset({
             name: parent.user.name ?? "", 
             email: parent.user.email ?? "",
         })
-    }, [query?.data?.data, reset]);
+    }, [query?.data?.data, reset, isDirty]);
 
     const onSubmit = async (values: z.infer<typeof editParentSchema>) => {
         const changedValues: Partial<z.infer<typeof editParentSchema>> = {};

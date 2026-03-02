@@ -41,18 +41,18 @@ const EditDepartments = () => {
   const {
     refineCore: {onFinish, query}, 
     handleSubmit, 
-    formState: {isSubmitting, dirtyFields}, 
+    formState: {isSubmitting, dirtyFields, isDirty}, 
     control, 
     reset
   } = form;
 
   useEffect(() => {
     const department = query?.data?.data;
-    if(!department) return;
+    if(!department || isDirty) return;
     reset({
       name: department.name ?? "", 
     })
-  }, [query?.data?.data, reset]);
+  }, [query?.data?.data, reset, isDirty]);
 
   const onSubmit = async (values: z.infer<typeof departmentSchema>) => {
     const changedValues: Partial<z.infer<typeof departmentSchema>> = {};

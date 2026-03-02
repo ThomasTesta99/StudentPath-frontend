@@ -30,14 +30,14 @@ const EditStudent = () => {
   const {
     refineCore: {onFinish, query},
     control, 
-    formState: {isSubmitting, dirtyFields}, 
+    formState: {isSubmitting, dirtyFields, isDirty}, 
     handleSubmit, 
     reset
   } = form;
 
   useEffect(() => {
     const student = query?.data?.data;
-    if(!student) return;
+    if(!student || isDirty) return;
     reset({
       name: student.user.name ?? "",
       email: student.user.email ?? "", 
@@ -45,7 +45,7 @@ const EditStudent = () => {
       osis: student.osis ?? "", 
       gradeLevel: student.gradeLevel ?? ""
     })
-  }, [query?.data?.data, reset]);
+  }, [query?.data?.data, reset, isDirty]);
 
   const onSubmit = async (values: z.infer<typeof editStudentSchema>) => {
     const changedValues: Partial<z.infer<typeof editStudentSchema>> = {};
