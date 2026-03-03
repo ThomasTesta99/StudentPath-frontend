@@ -61,6 +61,7 @@ export type TermDetails = {
 export type Department = {
     id: string;
     name: string;
+    code: string;
     createdAt: Date;
     updatedAt: Date;
     schoolId: string;

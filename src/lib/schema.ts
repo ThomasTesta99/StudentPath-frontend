@@ -26,7 +26,20 @@ export const editTermSchema = z.object({
   );
 
 export const departmentSchema = z.object({
-  name: z.string().min(2, "Department name must be at least 2 characters").optional(), 
+  name: z.string().min(2, "Department name must be at least 2 characters"),
+  code: z.string().trim()
+    .toUpperCase()
+    .length(3, "Department code must be exactly 3 characters")
+    .regex(/^[A-Z]{3}$/, "Department code must contain only 3 letters")
+});
+
+export const editDepartmentSchema = z.object({
+  name: z.string().min(2, "Department name must be at least 2 characters").optional(),
+  code: z.string().trim()
+    .toUpperCase()
+    .length(3, "Department code must be exactly 3 characters")
+    .regex(/^[A-Z]{3}$/, "Department code must contain only 3 letters")
+    .optional(),
 });
 
 export const teacherSchema = z.object({
