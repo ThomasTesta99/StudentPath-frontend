@@ -1,0 +1,107 @@
+import { CreateButton } from '@/components/refine-ui/buttons/create';
+import { ShowButton } from '@/components/refine-ui/buttons/show';
+import { DataTable } from '@/components/refine-ui/data-table/data-table';
+import { ListView } from '@/components/refine-ui/views/list-view';
+import { Badge } from '@/components/ui/badge';
+import { Breadcrumb } from '@/components/ui/breadcrumb';
+import { Input } from '@/components/ui/input';
+import { Course } from '@/types';
+import { useTable } from '@refinedev/react-table';
+import { ColumnDef } from '@tanstack/react-table';
+import { Search } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react'
+
+const CoursesList = () => {
+    const [searchQuery, setSearchQuery] = useState('');
+    const [debouncedQuery, setDebouncedQuery] = useState("");
+
+    useEffect(() => {
+    const timer = setTimeout(() => setDebouncedQuery(searchQuery), 300);
+    return () => clearTimeout(timer);
+    }, [searchQuery]);
+
+    const searchFilters = debouncedQuery ? [
+        {field: 'search', operator: "contains" as const, value: debouncedQuery}
+    ] : [];
+
+    const coursesList = useTable({
+        columns: useMemo<ColumnDef<Course>[]>(() => [
+            {
+                id: "code", 
+                accessorKey: "code", 
+                size: 80, 
+                header: () => <p className='column-title'>Course Code</p>,
+                cell: ({getValue}) => <Badge>{getValue<string>()}</Badge>
+            },
+            {
+                id: "courseName", 
+                accessorKey: "name",
+                size: 100, 
+                header: () => <p className='column-title'>Course Name</p>,
+                cell: ({getValue}) => <span>{getValue<string>()}</span>
+            },
+            {
+                id: "instructor", 
+                accessorFn: (row) => row.teacher?.name ?? "-", 
+                size: 120, 
+                header: () => <p className='column-title'>Course Instructor</p>,
+                cell: ({row}) => (
+                    <span>{row.original.teacher?.name ?? "-"}</span>
+            )
+            }, 
+            {
+                id: "term",
+                accessorFn: (row) => row.term?.termName ?? "-", 
+                size: 120, 
+                header: () => <p className='column-title'>Term</p>,
+                cell: ({row}) => (
+                    <span>{row.original.term?.termName ?? "-"}</span>
+            )
+            }, 
+            {
+                id: "details", 
+                size: 100,
+                header: () => <p className="column-title">Details</p>,
+                cell: ({ row }) => <ShowButton resource="courses" recordItemId={row.original.id} variant="outline" size="sm">View</ShowButton>
+            }
+        ], []),
+        refineCoreProps: {
+            resource: "courses", 
+            pagination: {
+                pageSize: 10, 
+                mode: "server", 
+            }, 
+            filters: {
+                permanent: [...searchFilters]
+            }
+        }
+    });
+
+    return (
+        <ListView>
+            <Breadcrumb/>
+            <h1 className="page-title">Courses</h1>
+            <div className="intro-row">
+                <p>Manage courses in your school.</p>
+                <div className="actions-row">
+                    <div className="search-field">
+                        <Search className='search-icon'/>
+                        <Input 
+                            type='text'
+                            placeholder='Search courses'
+                            className='pl-10 w-full'
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                    </div>
+                    <div className="flex gap-2 w-full sm:w-auto">
+                        <CreateButton />
+                    </div>
+                </div>
+            </div>
+            <DataTable table={coursesList} />
+        </ListView>
+     )
+}
+
+export default CoursesList
