@@ -49,7 +49,8 @@ const EditDepartments = () => {
     const department = query?.data?.data;
     if(!department || isDirty) return;
     reset({
-      name: department.name ?? "", 
+      name: department.name ?? "",
+      code: department.code ?? "",
     })
   }, [query?.data?.data, reset, isDirty]);
 

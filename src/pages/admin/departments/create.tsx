@@ -101,6 +101,7 @@ const DepartmentsCreate = () => {
                       <FormControl>
                         <Input placeholder='MTH' {...field} />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
