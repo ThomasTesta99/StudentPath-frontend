@@ -28,7 +28,6 @@ const options: CreateDataProviderOptions = {
       const pageSize = pagination?.pageSize ?? 10;
 
       const params: Record<string, string | number> = {page, limit: pageSize};
-      console.log("Building params")
       filters?.forEach((filter) => {
         const field = 'field' in filter ? filter.field : '';
         const value = String(filter.value);
@@ -45,9 +44,6 @@ const options: CreateDataProviderOptions = {
           if(field === "search") params.search = value;
           if(field === "studentId") params.studentId = value;
         }
-        // if(resource === "students/parents"){
-        //   if(field === "studentId") params.studentId = value;
-        // }
         if(resource === "parents"){
           if(field === "search") params.search = value;
           if(field === "parentId") params.parentId = value;

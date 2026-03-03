@@ -116,11 +116,11 @@ const CoursesList = () => {
                     </div>
                     <div className="flex gap-2 w-full sm:w-auto">
                         <Select value={selectedDepartmentId} onValueChange={setSelectedDepartmentId} disabled={departmentsQuery.isLoading || departmentsQuery.isError}>
-                            <SelectTrigger>
+                            <SelectTrigger className='cursor-pointer'>
                                 <SelectValue placeholder="Filter by department" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value='all'>All Departments</SelectItem>
+                                <SelectItem value='all' className='cursor-pointer'>All Departments</SelectItem>
                                 {departmentsQuery.isLoading && (
                                     <SelectItem value="loading" disabled>
                                         Loading departments...
@@ -136,7 +136,7 @@ const CoursesList = () => {
                                 {!departmentsQuery.isLoading &&
                                     !departmentsQuery.isError &&
                                     departmentsQuery.data?.data?.map((department) => (
-                                        <SelectItem key={department.id} value={department.id}>
+                                        <SelectItem key={department.id} value={department.id} className='cursor-pointer'>
                                             {department.name}
                                         </SelectItem>
                                     ))}
