@@ -5,7 +5,9 @@ import { ListView } from '@/components/refine-ui/views/list-view';
 import { Badge } from '@/components/ui/badge';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { Input } from '@/components/ui/input';
-import { Course } from '@/types';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Course, Department } from '@/types';
+import { useList } from '@refinedev/core';
 import { useTable } from '@refinedev/react-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { Search } from 'lucide-react';
@@ -14,6 +16,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 const CoursesList = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [debouncedQuery, setDebouncedQuery] = useState("");
+    const [selectedDepartmentId, setSelectedDepartmentId] = useState<string>("all");
 
     useEffect(() => {
     const timer = setTimeout(() => setDebouncedQuery(searchQuery), 300);
@@ -23,6 +26,16 @@ const CoursesList = () => {
     const searchFilters = debouncedQuery ? [
         {field: 'search', operator: "contains" as const, value: debouncedQuery}
     ] : [];
+
+    const departmentFilters = selectedDepartmentId === "all"
+        ? [] 
+        : [
+            {
+                field: "departmentId", 
+                operator: "eq" as const, 
+                value: selectedDepartmentId
+            }
+        ]
 
     const coursesList = useTable({
         columns: useMemo<ColumnDef<Course>[]>(() => [
@@ -72,8 +85,15 @@ const CoursesList = () => {
                 mode: "server", 
             }, 
             filters: {
-                permanent: [...searchFilters]
+                permanent: [...searchFilters, ...departmentFilters]
             }
+        }
+    });
+
+    const {query: departmentsQuery} = useList<Department>({
+        resource: "departments",
+        pagination: {
+            pageSize: 100,
         }
     });
 
@@ -95,6 +115,33 @@ const CoursesList = () => {
                         />
                     </div>
                     <div className="flex gap-2 w-full sm:w-auto">
+                        <Select value={selectedDepartmentId} onValueChange={setSelectedDepartmentId} disabled={departmentsQuery.isLoading || departmentsQuery.isError}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Filter by department" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value='all'>All Departments</SelectItem>
+                                {departmentsQuery.isLoading && (
+                                    <SelectItem value="loading" disabled>
+                                        Loading departments...
+                                    </SelectItem>
+                                )}
+
+                                {departmentsQuery.isError && (
+                                    <SelectItem value="error" disabled>
+                                        Failed to load departments
+                                    </SelectItem>
+                                )}
+
+                                {!departmentsQuery.isLoading &&
+                                    !departmentsQuery.isError &&
+                                    departmentsQuery.data?.data?.map((department) => (
+                                        <SelectItem key={department.id} value={department.id}>
+                                            {department.name}
+                                        </SelectItem>
+                                    ))}
+                            </SelectContent>
+                        </Select>
                         <CreateButton />
                     </div>
                 </div>

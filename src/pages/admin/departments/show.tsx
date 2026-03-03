@@ -111,7 +111,14 @@ const DepartmentsShow = () => {
               <Field label='School Name' value = {department.school?.schoolName ?? "-"} />
               <Field label='School ID' value = {department.schoolId} />
             </div>
-            <Field label='Department ID' value={department.id}/>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <Field label='Department ID' value={department.id}/>
+              <div className="flex flex-col gap-1">
+                <div className="text-sm text-muted-foreground">Department Code</div>
+                <Badge variant="secondary">{department.code}</Badge>
+              </div>
+
+            </div>
           </CardContent>
         </Card>
 
