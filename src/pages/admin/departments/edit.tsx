@@ -1,7 +1,7 @@
 import { EditView, EditViewHeader } from '@/components/refine-ui/views/edit-view';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { departmentSchema } from '@/lib/schema';
+import { editDepartmentSchema } from '@/lib/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from '@refinedev/react-hook-form';
 import React, { useEffect } from 'react'
@@ -24,9 +24,8 @@ const EditDepartments = () => {
   const {id} = useParams();
   const {open} = useNotification();
 
-  // When more fields are added to department, this will need an edit department schema
   const form = useForm({
-    resolver: zodResolver(departmentSchema),
+    resolver: zodResolver(editDepartmentSchema),
     refineCoreProps: {
       resource: "departments", 
       action: "edit", 
@@ -54,11 +53,14 @@ const EditDepartments = () => {
     })
   }, [query?.data?.data, reset, isDirty]);
 
-  const onSubmit = async (values: z.infer<typeof departmentSchema>) => {
-    const changedValues: Partial<z.infer<typeof departmentSchema>> = {};
+  const onSubmit = async (values: z.infer<typeof editDepartmentSchema>) => {
+    const changedValues: Partial<z.infer<typeof editDepartmentSchema>> = {};
 
     if(dirtyFields.name){
       changedValues.name = values.name;
+    }
+    if(dirtyFields.code){
+      changedValues.code = values.code;
     }
 
     if (Object.keys(changedValues).length === 0) {
@@ -106,6 +108,19 @@ const EditDepartments = () => {
                   render = {({field}) => (
                     <FormItem>
                       <FormLabel>Department Name</FormLabel>
+                      <FormControl>
+                        <Input {...field}/>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField 
+                  control={control}
+                  name = "code"
+                  render = {({field}) => (
+                    <FormItem>
+                      <FormLabel>Department Code</FormLabel>
                       <FormControl>
                         <Input {...field}/>
                       </FormControl>
