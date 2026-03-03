@@ -3,6 +3,7 @@ import { ShowButton } from '@/components/refine-ui/buttons/show'
 import { DataTable } from '@/components/refine-ui/data-table/data-table'
 import { Breadcrumb } from '@/components/refine-ui/layout/breadcrumb'
 import { ListView } from '@/components/refine-ui/views/list-view'
+import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { formatDate } from '@/lib/utils'
 import { Department } from '@/types'
@@ -30,20 +31,27 @@ const DepartmentsList = () => {
             {
                 id: "name", 
                 accessorKey: "name", 
-                size: 200, 
+                size: 150, 
                 header: () => <p className='column-title'>Department Name</p>,
                 cell: ({getValue}) => <span className='font-semibold text-center'>{getValue<string>().toUpperCase()}</span>
             },
             {
+                id: "code",
+                accessorKey: "code", 
+                size: 100, 
+                header: () => <p className="column-title">Department Code</p>,
+                cell: ({getValue}) => <Badge variant="secondary">{getValue<string>()}</Badge>
+            },
+            {
                 id: "createdAt", 
                 accessorKey: "createdAt", 
-                size: 150, 
+                size: 100, 
                 header: () => <p className='column-title'>Created At</p>,
                 cell: ({getValue}) => <span className="text-muted-foreground">{formatDate(getValue<string>())}</span>
             },
             {
                 id: "details", 
-                size: 140,
+                size: 100,
                 header: () => <p className="column-title">Details</p>,
                 cell: ({ row }) => <ShowButton resource="departments" recordItemId={row.original.id} variant="outline" size="sm">View</ShowButton>
             }
@@ -76,7 +84,7 @@ const DepartmentsList = () => {
 
                         <Input 
                             type='text'
-                            placeholder='Enter department name...'
+                            placeholder='Search department...'
                             className='pl-10 w-full'
                             value = {searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
