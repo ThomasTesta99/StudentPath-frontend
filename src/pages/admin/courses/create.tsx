@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { courseSchema } from '@/lib/schema';
+import { useDebouncedValue } from '@/lib/utilsTsx';
 import { Department, TeacherProfile, TermDetails } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { HttpError, useBack, useList, useNotification } from '@refinedev/core'
@@ -61,19 +62,23 @@ const CourseCreate = () => {
             mode: "off"
         }
     });
-    
+    const debouncedTeacherSearch = useDebouncedValue(teacherSearch, 300);
+    const shouldFetchTeachers = isTeacherDropdownOpen && debouncedTeacherSearch.trim().length >= 2;
     const {query: teachersQuery} = useList<TeacherProfile>({
         resource: "teachers", 
         pagination: {
-            mode: "off", 
+            currentPage: 1, 
+            pageSize: 10, 
+        },
+        filters: [
+            {field: "search", operator: "contains", value: debouncedTeacherSearch.trim()}
+        ],
+        queryOptions: {
+            enabled: shouldFetchTeachers,
         }
     });
 
     const teachers = teachersQuery.data?.data ?? [];
-    const filteredTeachers = teachers.filter((teacher) => 
-        teacher.user.name.toLowerCase().includes(teacherSearch.toLowerCase()),
-    );
-    
     
     const selectedDepartmentId = watch("departmentId");
     const selectedDepartment = departmentsQuery.data?.data.find(
@@ -253,62 +258,81 @@ const CourseCreate = () => {
                                 <FormField
                                     control={control}
                                     name="teacherId"
-                                    render={({field}) => {
-                                        const selectedTeacher = teachers.find((teacher) => teacher.userId === field.value);
+                                    render={({ field }) => {
+                                        const selectedTeacher = teachers.find((t) => t.userId === field.value);
 
                                         return (
-                                            <FormItem className='relative'>
-                                                <FormLabel>Instructor <span className="text-red-400">*</span></FormLabel>
+                                            <FormItem className="relative">
+                                                <FormLabel>
+                                                    Instructor <span className="text-red-400">*</span>
+                                                </FormLabel>
+
                                                 <FormControl>
                                                     <div className="relative">
                                                         <Input
-                                                            placeholder={teachersQuery.isLoading
-                                                                ? "Loading instructors..."
+                                                            placeholder={
+                                                                selectedTeacher
+                                                                ? `Selected: ${selectedTeacher.user.name}`
+                                                                : teachersQuery.isLoading
+                                                                ? "Searching instructors..."
                                                                 : "Search instructor by name"
                                                             }
-                                                            value={selectedTeacher ? selectedTeacher.user.name : teacherSearch}
+                                                            value={teacherSearch}
                                                             onChange={(e) => {
-                                                                field.onChange("");
                                                                 setTeacherSearch(e.target.value);
                                                                 setisTeacherDropdownOpen(true);
+                                                                if (field.value) field.onChange("");
                                                             }}
                                                             onFocus={() => setisTeacherDropdownOpen(true)}
-                                                            disabled={teachersQuery.isLoading || teachersQuery.isError}
+                                                            disabled={teachersQuery.isError}
                                                         />
-                                                        {isTeacherDropdownOpen && 
-                                                            !selectedTeacher && 
-                                                            teacherSearch.trim() !== "" && 
-                                                            !teachersQuery.isLoading &&
-                                                            !teachersQuery.isError && (
-                                                                <div className="absolute z-50 mt-1 w-full overflow-y-auto rounded-md border bg-popover shadow-md">
-                                                                    {filteredTeachers.length > 0 ? (
-                                                                        filteredTeachers.map((teacher) => (
-                                                                            <button 
-                                                                                type='button'
-                                                                                key={teacher.userId}
-                                                                                className='flex w-full items-center justify-between px-3 py-2 text-left text-sm hover:bg-accent hover:text-accent-foreground cursor-pointer'
-                                                                                onClick={() => {
-                                                                                    field.onChange(teacher.userId)
-                                                                                    setTeacherSearch("")
-                                                                                    setisTeacherDropdownOpen(false);
-                                                                                }}
-                                                                            >
-                                                                                <span>{teacher.user.name}</span>
-                                                                                {field.value === teacher.userId && <Check className='h-4 w-4'/>}
-                                                                            </button>
-                                                                        ))) : (
-                                                                            <div className="px-3 py-2 text-sm text-muted-foreground">
-                                                                                No Teachers found
-                                                                            </div>
-                                                                        )
-                                                                    }
-                                                                </div>
+
+                                                        {isTeacherDropdownOpen && teacherSearch.trim().length < 2 && (
+                                                            <div className="absolute z-50 mt-1 w-full rounded-md border bg-popover shadow-md px-3 py-2 text-sm text-muted-foreground">
+                                                                Type 2+ characters to search
+                                                            </div>
+                                                        )}
+
+                                                        {isTeacherDropdownOpen &&
+                                                        teacherSearch.trim().length >= 2 &&
+                                                        !teachersQuery.isError && (
+                                                            <div className="absolute z-50 mt-1 w-full max-h-64 overflow-y-auto rounded-md border bg-popover shadow-md">
+                                                                {teachersQuery.isLoading ? (
+                                                                    <div className="px-3 py-2 text-sm text-muted-foreground">
+                                                                        Searching...
+                                                                    </div>
+                                                                ) : teachers.length > 0 ? (
+                                                                    teachers.map((teacher) => (
+                                                                        <button
+                                                                            type="button"
+                                                                            key={teacher.userId}
+                                                                            className="flex w-full items-center justify-between px-3 py-2 text-left text-sm hover:bg-accent hover:text-accent-foreground cursor-pointer"
+                                                                            onMouseDown={(e) => e.preventDefault()}
+                                                                            onClick={() => {
+                                                                                field.onChange(teacher.userId);
+                                                                                setTeacherSearch(teacher.user.name);
+                                                                                setisTeacherDropdownOpen(false);
+                                                                            }}
+                                                                        >
+                                                                            <span>{teacher.user.name}</span>
+                                                                            {field.value === teacher.userId && (
+                                                                                <Check className="h-4 w-4" />
+                                                                            )}
+                                                                    </button>
+                                                                    ))
+                                                                ) : (
+                                                                    <div className="px-3 py-2 text-sm text-muted-foreground">
+                                                                    No teachers found
+                                                                    </div>
+                                                                )}
+                                                            </div>
                                                         )}
                                                     </div>
                                                 </FormControl>
-                                                <FormMessage/>
+
+                                                <FormMessage />
                                             </FormItem>
-                                        )
+                                        );
                                     }}
                                 />
 

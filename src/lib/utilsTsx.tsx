@@ -1,4 +1,4 @@
-import type {ReactNode} from "react"
+import {useEffect, useState, type ReactNode} from "react"
 export function Field({ label, value }: { label: string; value: ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
@@ -6,4 +6,13 @@ export function Field({ label, value }: { label: string; value: ReactNode }) {
       <div className="text-base font-medium">{value}</div>
     </div>
   );
+}
+
+export function useDebouncedValue<T>(value: T, delay = 300){
+    const [debounced, setDebounced] = useState(value);
+    useEffect(() => {
+        const timer = setTimeout(() => setDebounced(value), delay);
+        return () => clearTimeout(timer);
+    }, [value, delay]);
+    return debounced;
 }

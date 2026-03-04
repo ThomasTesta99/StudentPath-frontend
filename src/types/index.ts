@@ -158,3 +158,30 @@ export type ParentInviteResult = {
 }
 
 export type StudentSearchResult = StudentProfile;
+
+export type CourseEnrollment = {
+    student: {
+        userId: string;
+        name: string;
+        email: string;
+        osis: string;
+    };
+    createdAt: Date;
+    updatedAt: Date;
+    courseId: string;
+    studentId: string;
+}
+
+export type CreateEnrollment = {
+    createdAt: Date;
+    updatedAt: Date;
+    courseId: string;
+    studentId: string;
+}
+
+export type StudentEnrollmentResult = {
+    courseId: string;
+    createdAt: Date;
+    updatedAt: Date;
+    studentId: string;
+}

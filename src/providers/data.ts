@@ -54,9 +54,8 @@ const options: CreateDataProviderOptions = {
         }
         if(resource === "enrollments"){
           if(field === "studentId") params.studentId = value;
+          if(field === "courseId") params.courseId = value;
         }
-
-        console.log("caught nowhere: ", resource)
       })
 
       return params;
