@@ -32,7 +32,8 @@ const DepartmentsCreate = () => {
       action: "create", 
     }, 
     defaultValues: {
-      name: "", 
+      name: "",
+      code: "",  
     }
   });
 
@@ -89,7 +90,20 @@ const DepartmentsCreate = () => {
                       <FormMessage />
                     </FormItem>
                   )}
-                
+                />
+
+                <FormField
+                  control={control}
+                  name="code"
+                  render={({field}) => (
+                    <FormItem>
+                      <FormLabel>Department Code <span className='text-red-400'>*</span></FormLabel>
+                      <FormControl>
+                        <Input placeholder='MTH' {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
                 <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
                     {isSubmitting ? (

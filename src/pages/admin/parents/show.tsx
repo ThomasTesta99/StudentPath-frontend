@@ -19,7 +19,6 @@ import { useParams } from 'react-router';
 const ShowParent = () => {
   const go = useGo();
   const {id} = useParams();
-  console.log(id)
   const {query} = useShow<ParentProfile>({
     resource: "parents", 
     id: id, 

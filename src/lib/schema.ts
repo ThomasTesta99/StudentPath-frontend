@@ -26,7 +26,20 @@ export const editTermSchema = z.object({
   );
 
 export const departmentSchema = z.object({
-  name: z.string().min(2, "Department name must be at least 2 characters").optional(), 
+  name: z.string().min(2, "Department name must be at least 2 characters"),
+  code: z.string().trim()
+    .toUpperCase()
+    .length(3, "Department code must be exactly 3 characters")
+    .regex(/^[A-Z]{3}$/, "Department code must contain only 3 letters")
+});
+
+export const editDepartmentSchema = z.object({
+  name: z.string().min(2, "Department name must be at least 2 characters").optional(),
+  code: z.string().trim()
+    .toUpperCase()
+    .length(3, "Department code must be exactly 3 characters")
+    .regex(/^[A-Z]{3}$/, "Department code must contain only 3 letters")
+    .optional(),
 });
 
 export const teacherSchema = z.object({
@@ -97,3 +110,25 @@ export const editParentSchema = z.object({
   name: z.string().optional(), 
   email: z.string().email().optional(), 
 });
+
+export const courseSchema = z.object({
+  termId: z.string().min(1, "Term is required"), 
+  teacherId: z.string().min(1, "Instructor is required"),
+  name: z.string().min(2, "Course name must be at least 2 characters"),
+  gradeLevel: z.string().min(1, "Grade level is required"), 
+  departmentId: z.string().min(1, "Department is required"), 
+  courseNumber: z.string().trim().min(1, "Course number is required"),
+  code: z.string().optional(),
+  description: z.string().trim().min(1, "Description is required"), 
+})
+
+export const editCourseSchema = z.object({
+  termId: z.string().min(1, "Term is required").optional(), 
+  teacherId: z.string().min(1, "Instructor is required").optional(),
+  name: z.string().min(2, "Course name must be at least 2 characters").optional(),
+  gradeLevel: z.string().min(1, "Grade level is required").optional(), 
+  departmentId: z.string().min(1, "Department is required").optional(), 
+  courseNumber: z.string().trim().min(1, "Course number is required").optional(),
+  code: z.string().optional(),
+  description: z.string().trim().min(1, "Description is required").optional(), 
+})
