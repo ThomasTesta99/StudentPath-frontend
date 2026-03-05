@@ -231,7 +231,7 @@ const CourseCreate = () => {
 
                                                             {departmentsQuery.isError && (
                                                                 <SelectItem value='error' disabled>
-                                                                    Failed to load terms
+                                                                    Failed to load departments
                                                                 </SelectItem>
                                                             )}
 
@@ -363,6 +363,7 @@ const CourseCreate = () => {
                                             <FormControl>
                                                 <Textarea placeholder='Type your description here...' {...field} />
                                             </FormControl>
+                                            <FormMessage />
                                         </FormItem>
                                     )}
                                 />

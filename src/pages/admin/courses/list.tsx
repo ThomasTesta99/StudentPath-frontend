@@ -93,7 +93,7 @@ const CoursesList = () => {
             resource: "courses", 
             pagination: {
                 pageSize: 10, 
-                mode: "server", 
+                mode: "off", 
             }, 
             filters: {
                 permanent: [...searchFilters, ...departmentFilters, ...termFilters]
@@ -104,14 +104,14 @@ const CoursesList = () => {
     const {query: departmentsQuery} = useList<Department>({
         resource: "departments",
         pagination: {
-            pageSize: 100,
+            mode: "off",
         }
     });
 
     const {query: termsQuery} = useList<TermDetails>({
         resource: "terms", 
         pagination: {
-            pageSize: 100, 
+            mode: "off", 
         }
     })
 

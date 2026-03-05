@@ -40,6 +40,7 @@ const EditCourse = () => {
             gradeLevel: '',
             departmentId: '',
             description: '',
+            code: "", 
         },
     });
 
@@ -132,14 +133,19 @@ const EditCourse = () => {
         if (dirtyFields.termId) changedValues.termId = values.termId;
         if (dirtyFields.gradeLevel) changedValues.gradeLevel = values.gradeLevel;
         if (dirtyFields.departmentId) changedValues.departmentId = values.departmentId;
-        if (dirtyFields.courseNumber) changedValues.courseNumber = values.courseNumber;
         if (dirtyFields.teacherId) changedValues.teacherId = values.teacherId;
         if (dirtyFields.description) changedValues.description = values.description;
 
         if (dirtyFields.departmentId || dirtyFields.courseNumber) {
             const deptCode =
-                departmentsQuery.data?.data?.find((d) => d.id === values.departmentId)?.code ?? '';
-            changedValues.code = `${deptCode} ${values.courseNumber}`.trim();
+                departmentsQuery.data?.data?.find((d) => d.id === values.departmentId)?.code?.trim();
+            if (!deptCode) {
+                open?.({
+                    type: "error",
+                    message: "Selected department is missing a valid code.",
+                });
+                return;
+            }
         }
 
         if (Object.keys(changedValues).length === 0) {

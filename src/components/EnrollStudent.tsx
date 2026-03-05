@@ -19,6 +19,9 @@ const EnrollStudent = ({ courseId }: { courseId: string }) => {
             try {
                 const response = await enrollStudent({
                     resource: "enrollments",
+                    meta: {
+                        path: "admin/enrollments", 
+                    }, 
                     values: {
                         courseId,
                         studentId,
