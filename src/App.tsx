@@ -46,6 +46,7 @@ import EditParent from "./pages/admin/parents/edit";
 import CoursesList from "./pages/admin/courses/list";
 import CourseCreate from "./pages/admin/courses/create";
 import ShowCourse from "./pages/admin/courses/show";
+import EditCourse from "./pages/admin/courses/edit";
 
 function App() {
   return (
@@ -117,7 +118,7 @@ function App() {
                             <Route index element={<CoursesList />} />
                             <Route path="create" element={<CourseCreate />}/>
                             <Route path="show/:id" element={<ShowCourse />} />
-
+                            <Route path="edit/:id" element={<EditCourse />} />
                           </Route>
                         
                         </Route>

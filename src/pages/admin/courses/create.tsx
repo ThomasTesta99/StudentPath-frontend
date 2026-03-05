@@ -14,7 +14,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { HttpError, useBack, useList, useNotification } from '@refinedev/core'
 import { useForm } from '@refinedev/react-hook-form';
 import { Check } from 'lucide-react';
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import z from 'zod';
 
 const CourseCreate = () => {
@@ -85,6 +85,24 @@ const CourseCreate = () => {
         (department) => department.id === selectedDepartmentId
     );
     const selectedDepartmentCode = selectedDepartment?.code ?? "";
+
+    const teacherDropdownRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        const handlePointerDown = (e: PointerEvent) => {
+            const el = teacherDropdownRef.current;
+            if (!el) return;
+            if (!el.contains(e.target as Node)) {
+            setisTeacherDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener("pointerdown", handlePointerDown);
+
+        return () => {
+            document.removeEventListener("pointerdown", handlePointerDown);
+        };
+    }, []);
 
     const onSubmit = async (values: z.infer<typeof courseSchema>) => {
         try {
@@ -268,7 +286,7 @@ const CourseCreate = () => {
                                                 </FormLabel>
 
                                                 <FormControl>
-                                                    <div className="relative">
+                                                    <div className="relative" ref={teacherDropdownRef}>
                                                         <Input
                                                             placeholder={
                                                                 selectedTeacher

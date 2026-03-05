@@ -88,7 +88,7 @@ const ShowCourse = () => {
                         </ShowButton>
                     ),
                 },
-            ], [] 
+            ], [id] 
         ),
         refineCoreProps: {
             resource: `admin/enrollments/${id}/roster`,

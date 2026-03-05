@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Course, Department } from '@/types';
+import { Course, Department, TermDetails } from '@/types';
 import { useList } from '@refinedev/core';
 import { useTable } from '@refinedev/react-table';
 import { ColumnDef } from '@tanstack/react-table';
@@ -17,10 +17,11 @@ const CoursesList = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [debouncedQuery, setDebouncedQuery] = useState("");
     const [selectedDepartmentId, setSelectedDepartmentId] = useState<string>("all");
+    const [selectedTermId, setSelectedTermId] = useState<string>("all");
 
     useEffect(() => {
-    const timer = setTimeout(() => setDebouncedQuery(searchQuery), 300);
-    return () => clearTimeout(timer);
+        const timer = setTimeout(() => setDebouncedQuery(searchQuery), 300);
+        return () => clearTimeout(timer);
     }, [searchQuery]);
 
     const searchFilters = debouncedQuery ? [
@@ -34,6 +35,16 @@ const CoursesList = () => {
                 field: "departmentId", 
                 operator: "eq" as const, 
                 value: selectedDepartmentId
+            }
+        ]
+
+    const termFilters = selectedTermId === "all"
+        ? [] 
+        : [
+            {
+                field: "termId", 
+                operator: "eq" as const, 
+                value: selectedTermId
             }
         ]
 
@@ -85,7 +96,7 @@ const CoursesList = () => {
                 mode: "server", 
             }, 
             filters: {
-                permanent: [...searchFilters, ...departmentFilters]
+                permanent: [...searchFilters, ...departmentFilters, ...termFilters]
             }
         }
     });
@@ -96,6 +107,13 @@ const CoursesList = () => {
             pageSize: 100,
         }
     });
+
+    const {query: termsQuery} = useList<TermDetails>({
+        resource: "terms", 
+        pagination: {
+            pageSize: 100, 
+        }
+    })
 
     return (
         <ListView>
@@ -138,6 +156,33 @@ const CoursesList = () => {
                                     departmentsQuery.data?.data?.map((department) => (
                                         <SelectItem key={department.id} value={department.id} className='cursor-pointer'>
                                             {department.name}
+                                        </SelectItem>
+                                    ))}
+                            </SelectContent>
+                        </Select>
+                        <Select value={selectedTermId} onValueChange={setSelectedTermId} disabled={termsQuery.isLoading || termsQuery.isError}>
+                            <SelectTrigger className='cursor-pointer'>
+                                <SelectValue placeholder="Filter by term" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value='all' className='cursor-pointer'>All Terms</SelectItem>
+                                {termsQuery.isLoading && (
+                                    <SelectItem value="loading" disabled>
+                                        Loading terms...
+                                    </SelectItem>
+                                )}
+
+                                {termsQuery.isError && (
+                                    <SelectItem value="error" disabled>
+                                        Failed to load terms
+                                    </SelectItem>
+                                )}
+
+                                {!termsQuery.isLoading &&
+                                    !termsQuery.isError &&
+                                    termsQuery.data?.data?.map((term) => (
+                                        <SelectItem key={term.id} value={term.id} className='cursor-pointer'>
+                                            {term.termName}
                                         </SelectItem>
                                     ))}
                             </SelectContent>
