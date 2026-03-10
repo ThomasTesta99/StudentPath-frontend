@@ -141,7 +141,7 @@ const BellScheduleDetails = () => {
                         </div>
                     </div>
                 )}
-                {!hasSchedule && (
+                {!isLoading && !isError && !hasSchedule && (
                     <Dialog open={createScheduleOpen} onOpenChange={setCreateScheduleOpen}>
                         <DialogTrigger asChild>
                             <Button className="w-full">
