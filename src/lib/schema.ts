@@ -135,7 +135,7 @@ export const editCourseSchema = z.object({
 
 export const bellScheduleSchema = z.object({
   name: z.string().trim().min(1, "Schedule name is required").max(100, "Schedule name must be 100 characters or less"),
-  type: z.string().trim().min(1, "Schedule type is required").max(50, "Schedule type must be 50 characters or less").optional(),
+  type: z.string().trim().optional(),
   dayStartTime: z.string().trim().min(1, "Day start time is required"),
   dayEndTime: z.string().trim().min(1, "Day end time is required"),
 })

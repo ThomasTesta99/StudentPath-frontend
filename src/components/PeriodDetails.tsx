@@ -74,7 +74,9 @@ const PeriodDetails = () => {
             <CardContent className="space-y-4">
                 {periodsQuery.isLoading ? (
                     <p className="text-sm text-muted-foreground">Loading periods...</p>
-                ) : periods?.length === 0 ? (
+                ) : periodsQuery.isError ? (
+                    <p className="text-sm text-muted-foreground">Failed to load periods.</p>
+                ) : !periods || periods.length === 0 ? (
                     <p className="text-sm text-muted-foreground">
                         No periods have been added yet.
                     </p>
@@ -92,7 +94,7 @@ const PeriodDetails = () => {
                         {periods?.map((period) => (
                             <div
                                 key={period.id}
-                                className="flex items-center justify-between rounded-xl border bg-card px-4 py-3 shadow-sm transition-colors hover:bg-muted/40 overflow-y-auto"
+                                className="flex items-center justify-between rounded-xl border bg-card px-4 py-3 shadow-sm transition-colors hover:bg-muted/40"
                             >
                             <div className="flex items-center gap-4">
                                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">

@@ -58,10 +58,8 @@ const SchoolInformation = () => {
     };
 
     useEffect(() => {
-        if (school?.gradeLevels) {
-            setSelectedGradeLevels(school.gradeLevels);
-        }
-    }, [school]);
+        setSelectedGradeLevels(school?.gradeLevels ?? []);
+    }, [school?.gradeLevels]);
 
     if(schoolQuery.isLoading || schoolQuery.isError || !school){
         return (

@@ -221,6 +221,7 @@ const BellScheduleDetails = () => {
                                             <FormControl>
                                                 <Input type="time" {...field}/>
                                             </FormControl>
+                                            <FormMessage />
                                         </FormItem>
                                     )}
                                 />
