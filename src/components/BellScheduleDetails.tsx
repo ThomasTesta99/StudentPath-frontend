@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
 import { CalendarDays, Plus } from 'lucide-react'
-import { GetOneResponse, useCustom, useNotification } from '@refinedev/core'
+import { useCustom, useNotification } from '@refinedev/core'
 import { BELL_SCHEDULE_TYPE_OPTIONS, BellSchedule } from '@/types'
 import { BACKEND_BASE_URL } from '@/constants'
 import {
@@ -32,7 +32,7 @@ const BellScheduleDetails = () => {
     const [createScheduleOpen, setCreateScheduleOpen] = useState(false);
     const {open} = useNotification();
 
-    const { query: bellScheduleQuery } = useCustom<GetOneResponse<BellSchedule>>({
+    const { query: bellScheduleQuery } = useCustom<{ data: BellSchedule }>({
         url: `${BACKEND_BASE_URL}/admin/bell-schedule`,
         method: 'get',
     })

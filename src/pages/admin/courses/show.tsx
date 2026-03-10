@@ -1,16 +1,18 @@
+import { ShowButton } from '@/components/refine-ui/buttons/show';
+import { DataTable } from '@/components/refine-ui/data-table/data-table';
 import { ShowView, ShowViewHeader } from '@/components/refine-ui/views/show-view';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Course, Section } from '@/types';
+import { Course, CourseEnrollment } from '@/types';
 import { useShow } from '@refinedev/core';
-import React, { ReactNode, useMemo } from 'react';
-import { useParams } from 'react-router';
-import { BookOpen, Building2, School} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { DataTable } from '@/components/refine-ui/data-table/data-table';
 import { useTable } from '@refinedev/react-table';
 import { ColumnDef } from '@tanstack/react-table';
+import React, { ReactNode, useMemo } from 'react';
+import { useParams } from 'react-router';
+import { BookOpen, Building2, CalendarRange, GraduationCap, School, Users } from 'lucide-react';
+import EnrollStudent from '@/components/EnrollStudent';
+import UnenrollStudent from '@/components/UnenrollStudent';
 
 const DetailItem = ({
     label,
@@ -39,68 +41,71 @@ const ShowCourse = () => {
 
     const course = courseQuery.data?.data;
 
-    const sectionsTable = useTable<Section>({
-        columns: useMemo<ColumnDef<Section>[]>(() => [
-            {
-                id: "sectionLabel",
-                accessorFn: (row) => row.sectionLabel ?? "-",
-                size: 60,
-                header: () => <p className="column-title">Section</p>,
-                cell: ({ row }) => <span>{row.original.sectionLabel}</span>,
-            },
-            {
-                id: "teacher",
-                accessorFn: (row) => row.teacher.name ?? "-",
-                size: 80,
-                header: () => <p className="column-title">Teacher</p>,
-                cell: ({ row }) => <span>{row.original.teacher.name}</span>,
-            },
-            {
-                id: "term",
-                accessorFn: (row) => row.term.termName ?? "-",
-                size: 80,
-                header: () => <p className="column-title">Term</p>,
-                cell: ({ row }) => <span>{row.original.term.termName}</span>,
-            },
-            {
-                id: "period",
-                accessorFn: (row) => row.period.number ?? "-",
-                size: 50,
-                header: () => <p className="column-title">Period</p>,
-                cell: ({ row }) => <span>Period {row.original.period.number}</span>,
-            },
-            {
-                id: "capacity",
-                accessorFn: (row) => row.capacity ?? "-",
-                size: 50,
-                header: () => <p className="column-title">Capacity</p>,
-                cell: ({ row }) => <span>{row.original.capacity}</span>,
-            },
-            {
-                id: "roomNumber",
-                accessorFn: (row) => row.roomNumber ?? "-",
-                size: 50,
-                header: () => <p className="column-title">Room</p>,
-                cell: ({ row }) => <span>{row.original.roomNumber ?? "-"}</span>,
-            },
-        ], []),
+    const enrollmentsTable = useTable<CourseEnrollment>({
+        columns: useMemo<ColumnDef<CourseEnrollment>[]>(
+            () => [
+                {
+                    id: 'name',
+                    accessorFn: (row) => row.student.name,
+                    size: 180,
+                    header: () => <p className="column-title">Student Name</p>,
+                    cell: ({ row }) => <span>{row.original.student.name}</span>,
+                },
+                {
+                    id: 'email',
+                    accessorFn: (row) => row.student.email,
+                    size: 220,
+                    header: () => <p className="column-title">Email</p>,
+                    cell: ({ row }) => <span>{row.original.student.email}</span>,
+                },
+                {
+                    id: 'osis',
+                    accessorFn: (row) => row.student.osis,
+                    size: 120,
+                    header: () => <p className="column-title">OSIS</p>,
+                    cell: ({ row }) => <span>{row.original.student.osis}</span>,
+                },
+                {
+                    id: 'unenroll',
+                    size: 120,
+                    header: () => <p className="column-title">Unenroll</p>,
+                    cell: ({row}) => (
+                        <UnenrollStudent courseId={id} studentId={row.original.studentId}/>
+                    ),
+                },
+                {
+                    id: 'details',
+                    size: 100,
+                    header: () => <p className="column-title">Details</p>,
+                    cell: ({ row }) => (
+                        <ShowButton
+                            resource="students"
+                            recordItemId={row.original.studentId ?? '-'}
+                            variant="outline"
+                            size="sm"
+                        >
+                            View
+                        </ShowButton>
+                    ),
+                },
+            ], [id] 
+        ),
         refineCoreProps: {
-            resource: "sections",
-            meta: {
-                path: "admin/sections"
-            },
+            resource: `admin/enrollments/${id}/roster`,
             pagination: {
-                pageSize: 10, 
-                mode: "server", 
+                pageSize: 10,
+                mode: 'server',
             },
             filters: {
-                permanent: [
-                    { field: "courseId", operator: "eq", value: id },
-                ],
+                permanent: [{ field: 'courseId', operator: 'eq', value: id }],
             },
-        }
-    })
-    
+        },
+    });
+
+    const totalEnrolled =
+        enrollmentsTable.refineCore?.tableQuery?.data?.total ??
+        enrollmentsTable.refineCore?.tableQuery?.data?.data?.length ??
+        0;
 
     if (courseQuery.isLoading || courseQuery.isError || !course) {
         return (
@@ -142,6 +147,19 @@ const ShowCourse = () => {
                                     </CardDescription>
                                 </div>
                             </div>
+
+                            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                <div className="rounded-lg border px-4 py-3">
+                                    <p className="text-xs text-muted-foreground">Teacher</p>
+                                    <p className="text-sm font-medium">
+                                        {course.teacher?.name || 'Not assigned'}
+                                    </p>
+                                </div>
+                                <div className="rounded-lg border px-4 py-3">
+                                    <p className="text-xs text-muted-foreground">Students</p>
+                                    <p className="text-sm font-medium">{totalEnrolled}</p>
+                                </div>
+                            </div>
                         </div>
                     </CardHeader>
                 </Card>
@@ -157,11 +175,11 @@ const ShowCourse = () => {
                         <CardContent>
                             <div className="grid gap-4 sm:grid-cols-2">
                                 <DetailItem
-                                    label="School"
+                                    label="Teacher"
                                     value={
                                         <span className="inline-flex items-center gap-2">
-                                            <School className="h-4 w-4 text-muted-foreground" />
-                                            {course.school?.schoolName || 'Not available'}
+                                            <GraduationCap className="h-4 w-4 text-muted-foreground" />
+                                            {course.teacher?.name || 'Not assigned'}
                                         </span>
                                     }
                                 />
@@ -175,11 +193,29 @@ const ShowCourse = () => {
                                     }
                                 />
                                 <DetailItem
+                                    label="Term"
+                                    value={
+                                        <span className="inline-flex items-center gap-2">
+                                            <CalendarRange className="h-4 w-4 text-muted-foreground" />
+                                            {course.term?.termName || 'Not assigned'}
+                                        </span>
+                                    }
+                                />
+                                <DetailItem
                                     label="Grade Level"
                                     value={
                                         <span className="inline-flex items-center gap-2">
                                             <BookOpen className="h-4 w-4 text-muted-foreground" />
                                             {course.gradeLevel || 'Not assigned'}
+                                        </span>
+                                    }
+                                />
+                                <DetailItem
+                                    label="School"
+                                    value={
+                                        <span className="inline-flex items-center gap-2">
+                                            <School className="h-4 w-4 text-muted-foreground" />
+                                            {course.school?.schoolName || 'Not available'}
                                         </span>
                                     }
                                 />
@@ -191,21 +227,53 @@ const ShowCourse = () => {
                         </CardContent>
                     </Card>
 
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="text-lg">Roster Summary</CardTitle>
+                            <CardDescription>
+                                Quick enrollment overview for this course.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="rounded-lg border p-4">
+                                <div className="flex items-center gap-3">
+                                    <Users className="h-5 w-5 text-muted-foreground" />
+                                    <div>
+                                        <p className="text-sm text-muted-foreground">Enrolled Students</p>
+                                        <p className="text-2xl font-bold">{totalEnrolled}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="rounded-lg border p-4">
+                                <p className="text-sm text-muted-foreground">Instructor</p>
+                                <p className="mt-1 font-medium">
+                                    {course.teacher?.name || 'No instructor assigned'}
+                                </p>
+                            </div>
+
+                            <div className="rounded-lg border p-4">
+                                <p className="text-sm text-muted-foreground">Department</p>
+                                <p className="mt-1 font-medium">
+                                    {course.department?.name || 'No department assigned'}
+                                </p>
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
 
                 <Card>
                     <CardHeader className='flex flex-row items-start justify-between'>
                         <div className="space-y-1">
-                            <CardTitle className="text-lg">Course Sections</CardTitle>
+                            <CardTitle className="text-lg">Course Roster</CardTitle>
                             <CardDescription>
-                                View sections offered for this course.
+                                View enrolled students and manage course membership.
                             </CardDescription>
                         </div>
-                        <Button>Create Section</Button>
-                        {/* Add a create section or have it point to create section*/}
+                        <EnrollStudent courseId={course.id}/>
                     </CardHeader>
                     <CardContent>
-                        <DataTable table={sectionsTable} />
+                        <DataTable table={enrollmentsTable} />
                     </CardContent>
                 </Card>
             </div>

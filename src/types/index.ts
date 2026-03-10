@@ -78,32 +78,16 @@ export type Course = {
     schoolId: string;
     description?: string;
     code: string;
+    termId: string;
+    teacherId: string;
     departmentId: string;
     gradeLevel: string;
     school?: {
         schoolName: string;
     };
+    term?: TermDetails;
     department?: Department; 
-}
-
-export type Section = {
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
-    schoolId: string;
-    termId: string;
-    courseId: string;
-    periodId: string;
-    teacherId: string;
-    capacity: number;
-    sectionLabel: string;
-    roomNumber: string | null;
-    term: TermDetails;
-    course: Course;
-    period: Period;
-    department: Department;
-    teacher: User;
-    
+    teacher?: User;
 }
 
 export type TeacherProfile = {
