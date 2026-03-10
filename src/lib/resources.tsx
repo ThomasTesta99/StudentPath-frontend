@@ -1,5 +1,5 @@
 import { IResourceItem } from "@refinedev/core";
-import { BookOpen, Building2, CalendarRange, HomeIcon, UserCog, UserPlus, Users, UsersRound } from "lucide-react";
+import { BookOpen, Building2, CalendarRange, ClipboardList, HomeIcon, UserCog, UserPlus, Users, UsersRound } from "lucide-react";
 
 export const allResources: IResourceItem[] = [
     //ADMIN
@@ -31,6 +31,14 @@ export const allResources: IResourceItem[] = [
         edit: "/admin/courses/edit/:id", 
         show: "/admin/courses/show/:id", 
         meta: {label: "Courses", icon: <BookOpen />, roles: ["admin"], path: "admin/courses"}, 
+    },
+    {
+        name: "sections", 
+        list: "/admin/sections", 
+        create: "/admin/sections/create", 
+        edit: "/admin/sections/edit/:id", 
+        show: "/admin/sections/show/:id", 
+        meta: {label: "Sections", icon: <ClipboardList />, roles: ["admin"], path: "admin/sections"}, 
     },
     {
         name: "enrollments", 

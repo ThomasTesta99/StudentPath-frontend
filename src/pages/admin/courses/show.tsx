@@ -58,7 +58,7 @@ const ShowCourse = () => {
             {
                 id: "term",
                 accessorFn: (row) => row.term.termName ?? "-",
-                size: 80,
+                size: 50,
                 header: () => <p className="column-title">Term</p>,
                 cell: ({ row }) => <span>{row.original.term.termName}</span>,
             },
