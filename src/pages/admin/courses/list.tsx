@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Course, Department, TermDetails } from '@/types';
+import { Course, Department} from '@/types';
 import { useList } from '@refinedev/core';
 import { useTable } from '@refinedev/react-table';
 import { ColumnDef } from '@tanstack/react-table';
@@ -17,7 +17,6 @@ const CoursesList = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [debouncedQuery, setDebouncedQuery] = useState("");
     const [selectedDepartmentId, setSelectedDepartmentId] = useState<string>("all");
-    const [selectedTermId, setSelectedTermId] = useState<string>("all");
 
     useEffect(() => {
         const timer = setTimeout(() => setDebouncedQuery(searchQuery), 300);
@@ -38,16 +37,6 @@ const CoursesList = () => {
             }
         ]
 
-    const termFilters = selectedTermId === "all"
-        ? [] 
-        : [
-            {
-                field: "termId", 
-                operator: "eq" as const, 
-                value: selectedTermId
-            }
-        ]
-
     const coursesList = useTable({
         columns: useMemo<ColumnDef<Course>[]>(() => [
             {
@@ -60,31 +49,22 @@ const CoursesList = () => {
             {
                 id: "courseName", 
                 accessorKey: "name",
-                size: 100, 
+                size: 150, 
                 header: () => <p className='column-title'>Course Name</p>,
                 cell: ({getValue}) => <span>{getValue<string>()}</span>
             },
             {
-                id: "instructor", 
-                accessorFn: (row) => row.teacher?.name ?? "-", 
+                id: "department", 
+                accessorFn: (row) => row.department?.name ?? "-", 
                 size: 120, 
-                header: () => <p className='column-title'>Course Instructor</p>,
+                header: () => <p className='column-title'>Department</p>,
                 cell: ({row}) => (
-                    <span>{row.original.teacher?.name ?? "-"}</span>
-            )
-            }, 
-            {
-                id: "term",
-                accessorFn: (row) => row.term?.termName ?? "-", 
-                size: 120, 
-                header: () => <p className='column-title'>Term</p>,
-                cell: ({row}) => (
-                    <span>{row.original.term?.termName ?? "-"}</span>
+                    <span>{row.original.department?.name ?? "-"}</span>
             )
             }, 
             {
                 id: "details", 
-                size: 100,
+                size: 50,
                 header: () => <p className="column-title">Details</p>,
                 cell: ({ row }) => <ShowButton resource="courses" recordItemId={row.original.id} variant="outline" size="sm">View</ShowButton>
             }
@@ -96,7 +76,7 @@ const CoursesList = () => {
                 mode: "off", 
             }, 
             filters: {
-                permanent: [...searchFilters, ...departmentFilters, ...termFilters]
+                permanent: [...searchFilters, ...departmentFilters]
             }
         }
     });
@@ -107,13 +87,6 @@ const CoursesList = () => {
             mode: "off",
         }
     });
-
-    const {query: termsQuery} = useList<TermDetails>({
-        resource: "terms", 
-        pagination: {
-            mode: "off", 
-        }
-    })
 
     return (
         <ListView>
@@ -156,33 +129,6 @@ const CoursesList = () => {
                                     departmentsQuery.data?.data?.map((department) => (
                                         <SelectItem key={department.id} value={department.id} className='cursor-pointer'>
                                             {department.name}
-                                        </SelectItem>
-                                    ))}
-                            </SelectContent>
-                        </Select>
-                        <Select value={selectedTermId} onValueChange={setSelectedTermId} disabled={termsQuery.isLoading || termsQuery.isError}>
-                            <SelectTrigger className='cursor-pointer'>
-                                <SelectValue placeholder="Filter by term" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value='all' className='cursor-pointer'>All Terms</SelectItem>
-                                {termsQuery.isLoading && (
-                                    <SelectItem value="loading" disabled>
-                                        Loading terms...
-                                    </SelectItem>
-                                )}
-
-                                {termsQuery.isError && (
-                                    <SelectItem value="error" disabled>
-                                        Failed to load terms
-                                    </SelectItem>
-                                )}
-
-                                {!termsQuery.isLoading &&
-                                    !termsQuery.isError &&
-                                    termsQuery.data?.data?.map((term) => (
-                                        <SelectItem key={term.id} value={term.id} className='cursor-pointer'>
-                                            {term.termName}
                                         </SelectItem>
                                     ))}
                             </SelectContent>

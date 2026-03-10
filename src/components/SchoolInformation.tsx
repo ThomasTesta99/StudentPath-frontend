@@ -1,5 +1,5 @@
 import { BACKEND_BASE_URL } from '@/constants'
-import { GRADE_LEVELS, GradeLevel, School } from '@/types'
+import { GetOneResponse, GRADE_LEVELS, GradeLevel, School } from '@/types'
 import { useCustom, useNotification, useUpdate } from '@refinedev/core'
 import React, { useEffect, useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
@@ -11,7 +11,7 @@ import { Checkbox } from './ui/checkbox'
 const SchoolInformation = () => {
     const { open } = useNotification();
     const [selectedGradeLevels, setSelectedGradeLevels] = useState<GradeLevel[]>([]);
-    const {query: schoolQuery} = useCustom<{data: School}>({
+    const {query: schoolQuery} = useCustom<GetOneResponse<School>>({
         url: `${BACKEND_BASE_URL}/admin/schools/me`, 
         method: "get", 
     });

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
 import { Clock3, Plus } from 'lucide-react'
 import { useCustom, useNotification } from '@refinedev/core'
-import { Period } from '@/types'
+import { ListResponse, Period } from '@/types'
 import { BACKEND_BASE_URL } from '@/constants'
 import { useForm } from '@refinedev/react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -19,7 +19,7 @@ import { formatTime } from '@/lib/utils'
 const PeriodDetails = () => {
     const [createPeriodOpen, setCreatePeriodOpen] = useState(false);
     const {open} = useNotification();
-    const {query: periodsQuery} = useCustom<{data: Period[]}>({
+    const {query: periodsQuery} = useCustom<ListResponse<Period>>({
         url: `${BACKEND_BASE_URL}/admin/bell-schedule/periods`,
         method: "get", 
     });

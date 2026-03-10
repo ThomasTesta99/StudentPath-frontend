@@ -112,8 +112,6 @@ export const editParentSchema = z.object({
 });
 
 export const courseSchema = z.object({
-  termId: z.string().min(1, "Term is required"), 
-  teacherId: z.string().min(1, "Instructor is required"),
   name: z.string().min(2, "Course name must be at least 2 characters"),
   gradeLevel: z.string().min(1, "Grade level is required"), 
   departmentId: z.string().min(1, "Department is required"), 
@@ -123,8 +121,6 @@ export const courseSchema = z.object({
 })
 
 export const editCourseSchema = z.object({
-  termId: z.string().min(1, "Term is required").optional(), 
-  teacherId: z.string().min(1, "Instructor is required").optional(),
   name: z.string().min(2, "Course name must be at least 2 characters").optional(),
   gradeLevel: z.string().min(1, "Grade level is required").optional(), 
   departmentId: z.string().min(1, "Department is required").optional(), 
