@@ -141,117 +141,118 @@ const BellScheduleDetails = () => {
                         </div>
                     </div>
                 )}
+                {!hasSchedule && (
+                    <Dialog open={createScheduleOpen} onOpenChange={setCreateScheduleOpen}>
+                        <DialogTrigger asChild>
+                            <Button className="w-full">
+                                <Plus className="mr-2 h-4 w-4" />
+                                {hasSchedule ? 'Create Bell Schedule' : 'Add Bell Schedule'}
+                            </Button>
+                        </DialogTrigger>
 
-                <Dialog open={createScheduleOpen} onOpenChange={setCreateScheduleOpen}>
-                    <DialogTrigger asChild>
-                        <Button className="w-full">
-                            <Plus className="mr-2 h-4 w-4" />
-                            {hasSchedule ? 'Create Bell Schedule' : 'Add Bell Schedule'}
-                        </Button>
-                    </DialogTrigger>
+                        <DialogContent className="[&>button]:cursor-pointer">
+                            <DialogHeader>
+                                <DialogTitle>Create Bell Schedule</DialogTitle>
+                                <DialogDescription>
+                                    Add a bell schedule for this school.
+                                </DialogDescription>
+                            </DialogHeader>
 
-                    <DialogContent className="[&>button]:cursor-pointer">
-                        <DialogHeader>
-                            <DialogTitle>Create Bell Schedule</DialogTitle>
-                            <DialogDescription>
-                                Add a bell schedule for this school.
-                            </DialogDescription>
-                        </DialogHeader>
+                            <Separator />
 
-                        <Separator />
-
-                        <Form {...form}>
-                            <form onSubmit={handleSubmit(onSubmit)} className='space-y-3'>
-                                <FormField
-                                    control={control}
-                                    name="name"
-                                    render={({field}) => (
-                                        <FormItem>
-                                            <FormLabel>Name <span className="text-red-400">*</span></FormLabel>
-                                            <FormControl>
-                                                <Input placeholder='Regular-Day' {...field}/>
-                                            </FormControl>
-                                            <FormMessage/>
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={control}
-                                    name="type"
-                                    render={({field}) => (
-                                        <FormItem>
-                                            <FormLabel>Type (Optional)</FormLabel>
-                                            <FormControl>
-                                                <Select
-                                                onValueChange={field.onChange}
-                                                value={field.value}
-                                                
-                                            >
+                            <Form {...form}>
+                                <form onSubmit={handleSubmit(onSubmit)} className='space-y-3'>
+                                    <FormField
+                                        control={control}
+                                        name="name"
+                                        render={({field}) => (
+                                            <FormItem>
+                                                <FormLabel>Name <span className="text-red-400">*</span></FormLabel>
                                                 <FormControl>
-                                                    <SelectTrigger>
-                                                        <SelectValue placeholder="Select a schedule type" />
-                                                    </SelectTrigger>
+                                                    <Input placeholder='Regular-Day' {...field}/>
                                                 </FormControl>
+                                                <FormMessage/>
+                                            </FormItem>
+                                        )}
+                                    />
 
-                                                <SelectContent>
-                                                    {BELL_SCHEDULE_TYPE_OPTIONS.map((option) => (
-                                                        <SelectItem
-                                                            key={option.value}
-                                                            value={option.value}
-                                                            className='cursor-pointer'
-                                                        >
-                                                            {option.label}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                                    <FormField
+                                        control={control}
+                                        name="type"
+                                        render={({field}) => (
+                                            <FormItem>
+                                                <FormLabel>Type (Optional)</FormLabel>
+                                                <FormControl>
+                                                    <Select
+                                                    onValueChange={field.onChange}
+                                                    value={field.value}
+                                                    
+                                                >
+                                                    <FormControl>
+                                                        <SelectTrigger>
+                                                            <SelectValue placeholder="Select a schedule type" />
+                                                        </SelectTrigger>
+                                                    </FormControl>
 
-                                <FormField
-                                    control={control}
-                                    name="dayStartTime"
-                                    render={({field}) => (
-                                        <FormItem>
-                                            <FormLabel>Day Start Time <span className="text-red-400">*</span></FormLabel>
-                                            <FormControl>
-                                                <Input type="time" {...field}/>
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                                                    <SelectContent>
+                                                        {BELL_SCHEDULE_TYPE_OPTIONS.map((option) => (
+                                                            <SelectItem
+                                                                key={option.value}
+                                                                value={option.value}
+                                                                className='cursor-pointer'
+                                                            >
+                                                                {option.label}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
 
-                                <FormField
-                                    control={control}
-                                    name="dayEndTime"
-                                    render={({field}) => (
-                                        <FormItem>
-                                            <FormLabel>Day End Time <span className="text-red-400">*</span></FormLabel>
-                                            <FormControl>
-                                                <Input type="time" {...field}/>
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                                    <FormField
+                                        control={control}
+                                        name="dayStartTime"
+                                        render={({field}) => (
+                                            <FormItem>
+                                                <FormLabel>Day Start Time <span className="text-red-400">*</span></FormLabel>
+                                                <FormControl>
+                                                    <Input type="time" {...field}/>
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
 
-                                <Button
-                                    type='submit'
-                                    disabled={isSubmitting}
-                                    className="w-full"
-                                >
-                                    {isSubmitting ? "Creating bell schedule..." : "Create Bell Schedule"}
-                                </Button>
-                            </form>
-                        </Form>
+                                    <FormField
+                                        control={control}
+                                        name="dayEndTime"
+                                        render={({field}) => (
+                                            <FormItem>
+                                                <FormLabel>Day End Time <span className="text-red-400">*</span></FormLabel>
+                                                <FormControl>
+                                                    <Input type="time" {...field}/>
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
 
-                    </DialogContent>
-                </Dialog>
+                                    <Button
+                                        type='submit'
+                                        disabled={isSubmitting}
+                                        className="w-full"
+                                    >
+                                        {isSubmitting ? "Creating bell schedule..." : "Create Bell Schedule"}
+                                    </Button>
+                                </form>
+                            </Form>
+
+                        </DialogContent>
+                    </Dialog>
+                )}
             </CardContent>
         </Card>
     )
