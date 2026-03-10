@@ -48,6 +48,7 @@ import CourseCreate from "./pages/admin/courses/create";
 import ShowCourse from "./pages/admin/courses/show";
 import EditCourse from "./pages/admin/courses/edit";
 import SectionsList from "./pages/admin/sections/list";
+import SectionCreate from "./pages/admin/sections/create";
 
 function App() {
   return (
@@ -123,9 +124,9 @@ function App() {
                           </Route>
                           <Route path="sections">
                             <Route index element={<SectionsList />} />
-                            {/* <Route path="create" element={<CourseCreate />}/>
-                            <Route path="show/:id" element={<ShowCourse />} />
-                            <Route path="edit/:id" element={<EditCourse />} /> */}
+                            <Route path="create" element={<SectionCreate />}/>
+                            {/* <Route path="show/:id" element={<ShowCourse />} /> */}
+                            {/* <Route path="edit/:id" element={<EditCourse />} /> */}
                           </Route>
                         
                         </Route>

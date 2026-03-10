@@ -1,4 +1,5 @@
 import { CreateButton } from '@/components/refine-ui/buttons/create'
+import { ShowButton } from '@/components/refine-ui/buttons/show'
 import { DataTable } from '@/components/refine-ui/data-table/data-table'
 import { Breadcrumb } from '@/components/refine-ui/layout/breadcrumb'
 import { ListView } from '@/components/refine-ui/views/list-view'
@@ -48,14 +49,14 @@ const SectionsList = () => {
             {
                 id: "sectionLabel",
                 accessorKey: "sectionLabel",
-                size: 60,
+                size: 80,
                 header: () => <p className="column-title">Section</p>,
                 cell: ({getValue}) => <span>{getValue<string>()}</span>
             },
             {
                 id: "teacher",
                 accessorFn: (row) => row.teacher.name ?? "-",
-                size: 80,
+                size: 60,
                 header: () => <p className="column-title">Teacher</p>,
                 cell: ({ row }) => <span>{row.original.teacher.name}</span>,
             },
@@ -76,17 +77,23 @@ const SectionsList = () => {
             {
                 id: "capacity",
                 accessorKey: "capacity", 
-                size: 50,
+                size: 40,
                 header: () => <p className="column-title">Capacity</p>,
                 cell: ({ getValue }) => <span>{getValue<number>()}</span>,
             },
             {
                 id: "roomNumber",
                 accessorKey: "roomNumber",
-                size: 50,
+                size: 40,
                 header: () => <p className="column-title">Room</p>,
                 cell: ({ getValue }) => <span>{getValue<string>() ?? "-"}</span>,
             },
+            {
+                id: "details", 
+                size: 50,
+                header: () => <p className="column-title">Details</p>,
+                cell: ({ row }) => <ShowButton resource="sections" recordItemId={row.original.id} variant="outline" size="sm">View</ShowButton>
+            }
         ], []),
         refineCoreProps: {
             resource: "sections",
