@@ -62,6 +62,13 @@ const CourseCreate = () => {
             mode: "off"
         }
     });
+
+    // const {query: gradeLevelsQuery} = useCustom<GradeLevel[]>({
+    //     url: `${BACKEND_BASE_URL}/admin/schools/me/grade-levels`, 
+    //     method: "get", 
+    
+    // });
+
     const debouncedTeacherSearch = useDebouncedValue(teacherSearch, 300);
     const shouldFetchTeachers = isTeacherDropdownOpen && debouncedTeacherSearch.trim().length >= 2;
     const {query: teachersQuery} = useList<TeacherProfile>({

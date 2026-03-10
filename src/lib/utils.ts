@@ -36,3 +36,17 @@ export const isStrictIsoDate = (value: string): boolean => {
     date.getUTCDate() === day
   );
 };
+
+export const formatTime = (time?: string) => {
+    if (!time) return "-";
+
+    const [hourString, minuteString] = time.split(":");
+    let hour = Number(hourString);
+    const minute = minuteString ?? "00";
+
+    const suffix = hour >= 12 ? "PM" : "AM";
+    hour = hour % 12;
+    if (hour === 0) hour = 12;
+
+    return `${hour}:${minute} ${suffix}`;
+};
