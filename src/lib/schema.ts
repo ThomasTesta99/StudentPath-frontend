@@ -132,3 +132,52 @@ export const editCourseSchema = z.object({
   code: z.string().optional(),
   description: z.string().trim().min(1, "Description is required").optional(), 
 })
+
+export const bellScheduleSchema = z.object({
+  name: z.string().trim().min(1, "Schedule name is required").max(100, "Schedule name must be 100 characters or less"),
+  type: z.string().trim().min(1, "Schedule type is required").max(50, "Schedule type must be 50 characters or less").optional(),
+  dayStartTime: z.string().trim().min(1, "Day start time is required"),
+  dayEndTime: z.string().trim().min(1, "Day end time is required"),
+})
+.refine(
+  (data) => data.dayEndTime > data.dayStartTime,
+  {
+    message: "Day end time must be after day start time",
+    path: ["dayEndTime"],
+  }
+);
+
+export const periodSchema = z.object({
+    number: z.coerce
+      .number({
+        required_error: "Period number is required",
+        invalid_type_error: "Period number must be a number",
+      })
+      .int("Period number must be a whole number")
+      .positive("Period number must be greater than 0"),
+
+    startTime: z
+      .string({
+        required_error: "Start time is required",
+      })
+      .regex(
+        /^([01]\d|2[0-3]):([0-5]\d)(:[0-5]\d)?$/,
+        "Start time must be in HH:MM or HH:MM:SS format"
+      ),
+
+    endTime: z
+      .string({
+        required_error: "End time is required",
+      })
+      .regex(
+        /^([01]\d|2[0-3]):([0-5]\d)(:[0-5]\d)?$/,
+        "End time must be in HH:MM or HH:MM:SS format"
+      ),
+  })
+  .refine(
+    (data) => data.startTime < data.endTime,
+    {
+      message: "End time must be after start time",
+      path: ["endTime"],
+    }
+  );

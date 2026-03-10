@@ -101,10 +101,14 @@ export type TeacherProfile = {
     }
 }
 
+export const GRADE_LEVELS = ["6", "7", "8", "9", "10", "11", "12"] as const;
+export type GradeLevel = (typeof GRADE_LEVELS)[number];
+
 export type School = {
     createdAt: Date;
     updatedAt: Date;
     id: string;
+    gradeLevels?: GradeLevel[]; 
     schoolName: string;
 }
 
@@ -185,3 +189,29 @@ export type StudentEnrollmentResult = {
     updatedAt: Date;
     studentId: string;
 }
+
+export type BellSchedule = {
+    id: string;
+    schoolId: string;
+    name: string;
+    type: string;
+    dayStartTime: string;
+    dayEndTime: string;
+};
+
+export type Period = {
+    id: string;
+    bellScheduleId: string;
+    number: number;
+    startTime: string;
+    endTime: string;
+};
+
+export const BELL_SCHEDULE_TYPE_OPTIONS = [
+    { value: 'regular', label: 'Regular Day' },
+    { value: 'early_dismissal', label: 'Early Dismissal' },
+    { value: 'late_start', label: 'Late Start' },
+    { value: 'testing', label: 'Testing Day' },
+    { value: 'assembly', label: 'Assembly Day' },
+    { value: 'custom', label: 'Custom' },
+]

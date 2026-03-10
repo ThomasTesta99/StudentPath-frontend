@@ -4,7 +4,7 @@ import { BookOpen, Building2, CalendarRange, HomeIcon, UserCog, UserPlus, Users,
 export const allResources: IResourceItem[] = [
     //ADMIN
     {
-        name: "admin-dashboard",
+        name: "schools",
         list: "/admin",
         meta: { label: "Home", roles: ["admin"], icon: <HomeIcon /> },
     },
