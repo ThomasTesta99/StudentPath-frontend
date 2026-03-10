@@ -1,11 +1,12 @@
 import React from "react";
-import { useCreate, useNotification } from "@refinedev/core";
+import { useCreate, useInvalidate, useNotification } from "@refinedev/core";
 import { CreateEnrollment, StudentEnrollmentResult } from "@/types";
 import StudentSelectDialog from "./StudentDialog";
 
-const EnrollStudent = ({ courseId }: { courseId: string }) => {
+const EnrollStudent = ({ sectionId }: { sectionId: string}) => {
     const { open: notify } = useNotification();
-
+    const invalidate = useInvalidate();
+    
     const {
         mutateAsync: enrollStudent,
         mutation: { isPending: isEnrolling },
@@ -23,7 +24,7 @@ const EnrollStudent = ({ courseId }: { courseId: string }) => {
                         path: "admin/enrollments", 
                     }, 
                     values: {
-                        courseId,
+                        sectionId,
                         studentId,
                     },
                     successNotification: false,
@@ -46,6 +47,10 @@ const EnrollStudent = ({ courseId }: { courseId: string }) => {
                     : createdEnrollments.length === 1
                     ? "Student successfully enrolled"
                     : `${createdEnrollments.length} students enrolled successfully.`,
+        });
+        await invalidate({
+            resource: `admin/enrollments/${sectionId}/roster`,
+            invalidates: ["list"],
         });
     };
 

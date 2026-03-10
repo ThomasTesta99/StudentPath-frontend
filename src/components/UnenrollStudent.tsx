@@ -1,16 +1,17 @@
-import { useCustomMutation, useNotification } from '@refinedev/core';
+import { useCustomMutation, useInvalidate, useNotification } from '@refinedev/core';
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { Button } from './ui/button';
 import { BACKEND_BASE_URL } from '@/constants';
 
 const UnenrollStudent = ({
-    courseId,
-    studentId,
+    sectionId,
+    studentId, 
 }: {
-    courseId?: string;
+    sectionId?: string;
     studentId: string;
 }) => {
+    const invalidate = useInvalidate();
     const [open, setOpen] = useState(false);
     const { open: notify } = useNotification();
     const { mutateAsync: unEnrollStudent, mutation } = useCustomMutation();
@@ -18,11 +19,11 @@ const UnenrollStudent = ({
     const isUnenrolling = mutation.isPending;
 
     const handleUnenroll = async () => {
-        if (!courseId) return;
+        if (!sectionId) return;
 
         try {
             await unEnrollStudent({
-                url: `${BACKEND_BASE_URL}/admin/enrollments/${courseId}/${studentId}`,
+                url: `${BACKEND_BASE_URL}/admin/enrollments/${sectionId}/${studentId}`,
                 method: 'delete',
                 values: {},
                 successNotification: false,
@@ -31,10 +32,14 @@ const UnenrollStudent = ({
 
             notify?.({
                 type: 'success',
-                message: 'Student unenrolled successfully. Please refresh the page to update the roster.',
+                message: 'Student unenrolled successfully.'
             });
 
             setOpen(false);
+            await invalidate({
+                resource: `admin/enrollments/${sectionId}/roster`,
+                invalidates: ["list"],
+            });
         } catch {
             notify?.({
                 type: 'error',
@@ -57,12 +62,12 @@ const UnenrollStudent = ({
             <DialogContent className="max-w-md [&>button]:cursor-pointer">
                 <DialogHeader>
                     <DialogTitle>
-                        {courseId ? 'Unenroll Student' : 'No Course Provided'}
+                        {sectionId ? 'Unenroll Student' : 'No Course Provided'}
                     </DialogTitle>
                 </DialogHeader>
 
                 <p className="text-sm text-muted-foreground">
-                    {courseId
+                    {sectionId
                         ? 'Are you sure you want to unenroll this student from the course? This action cannot be undone.'
                         : 'A course ID was not provided, so the student cannot be unenrolled.'}
                 </p>
@@ -76,7 +81,7 @@ const UnenrollStudent = ({
                         Cancel
                     </Button>
 
-                    {courseId && (
+                    {sectionId && (
                         <Button
                             variant="destructive"
                             onClick={handleUnenroll}

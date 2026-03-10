@@ -53,7 +53,7 @@ const ShowStudent = () => {
         id: "details", 
         size: 100,
         header: () => <p className="column-title">Details</p>,
-        cell: ({ row }) => <ShowButton resource="courses" recordItemId={row.original.courseId ?? "-"} variant="outline" size="sm">View</ShowButton>
+        cell: ({ row }) => <ShowButton resource="sections" recordItemId={row.original.sectionId ?? "-"} variant="outline" size="sm">View</ShowButton>
       }
     ], []), 
     refineCoreProps: {
