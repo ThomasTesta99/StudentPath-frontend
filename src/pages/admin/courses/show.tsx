@@ -217,7 +217,7 @@ const ShowCourse = () => {
                                 View sections offered for this course.
                             </CardDescription>
                         </div>
-                        <CreateButton resource='sections' />
+                        <CreateButton resource='sections' meta={{query: {courseId: id}}}/>
                     </CardHeader>
                     <CardContent>
                         <DataTable table={sectionsTable} />

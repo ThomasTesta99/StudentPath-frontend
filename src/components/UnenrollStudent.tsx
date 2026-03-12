@@ -62,14 +62,14 @@ const UnenrollStudent = ({
             <DialogContent className="max-w-md [&>button]:cursor-pointer">
                 <DialogHeader>
                     <DialogTitle>
-                        {sectionId ? 'Unenroll Student' : 'No Course Provided'}
+                        {sectionId ? 'Unenroll Student' : 'No Section Provided'}
                     </DialogTitle>
                 </DialogHeader>
 
                 <p className="text-sm text-muted-foreground">
                     {sectionId
-                        ? 'Are you sure you want to unenroll this student from the course? This action cannot be undone.'
-                        : 'A course ID was not provided, so the student cannot be unenrolled.'}
+                        ? 'Are you sure you want to unenroll this student from this section? This action cannot be undone.'
+                        : 'A section ID was not provided, so the student cannot be unenrolled.'}
                 </p>
 
                 <DialogFooter>

@@ -215,6 +215,12 @@ const EditSection = () => {
             document.removeEventListener('pointerdown', handlePointerDown);
         };
     }, []);
+    
+    useEffect(() => {
+        initializedRef.current = false;
+        setTeacherSearch('');
+        setCourseSearch('');
+    }, [id]);
 
     const onSubmit = async (values: z.infer<typeof editSectionSchema>) => {
         if (!isFormReady) return;

@@ -58,7 +58,7 @@ const EnrollStudent = ({ sectionId }: { sectionId: string}) => {
         <StudentSelectDialog
             triggerLabel="Enroll Students"
             title="Enroll Students"
-            description="Search for one or more students to enroll them in this course."
+            description="Search for one or more students to enroll them in this section."
             submitLabel={(count) => `Enroll ${count === 1 ? "Student" : "Students"}`}
             submittingLabel="Enrolling..."
             isSubmitting={isEnrolling}

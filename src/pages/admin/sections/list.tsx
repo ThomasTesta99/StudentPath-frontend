@@ -72,24 +72,24 @@ const SectionsList = () => {
             },
             {
                 id: "teacher",
-                accessorFn: (row) => row.teacher.name ?? "-",
+                accessorFn: (row) => row.teacher?.name ?? "-",
                 size: 60,
                 header: () => <p className="column-title">Teacher</p>,
-                cell: ({ row }) => <span>{row.original.teacher.name}</span>,
+                cell: ({ row }) => <span>{row.original.teacher?.name}</span>,
             },
             {
                 id: "term",
-                accessorFn: (row) => row.term.termName ?? "-",
+                accessorFn: (row) => row.term?.termName ?? "-",
                 size: 50,
                 header: () => <p className="column-title">Term</p>,
-                cell: ({ row }) => <span>{row.original.term.termName}</span>,
+                cell: ({ row }) => <span>{row.original.term?.termName}</span>,
             },
             {
                 id: "period",
-                accessorFn: (row) => row.period.number ?? "-",
+                accessorFn: (row) => row.period?.number ?? "-",
                 size: 50,
                 header: () => <p className="column-title">Period</p>,
-                cell: ({ row }) => <span>Period {row.original.period.number}</span>,
+                cell: ({ row }) => <span>Period {row.original.period?.number}</span>,
             },
             {
                 id: "capacity",
@@ -139,7 +139,7 @@ const SectionsList = () => {
                         <Search className='search-icon'/>
                         <Input 
                             type='text'
-                            placeholder='Search courses...'
+                            placeholder='Search by course...'
                             className='pl-10 w-full'
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
@@ -161,7 +161,7 @@ const SectionsList = () => {
 
                                 {periodsQuery.isError && (
                                     <SelectItem value="error" disabled>
-                                        Failed to periods
+                                        Failed to load periods
                                     </SelectItem>
                                 )}
 
@@ -179,7 +179,7 @@ const SectionsList = () => {
                                 <SelectValue placeholder="Filter by Term" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value='all' className='cursor-pointer'>All Terns</SelectItem>
+                                <SelectItem value='all' className='cursor-pointer'>All Terms</SelectItem>
                                 {termsQuery.isLoading && (
                                     <SelectItem value="loading" disabled>
                                         Loading terms...
@@ -188,7 +188,7 @@ const SectionsList = () => {
 
                                 {termsQuery.isError && (
                                     <SelectItem value="error" disabled>
-                                        Failed to terms
+                                        Failed to load terms
                                     </SelectItem>
                                 )}
 

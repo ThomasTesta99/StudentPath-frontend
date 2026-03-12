@@ -55,7 +55,7 @@ const options: CreateDataProviderOptions = {
         }
         if(resource === "enrollments"){
           if(field === "studentId") params.studentId = value;
-          if(field === "courseId") params.courseId = value;
+          if(field === "sectionId") params.sectionId = value;
         }
         if(resource === "sections"){
           if(field === "search") params.search = value

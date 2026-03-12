@@ -11,20 +11,26 @@ import { formatTime } from '@/lib/utils';
 import { useDebouncedValue } from '@/lib/utilsTsx';
 import { Course, Period, TeacherProfile, TermDetails } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useBack, useList } from '@refinedev/core';
+import { HttpError, useBack, useList, useNotification, useOne } from '@refinedev/core';
 import { useForm } from '@refinedev/react-hook-form';
 import { Check } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react'
+import { useSearchParams } from 'react-router';
 import z from 'zod';
 
 const SectionCreate = () => {
+    const [searchParams] = useSearchParams();
     const back = useBack();
+    const {open} = useNotification();
+    
     const [teacherSearch, setTeacherSearch] = useState("");
     const [isTeacherDropdownOpen, setisTeacherDropdownOpen] = useState(false);
-
+    
     const [courseSearch, setCourseSearch] = useState("");
     const [isCourseDropdownOpen, setIsCourseDropdownOpen] = useState(false);
-
+    
+    const prefilledCourseId = searchParams.get('courseId') ?? '';
+    
     const form = useForm({
         resolver: zodResolver(sectionSchema), 
         refineCoreProps: {
@@ -34,7 +40,7 @@ const SectionCreate = () => {
         },
         defaultValues: {
             termId: "",
-            courseId: "",
+            courseId: prefilledCourseId,
             periodId: "",
             teacherId: "",
             sectionLabel: "",
@@ -74,6 +80,22 @@ const SectionCreate = () => {
             enabled: shouldFetchTeachers,
         }
     });
+
+    const { query: prefilledCourseQuery } = useOne<Course>({
+        resource: 'courses',
+        id: prefilledCourseId,
+        queryOptions: {
+            enabled: !!prefilledCourseId,
+        },
+        meta: { path: 'admin/courses' },
+    });
+    useEffect(() => {
+        if (!prefilledCourseId) return;
+        if (!prefilledCourseQuery.data?.data) return;
+
+        setCourseSearch(prefilledCourseQuery.data.data.name);
+    }, [prefilledCourseId, prefilledCourseQuery.data?.data]);
+
     const debouncedCourseSearch = useDebouncedValue(courseSearch, 300);
     const shouldFetchCourses = isCourseDropdownOpen && debouncedCourseSearch.trim().length >= 2;
 
@@ -129,7 +151,11 @@ const SectionCreate = () => {
         try {
             await onFinish(values);
         } catch (error) {
-            console.log(error)
+            const err = error as HttpError;
+            open?.({
+                type:"error", 
+                message: "There was an error creating the section: " + err.message,
+            })
         }
     }
 
@@ -450,7 +476,7 @@ const SectionCreate = () => {
                                     />
                                 </div>
 
-                                <Button type="submit" size="lg" className='w-full'>
+                                <Button type="submit" size="lg" className='w-full' disabled={isSubmitting}>
                                     {isSubmitting ? "Creating Section..." : "Create Section"}
                                 </Button>
                             </form>
