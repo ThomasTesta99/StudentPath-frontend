@@ -50,6 +50,7 @@ import EditCourse from "./pages/admin/courses/edit";
 import SectionsList from "./pages/admin/sections/list";
 import SectionCreate from "./pages/admin/sections/create";
 import ShowSection from "./pages/admin/sections/show";
+import EditSection from "./pages/admin/sections/edit";
 
 function App() {
   return (
@@ -127,7 +128,7 @@ function App() {
                             <Route index element={<SectionsList />} />
                             <Route path="create" element={<SectionCreate />}/>
                             <Route path="show/:id" element={<ShowSection />} />
-                            {/* <Route path="edit/:id" element={<EditCourse />} /> */}
+                            <Route path="edit/:id" element={<EditSection />} />
                           </Route>
                         
                         </Route>

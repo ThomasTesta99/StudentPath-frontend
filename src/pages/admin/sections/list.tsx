@@ -5,7 +5,7 @@ import { Breadcrumb } from '@/components/refine-ui/layout/breadcrumb'
 import { ListView } from '@/components/refine-ui/views/list-view'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Period, Section } from '@/types'
+import { Period, Section, TermDetails } from '@/types'
 import { useList } from '@refinedev/core'
 import { useTable } from '@refinedev/react-table'
 import { ColumnDef } from '@tanstack/react-table'
@@ -16,6 +16,7 @@ const SectionsList = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [debouncedQuery, setDebouncedQuery] = useState("");
     const [selectedPeriodId, setSelectedPeriodId] = useState("all");
+    const [selectedTermId, setSelectedTermId] = useState("all");
 
     useEffect(() => {
         const timer = setTimeout(() => setDebouncedQuery(searchQuery), 300);
@@ -36,6 +37,16 @@ const SectionsList = () => {
             }
         ]
 
+    const termFilters = selectedTermId === "all"
+        ? [] 
+        : [
+            {
+                field: "termId", 
+                operator: "eq" as const, 
+                value: selectedTermId
+            }
+        ]
+
     const {query: periodsQuery} = useList<Period>({
         resource: "bell-schedule/periods", 
         pagination: {
@@ -43,6 +54,12 @@ const SectionsList = () => {
         },
         meta: {path: "admin/bell-schedule/periods"}
     });
+
+    const {query: termsQuery} = useList<TermDetails>({
+        resource: "terms", 
+        pagination: {mode: "off"},
+        meta: {path: "admin/terms"},
+    })
 
     const sectionsTable = useTable<Section>({
         columns: useMemo<ColumnDef<Section>[]>(() => [
@@ -105,7 +122,7 @@ const SectionsList = () => {
                 mode: "server", 
             },
             filters: {
-                permanent: [...searchFilters, ...periodFilters]
+                permanent: [...searchFilters, ...periodFilters, ...termFilters]
             },
         }
     })
@@ -118,13 +135,17 @@ const SectionsList = () => {
             <div className="intro-row">
                 <p>Manage sections for your courses</p>
                 <div className="actions-row">
-                    <Search className='search-icon'/>
-                    <Input 
-                        type='text'
-                        placeholder='Search courses...'
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
+                    <div className="search-field">
+                        <Search className='search-icon'/>
+                        <Input 
+                            type='text'
+                            placeholder='Search courses...'
+                            className='pl-10 w-full'
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+
+                    </div>
                     <div className="flex gap-2 w-full sm:w-auto">
                         <Select value={selectedPeriodId} onValueChange={setSelectedPeriodId} disabled={periodsQuery.isLoading || periodsQuery.isError}>
                             <SelectTrigger className='cursor-pointer'>
@@ -149,6 +170,33 @@ const SectionsList = () => {
                                     periodsQuery.data?.data?.map((period) => (
                                         <SelectItem key={period.id} value={period.id} className='cursor-pointer'>
                                             {period.number}
+                                        </SelectItem>
+                                    ))}
+                            </SelectContent>
+                        </Select>
+                        <Select value={selectedTermId} onValueChange={setSelectedTermId} disabled={termsQuery.isLoading || termsQuery.isError}>
+                            <SelectTrigger className='cursor-pointer'>
+                                <SelectValue placeholder="Filter by Term" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value='all' className='cursor-pointer'>All Terns</SelectItem>
+                                {termsQuery.isLoading && (
+                                    <SelectItem value="loading" disabled>
+                                        Loading terms...
+                                    </SelectItem>
+                                )}
+
+                                {termsQuery.isError && (
+                                    <SelectItem value="error" disabled>
+                                        Failed to terms
+                                    </SelectItem>
+                                )}
+
+                                {!termsQuery.isLoading &&
+                                    !termsQuery.isError &&
+                                    termsQuery.data?.data?.map((term) => (
+                                        <SelectItem key={term.id} value={term.id} className='cursor-pointer'>
+                                            {term.termName}
                                         </SelectItem>
                                     ))}
                             </SelectContent>

@@ -61,6 +61,7 @@ const options: CreateDataProviderOptions = {
           if(field === "search") params.search = value
           if(field === "courseId") params.courseId = value;
           if(field === "periodId") params.periodId = value;
+          if(field === "termId") params.termId = value;
         }
       })
 

@@ -12,13 +12,14 @@ import { Department, GradeLevel } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { HttpError, useCustom, useList, useNotification } from '@refinedev/core';
 import { useForm } from '@refinedev/react-hook-form';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useParams } from 'react-router';
 import z from 'zod';
 
 const EditCourse = () => {
     const { id } = useParams();
     const { open } = useNotification();
+    const initializedRef = useRef(false);
 
     const form = useForm({
         resolver: zodResolver(editCourseSchema),
@@ -43,7 +44,7 @@ const EditCourse = () => {
         control,
         watch,
         handleSubmit,
-        formState: { isSubmitting, dirtyFields, isDirty },
+        formState: { isSubmitting },
         reset,
     } = form;
 
@@ -57,7 +58,32 @@ const EditCourse = () => {
         method: 'get',
     });
 
-    const gradeLevels = gradeLevelsQuery?.data?.data?.data;
+    const gradeLevels = gradeLevelsQuery?.data?.data?.data ?? [];
+    const currentValues = watch();
+
+    const originalValues = useMemo(() => {
+        const course = query?.data?.data;
+
+        if (!course) {
+            return {
+                name: '',
+                courseNumber: '',
+                gradeLevel: '',
+                departmentId: '',
+                description: '',
+                code: '',
+            };
+        }
+
+        return {
+            name: course.name ?? '',
+            courseNumber: course.code?.split(' ')?.slice(1).join(' ') ?? '',
+            gradeLevel: String(course.gradeLevel ?? ''),
+            departmentId: String(course.departmentId ?? ''),
+            description: course.description ?? '',
+            code: course.code ?? '',
+        };
+    }, [query?.data?.data]);
 
     const selectedDepartmentId = watch('departmentId');
     const courseNumber = watch('courseNumber');
@@ -73,30 +99,84 @@ const EditCourse = () => {
             ? `${selectedDepartmentCode} ${courseNumber}`
             : selectedDepartmentCode || '';
 
+    const courseRecord = query?.data?.data;
+    const isEditRecordLoading = query?.isLoading;
+    const areBaseOptionsLoading = departmentsQuery.isLoading || gradeLevelsQuery.isLoading;
+
+    const isFormReady =
+        !!courseRecord &&
+        !isEditRecordLoading &&
+        !areBaseOptionsLoading &&
+        initializedRef.current;
+
+    const hasActualChanges = useMemo(() => {
+        if (!isFormReady) return false;
+
+        return (
+            String(currentValues.name ?? '') !== originalValues.name ||
+            String(currentValues.courseNumber ?? '') !== originalValues.courseNumber ||
+            String(currentValues.gradeLevel ?? '') !== originalValues.gradeLevel ||
+            String(currentValues.departmentId ?? '') !== originalValues.departmentId ||
+            String(currentValues.description ?? '') !== originalValues.description
+        );
+    }, [currentValues, originalValues, isFormReady]);
+
     useEffect(() => {
         const course = query?.data?.data;
-        if (!course || isDirty) return;
 
-        reset({
-            name: course.name ?? '',
-            courseNumber: course.code?.split(' ')?.slice(1).join(' ') ?? '',
-            gradeLevel: course.gradeLevel ?? '',
-            departmentId: course.departmentId ?? '',
-            description: course.description ?? '',
-            code: course.code ?? '',
-        });
-    }, [query?.data?.data, reset, isDirty]);
+        if (!course || initializedRef.current) return;
+        if (departmentsQuery.isLoading || gradeLevelsQuery.isLoading) return;
+
+        reset(
+            {
+                name: course.name ?? '',
+                courseNumber: course.code?.split(' ')?.slice(1).join(' ') ?? '',
+                gradeLevel: String(course.gradeLevel ?? ''),
+                departmentId: String(course.departmentId ?? ''),
+                description: course.description ?? '',
+                code: course.code ?? '',
+            },
+            {
+                keepDirty: false,
+                keepTouched: false,
+            }
+        );
+
+        initializedRef.current = true;
+    }, [query?.data?.data, departmentsQuery.isLoading, gradeLevelsQuery.isLoading, reset]);
 
     const onSubmit = async (values: z.infer<typeof editCourseSchema>) => {
+        if (!isFormReady) return;
+
         const changedValues: Partial<z.infer<typeof editCourseSchema>> = {};
 
-        if (dirtyFields.name) changedValues.name = values.name;
-        if (dirtyFields.gradeLevel) changedValues.gradeLevel = values.gradeLevel;
-        if (dirtyFields.departmentId) changedValues.departmentId = values.departmentId;
-        if (dirtyFields.description) changedValues.description = values.description;
-        if (dirtyFields.courseNumber) changedValues.courseNumber = values.courseNumber;
+        if (String(values.name ?? '') !== originalValues.name) {
+            changedValues.name = values.name;
+        }
 
-        if (dirtyFields.departmentId || dirtyFields.courseNumber) {
+        if (String(values.gradeLevel ?? '') !== originalValues.gradeLevel) {
+            changedValues.gradeLevel = values.gradeLevel;
+        }
+
+        if (String(values.departmentId ?? '') !== originalValues.departmentId) {
+            changedValues.departmentId = values.departmentId;
+        }
+
+        if (String(values.description ?? '') !== originalValues.description) {
+            changedValues.description = values.description;
+        }
+
+        const courseNumberChanged =
+            String(values.courseNumber ?? '') !== originalValues.courseNumber;
+
+        if (courseNumberChanged) {
+            changedValues.courseNumber = values.courseNumber;
+        }
+
+        if (
+            String(values.departmentId ?? '') !== originalValues.departmentId ||
+            courseNumberChanged
+        ) {
             const deptCode = departmentsQuery.data?.data
                 ?.find((d) => d.id === values.departmentId)
                 ?.code?.trim();
@@ -141,60 +221,56 @@ const EditCourse = () => {
             <div className="my-4 flex items-center">
                 <Card className="class-form-card">
                     <CardHeader className="relative z-10">
-                        <CardTitle className="text-2xl pb-0 font-bold">Update Course Info</CardTitle>
+                        <CardTitle className="pb-0 text-2xl font-bold">Update Course Info</CardTitle>
                     </CardHeader>
 
                     <Separator />
 
                     <CardContent className="mt-7">
-                        <Form {...form}>
-                            <form onSubmit={handleSubmit(onSubmit)} className="space-y-7">
-                                <FormField
-                                    control={control}
-                                    name="name"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                Course Name <span className="text-red-400">*</span>
-                                            </FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Data Structures and Algorithms" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        {!courseRecord || isEditRecordLoading || areBaseOptionsLoading ? (
+                            <div className="py-6 text-sm text-muted-foreground">Loading course form...</div>
+                        ) : (
+                            <Form {...form}>
+                                <form onSubmit={handleSubmit(onSubmit)} className="space-y-7">
                                     <FormField
                                         control={control}
-                                        name="departmentId"
+                                        name="name"
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>
-                                                    Department <span className="text-red-400">*</span>
+                                                    Course Name <span className="text-red-400">*</span>
                                                 </FormLabel>
                                                 <FormControl>
-                                                    <Select value={field.value} onValueChange={field.onChange}>
-                                                        <SelectTrigger className="cursor-pointer w-full">
-                                                            <SelectValue placeholder="Select Department" />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                            {departmentsQuery.isLoading && (
-                                                                <SelectItem value="loading" disabled>
-                                                                    Loading...
-                                                                </SelectItem>
-                                                            )}
+                                                    <Input
+                                                        placeholder="Data Structures and Algorithms"
+                                                        {...field}
+                                                        value={field.value ?? ''}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
 
-                                                            {departmentsQuery.isError && (
-                                                                <SelectItem value="error" disabled>
-                                                                    Failed to load departments
-                                                                </SelectItem>
-                                                            )}
-
-                                                            {!departmentsQuery.isLoading &&
-                                                                !departmentsQuery.isError &&
-                                                                departmentsQuery.data?.data?.map((department) => (
+                                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                                        <FormField
+                                            control={control}
+                                            name="departmentId"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>
+                                                        Department <span className="text-red-400">*</span>
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Select
+                                                            value={field.value ?? ''}
+                                                            onValueChange={(value) => field.onChange(value)}
+                                                        >
+                                                            <SelectTrigger className="w-full cursor-pointer">
+                                                                <SelectValue placeholder="Select Department" />
+                                                            </SelectTrigger>
+                                                            <SelectContent>
+                                                                {departmentsQuery.data?.data?.map((department) => (
                                                                     <SelectItem
                                                                         key={department.id}
                                                                         value={department.id}
@@ -203,59 +279,52 @@ const EditCourse = () => {
                                                                         {department.name}
                                                                     </SelectItem>
                                                                 ))}
-                                                        </SelectContent>
-                                                    </Select>
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
+                                                            </SelectContent>
+                                                        </Select>
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
 
-                                    <FormField
-                                        control={control}
-                                        name="courseNumber"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>
-                                                    Course Number <span className="text-red-400">*</span>
-                                                </FormLabel>
-                                                <FormControl>
-                                                    <Input placeholder="326" {...field} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
+                                        <FormField
+                                            control={control}
+                                            name="courseNumber"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>
+                                                        Course Number <span className="text-red-400">*</span>
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            placeholder="326"
+                                                            {...field}
+                                                            value={field.value ?? ''}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
 
-                                    <FormField
-                                        control={control}
-                                        name="gradeLevel"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>
-                                                    Grade Level <span className="text-red-400">*</span>
-                                                </FormLabel>
-                                                <FormControl>
-                                                    <Select value={field.value} onValueChange={field.onChange}>
-                                                        <SelectTrigger className="cursor-pointer w-full">
-                                                            <SelectValue placeholder="Select Grade Level" />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                            {gradeLevelsQuery.isLoading && (
-                                                                <SelectItem value="loading" disabled>
-                                                                    Loading...
-                                                                </SelectItem>
-                                                            )}
-
-                                                            {gradeLevelsQuery.isError && (
-                                                                <SelectItem value="error" disabled>
-                                                                    Failed to load grade levels
-                                                                </SelectItem>
-                                                            )}
-
-                                                            {!gradeLevelsQuery.isLoading &&
-                                                                !gradeLevelsQuery.isError &&
-                                                                gradeLevels?.map((gradeLevel) => (
+                                        <FormField
+                                            control={control}
+                                            name="gradeLevel"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>
+                                                        Grade Level <span className="text-red-400">*</span>
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Select
+                                                            value={field.value ?? ''}
+                                                            onValueChange={(value) => field.onChange(value)}
+                                                        >
+                                                            <SelectTrigger className="w-full cursor-pointer">
+                                                                <SelectValue placeholder="Select Grade Level" />
+                                                            </SelectTrigger>
+                                                            <SelectContent>
+                                                                {gradeLevels.map((gradeLevel) => (
                                                                     <SelectItem
                                                                         key={gradeLevel}
                                                                         value={gradeLevel}
@@ -264,49 +333,56 @@ const EditCourse = () => {
                                                                         {gradeLevel}
                                                                     </SelectItem>
                                                                 ))}
-                                                        </SelectContent>
-                                                    </Select>
+                                                            </SelectContent>
+                                                        </Select>
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+
+                                    <div className="w-full space-y-2">
+                                        <FormLabel>Course Code</FormLabel>
+                                        <Input
+                                            disabled
+                                            value={generatedCode}
+                                            placeholder="Auto-generated from department and course number"
+                                        />
+                                    </div>
+
+                                    <FormField
+                                        control={control}
+                                        name="description"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>
+                                                    Description <span className="text-red-400">*</span>
+                                                </FormLabel>
+                                                <FormControl>
+                                                    <Textarea
+                                                        placeholder="Type your description here..."
+                                                        className="min-h-[140px]"
+                                                        {...field}
+                                                        value={field.value ?? ''}
+                                                    />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
                                         )}
                                     />
-                                </div>
 
-                                <div className="w-full space-y-2">
-                                    <FormLabel>Course Code</FormLabel>
-                                    <Input
-                                        disabled
-                                        value={generatedCode}
-                                        placeholder="Auto-generated from department and course number"
-                                    />
-                                </div>
-
-                                <FormField
-                                    control={control}
-                                    name="description"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                Description <span className="text-red-400">*</span>
-                                            </FormLabel>
-                                            <FormControl>
-                                                <Textarea
-                                                    placeholder="Type your description here..."
-                                                    className="min-h-[140px]"
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <Button type="submit" size="lg" disabled={isSubmitting} className="w-full">
-                                    {isSubmitting ? 'Saving Changes...' : 'Save Changes'}
-                                </Button>
-                            </form>
-                        </Form>
+                                    <Button
+                                        type="submit"
+                                        size="lg"
+                                        disabled={isSubmitting || !hasActualChanges}
+                                        className="w-full"
+                                    >
+                                        {isSubmitting ? 'Saving Changes...' : 'Save Changes'}
+                                    </Button>
+                                </form>
+                            </Form>
+                        )}
                     </CardContent>
                 </Card>
             </div>
