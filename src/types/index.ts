@@ -143,7 +143,7 @@ export type StudentProfile = {
 }
 
 export type Enrollment = {
-    courseId: string;
+    sectionId: string;
     createdAt: Date;
     updatedAt: Date;
     studentId: string;
@@ -188,19 +188,19 @@ export type CourseEnrollment = {
     };
     createdAt: Date;
     updatedAt: Date;
-    courseId: string;
+    sectionId: string;
     studentId: string;
 }
 
 export type CreateEnrollment = {
     createdAt: Date;
     updatedAt: Date;
-    courseId: string;
+    sectionId: string;
     studentId: string;
 }
 
 export type StudentEnrollmentResult = {
-    courseId: string;
+    sectionId: string;
     createdAt: Date;
     updatedAt: Date;
     studentId: string;

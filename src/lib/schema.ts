@@ -177,3 +177,24 @@ export const periodSchema = z.object({
       path: ["endTime"],
     }
   );
+
+
+export const sectionSchema = z.object({
+  termId: z.string().min(1, "Term is required"), 
+  courseId: z.string().min(1, "Course is required"), 
+  periodId: z.string().min(1, "Period is required"), 
+  teacherId: z.string().min(1, "Teacher is required"), 
+  sectionLabel: z.string().min(3, "Section label must be at least 3 characters"), 
+  capacity: z.coerce.number({required_error: "Capacity is required", invalid_type_error: "Capacity must be a number"}).int("Capacity must be a whole number").positive("Capacity must be greater than 0"),
+  roomNumber: z.string().optional(),
+});
+
+export const editSectionSchema = z.object({
+  termId: z.string().min(1, "Term is required").optional(), 
+  courseId: z.string().min(1, "Course is required").optional(), 
+  periodId: z.string().min(1, "Period is requried").optional(), 
+  teacherId: z.string().min(1, "Teacher is required").optional(), 
+  sectionLabel: z.string().min(3, "Section label must be at least 3 characters").optional(), 
+  capacity: z.coerce.number({required_error: "Capacity is required", invalid_type_error: "Capacity must be a number"}).int("Capacity must be a whole number").positive("Capacity must be greater than 0").optional(),
+  roomNumber: z.string().optional(),
+})

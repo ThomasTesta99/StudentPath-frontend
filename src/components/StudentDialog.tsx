@@ -98,6 +98,8 @@ const StudentSelectDialog = ({
         }
 
         await onSubmit(selectedStudentIds);
+        setOpen(false);
+        resetDialog();
     };
 
     return (
