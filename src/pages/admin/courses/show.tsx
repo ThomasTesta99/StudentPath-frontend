@@ -7,10 +7,11 @@ import { useShow } from '@refinedev/core';
 import React, { ReactNode, useMemo } from 'react';
 import { useParams } from 'react-router';
 import { BookOpen, Building2, School} from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/refine-ui/data-table/data-table';
 import { useTable } from '@refinedev/react-table';
 import { ColumnDef } from '@tanstack/react-table';
+import { ShowButton } from '@/components/refine-ui/buttons/show';
+import { CreateButton } from '@/components/refine-ui/buttons/create';
 
 const DetailItem = ({
     label,
@@ -82,6 +83,21 @@ const ShowCourse = () => {
                 size: 50,
                 header: () => <p className="column-title">Room</p>,
                 cell: ({ row }) => <span>{row.original.roomNumber ?? "-"}</span>,
+            },
+            {
+                id: 'details',
+                size: 50,
+                header: () => <p className="column-title">Details</p>,
+                cell: ({ row }) => (
+                    <ShowButton
+                        resource="sections"
+                        recordItemId={row.original.id ?? '-'}
+                        variant="outline"
+                        size="sm"
+                    >
+                        View
+                    </ShowButton>
+                ),
             },
         ], []),
         refineCoreProps: {
@@ -201,8 +217,7 @@ const ShowCourse = () => {
                                 View sections offered for this course.
                             </CardDescription>
                         </div>
-                        <Button>Create Section</Button>
-                        {/* Add a create section or have it point to create section*/}
+                        <CreateButton resource='sections' />
                     </CardHeader>
                     <CardContent>
                         <DataTable table={sectionsTable} />
