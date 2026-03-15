@@ -51,6 +51,7 @@ import SectionsList from "./pages/admin/sections/list";
 import SectionCreate from "./pages/admin/sections/create";
 import ShowSection from "./pages/admin/sections/show";
 import EditSection from "./pages/admin/sections/edit";
+import EnrollmentsList from "./pages/admin/enrollments/list";
 
 function App() {
   return (
@@ -129,6 +130,9 @@ function App() {
                             <Route path="create" element={<SectionCreate />}/>
                             <Route path="show/:id" element={<ShowSection />} />
                             <Route path="edit/:id" element={<EditSection />} />
+                          </Route>
+                          <Route path="enrollments">
+                            <Route index element={<EnrollmentsList />} />
                           </Route>
                         
                         </Route>

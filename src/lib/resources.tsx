@@ -43,9 +43,6 @@ export const allResources: IResourceItem[] = [
     {
         name: "enrollments", 
         list: "/admin/enrollments", 
-        create: "/admin/enrollments/create", 
-        edit: "/admin/enrollments/edit/:id", 
-        show: "/admin/enrollments/show/:id", 
         meta: {label: "Enrollments", icon: <UserPlus />, roles: ["admin"], path: "admin/enrollments"}, 
     },
     {
