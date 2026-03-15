@@ -96,6 +96,8 @@ export type Section = {
     periodId: string;
     teacherId: string;
     capacity: number;
+    enrolledCount?: number;
+    availableSeats?: number | null;
     sectionLabel: string;
     roomNumber: string | null;
     term: TermDetails;
