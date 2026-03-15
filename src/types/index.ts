@@ -254,3 +254,14 @@ export type EnrolledStudent = {
     osis: string;
     gradeLevel: GradeLevel;
 }
+
+export type StudentScheduleRow = {
+    sectionId: string;
+    studentId: string;
+    createdAt: string;
+    updatedAt: string;
+    section: Section;
+    course: Course;
+    teacher: User;
+    period: Period;
+}
