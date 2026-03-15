@@ -19,82 +19,114 @@ type DeleteButtonProps = {
   };
   meta?: Record<string, unknown>;
   onSuccess?: () => void;
+
+  confirmTitle?: React.ReactNode;
+  confirmDescription?: React.ReactNode;
+  confirmOkLabel?: React.ReactNode;
+  cancelLabel?: React.ReactNode;
 } & React.ComponentProps<typeof Button>;
 
 export const DeleteButton = React.forwardRef<
   React.ComponentRef<typeof Button>,
   DeleteButtonProps
->(({ resource, recordItemId, accessControl, meta, onSuccess, children, ...rest }, ref) => {
-  const {
-    hidden,
-    disabled,
-    loading,
-    onConfirm,
-    label,
-    confirmTitle: defaultConfirmTitle,
-    confirmOkLabel: defaultConfirmOkLabel,
-    cancelLabel: defaultCancelLabel,
-  } = useDeleteButton({
-    resource,
-    id: recordItemId,
-    accessControl,
-    meta,
-    onSuccess,
-  });
+>(
+  (
+    {
+      resource,
+      recordItemId,
+      accessControl,
+      meta,
+      onSuccess,
+      children,
+      confirmTitle,
+      confirmDescription,
+      confirmOkLabel,
+      cancelLabel,
+      ...rest
+    },
+    ref
+  ) => {
+    const {
+      hidden,
+      disabled,
+      loading,
+      onConfirm,
+      label,
+      confirmTitle: defaultConfirmTitle,
+      confirmOkLabel: defaultConfirmOkLabel,
+      cancelLabel: defaultCancelLabel,
+    } = useDeleteButton({
+      resource,
+      id: recordItemId,
+      accessControl,
+      meta,
+      onSuccess,
+    });
 
-  const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = React.useState(false);
 
-  const isDisabled = disabled || rest.disabled || loading;
-  const isHidden = hidden || rest.hidden;
+    const isDisabled = disabled || rest.disabled || loading;
+    const isHidden = hidden || rest.hidden;
 
-  if (isHidden) return null;
+    if (isHidden) return null;
 
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <span>
-          <Button
-            variant="destructive"
-            {...rest}
-            ref={ref}
-            disabled={isDisabled}
-          >
-            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {children ?? (
-              <div className="flex items-center gap-2 font-semibold">
-                <Trash className="h-4 w-4" />
-                <span>{label}</span>
-              </div>
-            )}
-          </Button>
-        </span>
-      </PopoverTrigger>
-
-      <PopoverContent className="w-auto" align="start">
-        <div className="flex flex-col gap-2">
-          <p className="text-sm">{defaultConfirmTitle}</p>
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" size="sm" onClick={() => setOpen(false)}>
-              {defaultCancelLabel}
-            </Button>
+    return (
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <span>
             <Button
               variant="destructive"
-              size="sm"
-              disabled={loading}
-              onClick={() => {
-                if (typeof onConfirm === "function") {
-                  onConfirm();
-                }
-                setOpen(false);
-              }}
+              {...rest}
+              ref={ref}
+              disabled={isDisabled}
             >
-              {defaultConfirmOkLabel}
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {children ?? (
+                <div className="flex items-center gap-2 font-semibold">
+                  <Trash className="h-4 w-4" />
+                  <span>{label}</span>
+                </div>
+              )}
             </Button>
+          </span>
+        </PopoverTrigger>
+
+        <PopoverContent className="w-80" align="start">
+          <div className="flex flex-col gap-3">
+            <div className="space-y-1">
+              <p className="text-sm font-medium">
+                {confirmTitle ?? defaultConfirmTitle}
+              </p>
+              {confirmDescription && (
+                <p className="text-sm text-muted-foreground">
+                  {confirmDescription}
+                </p>
+              )}
+            </div>
+
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" size="sm" onClick={() => setOpen(false)}>
+                {cancelLabel ?? defaultCancelLabel}
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                disabled={loading}
+                onClick={() => {
+                  if (typeof onConfirm === "function") {
+                    onConfirm();
+                  }
+                  setOpen(false);
+                }}
+              >
+                {confirmOkLabel ?? defaultConfirmOkLabel}
+              </Button>
+            </div>
           </div>
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
-});
+        </PopoverContent>
+      </Popover>
+    );
+  }
+);
 
 DeleteButton.displayName = "DeleteButton";

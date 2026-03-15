@@ -1,4 +1,5 @@
 import EnrollStudent from "@/components/EnrollStudent";
+import { DeleteButton } from "@/components/refine-ui/buttons/delete";
 import { ShowButton } from "@/components/refine-ui/buttons/show";
 import { DataTable } from "@/components/refine-ui/data-table/data-table";
 import { ShowView, ShowViewHeader } from "@/components/refine-ui/views/show-view";
@@ -7,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator";
 import UnenrollStudent from "@/components/UnenrollStudent";
 import { CourseEnrollment, Section } from "@/types";
-import { useShow } from "@refinedev/core";
+import { useGo, useShow } from "@refinedev/core";
 import { useTable } from "@refinedev/react-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { BookOpen, Building2, CalendarDays, DoorOpen, UserRound, Users } from "lucide-react";
@@ -33,7 +34,7 @@ const DetailItem = ({
 
 const ShowSection = () => {
     const { id } = useParams();
-
+    const go = useGo();
     const { query: sectionQuery } = useShow<Section>({
         resource: 'sections',
         id,
@@ -157,24 +158,49 @@ const ShowSection = () => {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:w-auto lg:min-w-[420px]">
-                                <div className="rounded-lg border px-4 py-3">
-                                    <p className="text-xs text-muted-foreground">Teacher</p>
-                                    <p className="text-sm font-medium">
-                                        {section.teacher?.name || "Not assigned"}
-                                    </p>
+                            <div className="flex flex-col gap-3 lg:items-end">
+
+                                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:w-auto lg:min-w-[420px]">
+                                    <div className="rounded-lg border px-4 py-3">
+                                        <p className="text-xs text-muted-foreground">Teacher</p>
+                                        <p className="text-sm font-medium">
+                                            {section.teacher?.name || "Not assigned"}
+                                        </p>
+                                    </div>
+
+                                    <div className="rounded-lg border px-4 py-3">
+                                        <p className="text-xs text-muted-foreground">Students</p>
+                                        <p className="text-sm font-medium">{totalEnrolled}</p>
+                                    </div>
+
+                                    <div className="rounded-lg border px-4 py-3">
+                                        <p className="text-xs text-muted-foreground">Available Seats</p>
+                                        <p className="text-sm font-medium">
+                                            {availableSeats === null ? "Open" : availableSeats}
+                                        </p>
+                                    </div>
                                 </div>
 
-                                <div className="rounded-lg border px-4 py-3">
-                                    <p className="text-xs text-muted-foreground">Students</p>
-                                    <p className="text-sm font-medium">{totalEnrolled}</p>
-                                </div>
-
-                                <div className="rounded-lg border px-4 py-3">
-                                    <p className="text-xs text-muted-foreground">Available Seats</p>
-                                    <p className="text-sm font-medium">
-                                        {availableSeats === null ? "Open" : availableSeats}
-                                    </p>
+                                <div className="flex flex-wrap gap-2">
+                                    <DeleteButton
+                                        resource="sections"
+                                        recordItemId={section.id}
+                                        meta={{ path: "admin/sections" }}
+                                        confirmTitle="Delete this section?"
+                                        confirmDescription={`Section ${section.sectionLabel} will be permanently deleted, along with all student enrollments.`}
+                                        confirmOkLabel="Delete section"
+                                        cancelLabel="Cancel"
+                                        size="sm"
+                                        onSuccess={() => {
+                                            go({
+                                                to: {
+                                                    resource: "sections",
+                                                    action: "list",
+                                                },
+                                                type: "replace",
+                                            }); 
+                                        }}
+                                    />
                                 </div>
                             </div>
                         </div>

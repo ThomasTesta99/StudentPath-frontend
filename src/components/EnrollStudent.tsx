@@ -56,10 +56,16 @@ const EnrollStudent = ({ sectionId }: { sectionId: string}) => {
                     : `${createdEnrollments.length} students enrolled successfully.`,
             description: errorMessages[0],
         });
-        await invalidate({
-            resource: `admin/enrollments/${sectionId}/roster`,
-            invalidates: ["list"],
-        });
+        await Promise.all([
+            invalidate({
+                resource: `admin/enrollments/${sectionId}/roster`,
+                invalidates: ["list"],
+            }),
+            invalidate({
+                resource: "sections",
+                invalidates: ["list"],
+            }),
+        ]);
     };
 
     return (
