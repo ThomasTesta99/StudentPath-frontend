@@ -171,7 +171,12 @@ const EditSection = () => {
         const section = query?.data?.data;
 
         if (!section || initializedRef.current) return;
-        if (termsQuery.isLoading || periodsQuery.isLoading) return;
+        if (query?.isLoading || termsQuery.isLoading || periodsQuery.isLoading) return;
+
+        const hasTeacherDisplay = !!section.teacher?.name || !section.teacherId;
+        const hasCourseDisplay = !!section.course?.name || !section.courseId;
+
+        if (!hasTeacherDisplay || !hasCourseDisplay) return;
 
         reset(
             {
@@ -193,7 +198,13 @@ const EditSection = () => {
         setCourseSearch(section.course?.name ?? '');
 
         initializedRef.current = true;
-    }, [query?.data?.data, termsQuery.isLoading, periodsQuery.isLoading, reset]);
+    }, [
+        query?.data?.data,
+        query?.isLoading,
+        termsQuery.isLoading,
+        periodsQuery.isLoading,
+        reset,
+    ]);
 
     useEffect(() => {
         const handlePointerDown = (e: PointerEvent) => {

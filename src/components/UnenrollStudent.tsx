@@ -15,7 +15,6 @@ const UnenrollStudent = ({
     const [open, setOpen] = useState(false);
     const { open: notify } = useNotification();
     const { mutateAsync: unEnrollStudent, mutation } = useCustomMutation();
-
     const isUnenrolling = mutation.isPending;
 
     const handleUnenroll = async () => {
@@ -36,10 +35,20 @@ const UnenrollStudent = ({
             });
 
             setOpen(false);
-            await invalidate({
-                resource: `admin/enrollments/${sectionId}/roster`,
-                invalidates: ["list"],
-            });
+            await Promise.all([
+                invalidate({
+                    resource: `admin/enrollments/${sectionId}/roster`,
+                    invalidates: ["list"],
+                }),
+                invalidate({
+                    resource: `enrollments`, 
+                    invalidates: ["all"], 
+                }),
+                 invalidate({
+                    resource: "sections",
+                    invalidates: ["list"],
+                }),
+            ]);
         } catch {
             notify?.({
                 type: 'error',

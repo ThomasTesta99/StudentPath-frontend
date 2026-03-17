@@ -1,5 +1,5 @@
 import React from "react";
-import { useCreate, useInvalidate, useNotification } from "@refinedev/core";
+import { HttpError, useCreate, useInvalidate, useNotification } from "@refinedev/core";
 import { CreateEnrollment, StudentEnrollmentResult } from "@/types";
 import StudentSelectDialog from "./StudentDialog";
 
@@ -15,6 +15,8 @@ const EnrollStudent = ({ sectionId }: { sectionId: string}) => {
     const handleEnrollStudents = async (selectedStudentIds: string[]) => {
         const createdEnrollments: StudentEnrollmentResult[] = [];
         let failedCount = 0;
+
+        const errorMessages: string[] = [];
 
         for (const studentId of selectedStudentIds) {
             try {
@@ -34,8 +36,13 @@ const EnrollStudent = ({ sectionId }: { sectionId: string}) => {
                 if (response.data) {
                     createdEnrollments.push(response.data);
                 }
-            } catch {
+            } catch (error) {
                 failedCount += 1;
+                const err = error as HttpError;
+                const message =
+                    err?.message ||
+                    "Failed to enroll student";
+                errorMessages.push(message);
             }
         }
 
@@ -47,11 +54,23 @@ const EnrollStudent = ({ sectionId }: { sectionId: string}) => {
                     : createdEnrollments.length === 1
                     ? "Student successfully enrolled"
                     : `${createdEnrollments.length} students enrolled successfully.`,
+            description: errorMessages[0],
         });
-        await invalidate({
-            resource: `admin/enrollments/${sectionId}/roster`,
-            invalidates: ["list"],
-        });
+        await Promise.all([
+            invalidate({
+                resource: "enrollments",
+                invalidates: ["all"],
+            }),
+            invalidate({
+                resource: `admin/enrollments/${sectionId}/roster`,
+                invalidates: ["list"],
+            }),
+            invalidate({
+                resource: "sections",
+                invalidates: ["list"],
+            }),
+            
+        ]);
     };
 
     return (

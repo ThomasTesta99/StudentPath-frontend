@@ -96,6 +96,8 @@ export type Section = {
     periodId: string;
     teacherId: string;
     capacity: number;
+    enrolledCount?: number;
+    availableSeats?: number | null;
     sectionLabel: string;
     roomNumber: string | null;
     term: TermDetails;
@@ -231,3 +233,38 @@ export const BELL_SCHEDULE_TYPE_OPTIONS = [
     { value: 'assembly', label: 'Assembly Day' },
     { value: 'custom', label: 'Custom' },
 ]
+
+export type EnrollmentListRow = {
+    sectionId: string;
+    studentId: string;
+    createdAt: string;
+    updatedAt: string;
+    student: EnrolledStudent;
+    section: Section;
+    course: Course;
+    teacher: User;
+    period: Period;
+};
+
+
+export type EnrolledStudent = {
+    id: string;
+    name: string;
+    email: string;
+    osis: string;
+    gradeLevel: GradeLevel;
+}
+
+export type StudentScheduleRow = {
+    period: Period;
+    enrollment: Enrollment;
+    section: Section;
+    course: Course;
+    teacher: {
+        id: string;
+        name: string;
+    };
+    isEnrolled: boolean;
+};
+
+export type SectionSearchResult = Section;

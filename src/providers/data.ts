@@ -33,6 +33,7 @@ const options: CreateDataProviderOptions = {
         const value = String(filter.value);
         if(resource === "terms"){
           if(field === "termName") params.search = value;
+          if(field === "active") params.active = value;
         }
         if(resource === "departments"){
           if(field === "name") params.search = value;
@@ -54,8 +55,12 @@ const options: CreateDataProviderOptions = {
           if(field === "termId") params.termId = value;
         }
         if(resource === "enrollments"){
+          if(field === "search") params.search = value;
+          if(field === "gradeLevel") params.gradeLevel = value;
           if(field === "studentId") params.studentId = value;
+          if(field === "teacherId") params.teacherId = value;
           if(field === "sectionId") params.sectionId = value;
+          if(field === "termId") params.termId = value;
         }
         if(resource === "sections"){
           if(field === "search") params.search = value

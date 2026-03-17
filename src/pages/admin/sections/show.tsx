@@ -1,4 +1,5 @@
 import EnrollStudent from "@/components/EnrollStudent";
+import { DeleteButton } from "@/components/refine-ui/buttons/delete";
 import { ShowButton } from "@/components/refine-ui/buttons/show";
 import { DataTable } from "@/components/refine-ui/data-table/data-table";
 import { ShowView, ShowViewHeader } from "@/components/refine-ui/views/show-view";
@@ -7,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator";
 import UnenrollStudent from "@/components/UnenrollStudent";
 import { CourseEnrollment, Section } from "@/types";
-import { useShow } from "@refinedev/core";
+import { useGo, useShow } from "@refinedev/core";
 import { useTable } from "@refinedev/react-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { BookOpen, Building2, CalendarDays, DoorOpen, UserRound, Users } from "lucide-react";
@@ -33,7 +34,7 @@ const DetailItem = ({
 
 const ShowSection = () => {
     const { id } = useParams();
-
+    const go = useGo();
     const { query: sectionQuery } = useShow<Section>({
         resource: 'sections',
         id,
@@ -108,6 +109,14 @@ const ShowSection = () => {
         enrollmentsTable.refineCore?.tableQuery?.data?.data?.length ??
         0;
 
+    const capacity = section?.capacity ?? 0;
+
+    const availableSeats =
+        capacity === 0 ? 0 : Math.max(capacity - totalEnrolled, 0);
+
+    const isFull =
+        capacity !== 0 && availableSeats <= 0;
+
     if (sectionQuery.isLoading || sectionQuery.isError || !section) {
         return (
             <ShowView>
@@ -149,16 +158,49 @@ const ShowSection = () => {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:w-auto lg:min-w-[260px]">
-                                <div className="rounded-lg border px-4 py-3">
-                                    <p className="text-xs text-muted-foreground">Teacher</p>
-                                    <p className="text-sm font-medium">
-                                        {section.teacher?.name || 'Not assigned'}
-                                    </p>
+                            <div className="flex flex-col gap-3 lg:items-end">
+
+                                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:w-auto lg:min-w-[420px]">
+                                    <div className="rounded-lg border px-4 py-3">
+                                        <p className="text-xs text-muted-foreground">Teacher</p>
+                                        <p className="text-sm font-medium">
+                                            {section.teacher?.name || "Not assigned"}
+                                        </p>
+                                    </div>
+
+                                    <div className="rounded-lg border px-4 py-3">
+                                        <p className="text-xs text-muted-foreground">Students</p>
+                                        <p className="text-sm font-medium">{totalEnrolled}</p>
+                                    </div>
+
+                                    <div className="rounded-lg border px-4 py-3">
+                                        <p className="text-xs text-muted-foreground">Available Seats</p>
+                                        <p className="text-sm font-medium">
+                                            {availableSeats === null ? "Open" : availableSeats}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div className="rounded-lg border px-4 py-3">
-                                    <p className="text-xs text-muted-foreground">Students</p>
-                                    <p className="text-sm font-medium">{totalEnrolled}</p>
+
+                                <div className="flex flex-wrap gap-2">
+                                    <DeleteButton
+                                        resource="sections"
+                                        recordItemId={section.id}
+                                        meta={{ path: "admin/sections" }}
+                                        confirmTitle="Delete this section?"
+                                        confirmDescription={`Section ${section.sectionLabel} will be permanently deleted, along with all student enrollments.`}
+                                        confirmOkLabel="Delete section"
+                                        cancelLabel="Cancel"
+                                        size="sm"
+                                        onSuccess={() => {
+                                            go({
+                                                to: {
+                                                    resource: "sections",
+                                                    action: "list",
+                                                },
+                                                type: "replace",
+                                            }); 
+                                        }}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -225,7 +267,22 @@ const ShowSection = () => {
                                 />
                                 <DetailItem
                                     label="Capacity"
-                                    value={section.capacity ?? 'Not available'}
+                                    value={
+                                        capacity === null ? "No capacity set" : `${totalEnrolled}/${capacity} enrolled`
+                                    }
+                                />
+
+                                <DetailItem
+                                    label="Available Seats"
+                                    value={
+                                        availableSeats === null ? (
+                                            "Open"
+                                        ) : isFull ? (
+                                            <Badge variant="destructive">Full</Badge>
+                                        ) : (
+                                            `${availableSeats} seat${availableSeats === 1 ? "" : "s"} left`
+                                        )
+                                    }
                                 />
                                 <DetailItem
                                     label="Room Number"
@@ -275,8 +332,22 @@ const ShowSection = () => {
                             <div className="rounded-lg border p-4">
                                 <p className="text-sm text-muted-foreground">Capacity</p>
                                 <p className="mt-1 font-medium">
-                                    {section.capacity ?? 'No capacity set'}
+                                    {capacity === null ? "No capacity set" : capacity}
                                 </p>
+                            </div>
+
+                            <div className="rounded-lg border p-4">
+                                <p className="text-sm text-muted-foreground">Available Seats</p>
+                                <p className="mt-1 font-medium">
+                                    {availableSeats === null
+                                        ? "Open"
+                                        : `${availableSeats} seat${availableSeats === 1 ? "" : "s"} left`}
+                                </p>
+                                {isFull && (
+                                    <Badge variant="destructive" className="mt-2">
+                                        Section Full
+                                    </Badge>
+                                )}
                             </div>
                         </CardContent>
                     </Card>
