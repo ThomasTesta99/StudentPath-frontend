@@ -51,7 +51,7 @@ export function UserInfo() {
         <span className={cn("text-sm", "font-medium")}>
           {name}
         </span>
-        <span className={cn("text-xs")}>{email}</span>
+        <span className={cn("text-xs", "truncate")}>{email}</span>
       </div>
     </div>
   );

@@ -382,30 +382,36 @@ function SidebarButton({
   );
 }
 
-function SidebarFooter(){
-  const {open} = useShadcnSidebar();
-  const {mutate: logout} = useLogout();
+function SidebarFooter() {
+  const { open } = useShadcnSidebar();
+  const { mutate: logout } = useLogout();
 
   return (
-    <div className="mt-auto mb-4 flex flex-row items-center">
-      <div className={cn(
-          "flex items-center",
-          open ? "gap-2 px-1" : "justify-center px-0"
-        )}>
-        <UserInfo />
+    <div className="mt-auto mb-4 w-full px-1">
+      <div
+        className={cn(
+          "flex w-full items-center gap-2 overflow-hidden",
+          !open && "justify-center"
+        )}
+      >
+        {open && (
+          <div className="min-w-0 flex-1 overflow-hidden">
+            <UserInfo />
+          </div>
+        )}
 
         <Button
           type="button"
           variant="ghost"
           size="icon"
-          className={cn("shrink-0")}
+          className="h-9 w-9 shrink-0"
           onClick={() => logout()}
         >
           <LogOut className="h-4 w-4" />
         </Button>
       </div>
     </div>
-  )
+  );
 }
 
 
