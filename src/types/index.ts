@@ -256,12 +256,15 @@ export type EnrolledStudent = {
 }
 
 export type StudentScheduleRow = {
-    sectionId: string;
-    studentId: string;
-    createdAt: string;
-    updatedAt: string;
+    period: Period;
+    enrollment: Enrollment;
     section: Section;
     course: Course;
-    teacher: User;
-    period: Period;
-}
+    teacher: {
+        id: string;
+        name: string;
+    };
+    isEnrolled: boolean;
+};
+
+export type SectionSearchResult = Section;

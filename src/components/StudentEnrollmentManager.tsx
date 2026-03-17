@@ -4,7 +4,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Checkbox } from "./ui/checkbox";
-import { Separator } from "./ui/separator";
 import { useList } from "@refinedev/core";
 import { useTable } from "@refinedev/react-table";
 import { ColumnDef } from "@tanstack/react-table";
@@ -12,6 +11,8 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { StudentProfile, StudentScheduleRow, TermDetails } from "@/types";
 import { useDebouncedValue } from "@/lib/utilsTsx";
 import { Check, Search, UserRound } from "lucide-react";
+import UnenrollStudent from "./UnenrollStudent";
+import FindCourse from "./FindCourse";
 
 const StudentEnrollmentManager = () => {
     const [studentSearch, setStudentSearch] = useState("");
@@ -101,36 +102,28 @@ const StudentEnrollmentManager = () => {
                 id: "period",
                 accessorFn: (row) => row.period?.number ?? "",
                 header: () => <p className="column-title">Period</p>,
-                size: 90,
+                size: 110,
                 cell: ({ row }) => (
-                    <span className="font-semibold">
-                        {row.original.period?.number
-                            ? `Period ${row.original.period.number}`
-                            : "—"}
-                    </span>
-                ),
-            },
-            {
-                id: "code",
-                accessorFn: (row) => row.course?.code ?? "",
-                header: () => <p className="column-title">Code</p>,
-                size: 100,
-                cell: ({ row }) => (
-                    <span className="text-sm font-medium">
-                        {row.original.course?.code ?? "—"}
-                    </span>
+                    <div className="inline-flex min-w-[90px] items-center justify-center rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
+                        {row.original.period?.number ? `Period ${row.original.period.number}` : "—"}
+                    </div>
                 ),
             },
             {
                 id: "course",
                 accessorFn: (row) => row.course?.name ?? "",
                 header: () => <p className="column-title">Course Title</p>,
-                size: 240,
+                size: 260,
                 cell: ({ row }) => (
                     <div className="space-y-1">
                         <p className="font-medium text-foreground">
                             {row.original.course?.name ?? "Free Period"}
                         </p>
+                        {row.original.course?.code && (
+                            <p className="text-xs text-muted-foreground">
+                                {row.original.course.code}
+                            </p>
+                        )}
                     </div>
                 ),
             },
@@ -138,9 +131,9 @@ const StudentEnrollmentManager = () => {
                 id: "teacher",
                 accessorFn: (row) => row.teacher?.name ?? "",
                 header: () => <p className="column-title">Teacher</p>,
-                size: 180,
+                size: 190,
                 cell: ({ row }) => (
-                    <span className="text-sm">
+                    <span className="text-sm font-medium">
                         {row.original.teacher?.name ?? "Unassigned"}
                     </span>
                 ),
@@ -149,9 +142,11 @@ const StudentEnrollmentManager = () => {
                 id: "room",
                 accessorFn: (row) => row.section?.roomNumber ?? "",
                 header: () => <p className="column-title">Room</p>,
-                size: 100,
+                size: 110,
                 cell: ({ row }) => (
-                    <span className="text-sm">{row.original.section?.roomNumber ?? "—"}</span>
+                    <span className="rounded-md bg-muted px-2 py-1 text-xs font-medium">
+                        {row.original.section?.roomNumber ?? "—"}
+                    </span>
                 ),
             },
             {
@@ -172,8 +167,19 @@ const StudentEnrollmentManager = () => {
                         <span className="text-sm text-muted-foreground">—</span>
                     ),
             },
-        ],
-        []
+            {
+                id: "actions", 
+                accessorFn: (row) => row.isEnrolled,
+                size: 100,
+                header: () => <p className="column-title">Action</p>,
+                cell: ({row}) => 
+                    row.original.isEnrolled ? (
+                        <UnenrollStudent studentId={selectedStudentId} sectionId={row.original.enrollment.sectionId}/>
+                    ) : (
+                        <FindCourse studentId={selectedStudentId} periodId={row.original.period.id}/>
+                    )
+            }
+        ], [selectedStudentId]
     );
 
     const scheduleTable = useTable<StudentScheduleRow>({
@@ -198,6 +204,9 @@ const StudentEnrollmentManager = () => {
     const selectedStudent = students.find(
         (student) => student.userId === selectedStudentId
     );
+
+    const scheduleRows = scheduleTable.refineCore.tableQuery?.data?.data ?? [];
+    const scheduleRowCount = scheduleRows.length;
 
     return (
         <div className="space-y-6">
@@ -355,25 +364,113 @@ const StudentEnrollmentManager = () => {
                 </CardContent>
             </Card>
 
-            <Card className="border-border/60 shadow-sm">
-                <CardHeader className="pb-4">
-                    <CardTitle className="text-lg">Student Schedule</CardTitle>
-                    <CardDescription>
-                        Review the selected student's schedule by period.
-                    </CardDescription>
+            <Card className="overflow-hidden border-border/60 shadow-sm">
+                <CardHeader className="border-b bg-gradient-to-r from-muted/40 to-background pb-5">
+                    <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                        <div className="space-y-2">
+                            <div className="flex items-center gap-2">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                                    <UserRound className="h-5 w-5" />
+                                </div>
+
+                                <div>
+                                    <CardTitle className="text-lg sm:text-xl">
+                                        Student Schedule
+                                    </CardTitle>
+                                    <CardDescription className="mt-1">
+                                        Review the selected student&apos;s class schedule by period.
+                                    </CardDescription>
+                                </div>
+                            </div>
+
+                            {selectedStudentId && selectedTermId !== "all" && (
+                                <div className="flex flex-wrap items-center gap-2 pt-1">
+                                    <div className="rounded-full border bg-background px-3 py-1 text-sm font-medium shadow-sm">
+                                        {selectedStudent?.user.name ?? "Selected Student"}
+                                    </div>
+
+                                    <div className="rounded-full border bg-background px-3 py-1 text-sm text-muted-foreground shadow-sm">
+                                        {
+                                            terms.find((term) => term.id === selectedTermId)?.termName ??
+                                            "Selected Term"
+                                        }
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </CardHeader>
-                <CardContent className="pt-0">
+
+                <CardContent className="p-0">
                     {!selectedStudentId ? (
-                        <p className="text-sm text-muted-foreground">
-                            Search for and select a student to display their schedule.
-                        </p>
+                        <div className="flex min-h-[220px] flex-col items-center justify-center px-6 py-12 text-center">
+                            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-muted text-muted-foreground">
+                                <UserRound className="h-6 w-6" />
+                            </div>
+                            <p className="text-base font-medium">No student selected</p>
+                            <p className="mt-1 max-w-md text-sm text-muted-foreground">
+                                Search for a student above to view and manage their schedule.
+                            </p>
+                        </div>
                     ) : selectedTermId === "all" ? (
-                        <p className="text-sm text-muted-foreground">
-                            Select a term to display the student's schedule.
-                        </p>
+                        <div className="flex min-h-[220px] flex-col items-center justify-center px-6 py-12 text-center">
+                            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-muted text-muted-foreground">
+                                <Search className="h-6 w-6" />
+                            </div>
+                            <p className="text-base font-medium">Term required</p>
+                            <p className="mt-1 max-w-md text-sm text-muted-foreground">
+                                Choose a term or enable the active term filter to display the student&apos;s schedule.
+                            </p>
+                        </div>
+                    ) : scheduleTable.refineCore?.tableQuery?.isLoading ? (
+                        <div className="space-y-4 px-6 py-6">
+                            <div className="h-5 w-40 animate-pulse rounded-md bg-muted" />
+                            <div className="space-y-3">
+                                {[...Array(6)].map((_, index) => (
+                                    <div
+                                        key={index}
+                                        className="h-14 animate-pulse rounded-xl border bg-muted/40"
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    ) : scheduleTable.refineCore?.tableQuery?.isError ? (
+                        <div className="flex min-h-[220px] flex-col items-center justify-center px-6 py-12 text-center">
+                            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-destructive/10 text-destructive">
+                                <Search className="h-6 w-6" />
+                            </div>
+                            <p className="text-base font-medium">Unable to load schedule</p>
+                            <p className="mt-1 max-w-md text-sm text-muted-foreground">
+                                Something went wrong while loading this student&apos;s schedule.
+                            </p>
+                        </div>
                     ) : (
-                        <div className="rounded-xl border bg-background">
-                            <DataTable table={scheduleTable} />
+                        <div className="space-y-4 p-4 sm:p-6">
+                            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                <div>
+                                    <p className="font-medium text-foreground">
+                                        Schedule Overview
+                                    </p>
+                                    <p className="text-sm text-muted-foreground">
+                                        Period-by-period classes, room assignments, and actions.
+                                    </p>
+                                </div>
+
+                                <div className="flex flex-wrap gap-2">
+                                    <div className="rounded-full border bg-muted/40 px-3 py-1 text-xs font-medium">
+                                        {scheduleRowCount} period{scheduleRowCount === 1 ? "" : "s"}
+                                    </div>
+                                    {useActiveTerm && (
+                                        <div className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                                            Active Term
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="overflow-hidden rounded-2xl border bg-background shadow-sm">
+                                <DataTable table={scheduleTable} hidePagination={true}/>
+                            </div>
                         </div>
                     )}
                 </CardContent>

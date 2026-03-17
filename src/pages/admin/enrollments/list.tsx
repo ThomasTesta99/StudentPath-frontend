@@ -8,7 +8,7 @@ import React, { useState } from 'react'
 
 
 const EnrollmentsList = () => {
-    const [activeTab, setActiveTab] = useState<EnrollmentTab>("student");
+    const [activeTab, setActiveTab] = useState<EnrollmentTab>("course");
     
     return (
         <ListView>

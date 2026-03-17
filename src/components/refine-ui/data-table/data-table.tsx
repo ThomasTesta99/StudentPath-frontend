@@ -20,10 +20,12 @@ import { cn } from "@/lib/utils";
 
 type DataTableProps<TData extends BaseRecord> = {
   table: UseTableReturnType<TData, HttpError>;
+  hidePagination?: boolean;
 };
 
 export function DataTable<TData extends BaseRecord>({
   table,
+  hidePagination = false
 }: DataTableProps<TData>) {
   const {
     reactTable: { getHeaderGroups, getRowModel, getAllColumns },
@@ -198,7 +200,7 @@ export function DataTable<TData extends BaseRecord>({
           </TableBody>
         </Table>
       </div>
-      {!isLoading && getRowModel().rows?.length > 0 && (
+      {!hidePagination && !isLoading && getRowModel().rows?.length > 0 && (
         <DataTablePagination
           currentPage={currentPage}
           pageCount={pageCount}
