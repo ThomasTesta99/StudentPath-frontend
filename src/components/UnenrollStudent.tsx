@@ -43,7 +43,11 @@ const UnenrollStudent = ({
                 invalidate({
                     resource: `enrollments`, 
                     invalidates: ["all"], 
-                })
+                }),
+                 invalidate({
+                    resource: "sections",
+                    invalidates: ["list"],
+                }),
             ]);
         } catch {
             notify?.({

@@ -95,11 +95,12 @@ const FindCourse = ({
                 type: "success",
                 message: "Student enrolled successfully.",
             });
+            
+            const enrolledSectionId = selectedSectionId;
 
             setOpen(false);
             resetDialog();
 
-            const enrolledSectionId = selectedSectionId;
 
             setOpen(false);
             resetDialog();
@@ -168,6 +169,10 @@ const FindCourse = ({
                             {sectionsLoading ? (
                                 <div className="p-4 text-sm text-muted-foreground">
                                     Loading sections...
+                                </div>
+                            ) : query.isError ? (
+                                <div className="p-4 text-sm text-destructive">
+                                    Failed to load sections. Try again.
                                 </div>
                             ) : sections.length === 0 ? (
                                 <div className="p-4 text-sm text-muted-foreground">

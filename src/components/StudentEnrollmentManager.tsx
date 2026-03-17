@@ -62,7 +62,7 @@ const StudentEnrollmentManager = () => {
     });
 
     const students = studentsQuery.data?.data ?? [];
-    const terms = useActiveTerm ? termsQuery.data?.data ?? [] : termsQuery.data?.data ?? [];
+    const terms = termsQuery.data?.data ?? [];
 
     useEffect(() => {
         if (!useActiveTerm) return;
@@ -178,12 +178,23 @@ const StudentEnrollmentManager = () => {
                 accessorFn: (row) => row.isEnrolled,
                 size: 100,
                 header: () => <p className="column-title">Action</p>,
-                cell: ({row}) => 
-                    row.original.isEnrolled ? (
-                        <UnenrollStudent studentId={selectedStudentId} sectionId={row.original.enrollment.sectionId}/>
-                    ) : (
-                        <FindCourse studentId={selectedStudentId} periodId={row.original.period.id}/>
-                    )
+                cell: ({ row }) => {
+                    if (row.original.isEnrolled) {
+                        return (
+                            <UnenrollStudent
+                                studentId={selectedStudentId}
+                                sectionId={row.original.enrollment.sectionId}
+                            />
+                        );
+                    }
+
+                    const periodId = row.original.period?.id;
+                    if (!periodId) {
+                        return <span className="text-sm text-muted-foreground">—</span>;
+                    }
+
+                    return <FindCourse studentId={selectedStudentId} periodId={periodId} />;
+                },
             }
         ], [selectedStudentId]
     );

@@ -43,7 +43,7 @@ const EnrollStudent = ({ sectionId }: { sectionId: string}) => {
                     err?.message ||
                     "Failed to enroll student";
                 errorMessages.push(message);
-    }
+            }
         }
 
         notify?.({
