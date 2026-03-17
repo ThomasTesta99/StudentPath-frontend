@@ -268,3 +268,25 @@ export type StudentScheduleRow = {
 };
 
 export type SectionSearchResult = Section;
+
+// TEACHER TYPES 
+
+export type Class = {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    schoolId: string;
+    termId: string;
+    courseId: string;
+    periodId: string;
+    teacherId: string;
+    capacity: number;
+    sectionLabel: string;
+    roomNumber: string | null;
+
+    course: Course;
+    term: TermDetails;
+    period: Period;
+    bellSchedule: BellSchedule;
+    studentCount: number;
+}
