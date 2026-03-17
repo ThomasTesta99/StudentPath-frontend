@@ -35,14 +35,16 @@ const UnenrollStudent = ({
             });
 
             setOpen(false);
-            await invalidate({
-                resource: `admin/enrollments/${sectionId}/roster`,
-                invalidates: ["list"],
-            });
-            await invalidate({
-                resource: `enrollments`, 
-                invalidates: ["all"], 
-            })
+            await Promise.all([
+                invalidate({
+                    resource: `admin/enrollments/${sectionId}/roster`,
+                    invalidates: ["list"],
+                }),
+                invalidate({
+                    resource: `enrollments`, 
+                    invalidates: ["all"], 
+                })
+            ]);
         } catch {
             notify?.({
                 type: 'error',

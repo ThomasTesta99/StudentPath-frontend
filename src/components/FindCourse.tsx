@@ -99,10 +99,25 @@ const FindCourse = ({
             setOpen(false);
             resetDialog();
 
-            await invalidate({
-                resource: "enrollments",
-                invalidates: ["list"],
-            });
+            const enrolledSectionId = selectedSectionId;
+
+            setOpen(false);
+            resetDialog();
+
+            await Promise.all([
+                invalidate({
+                    resource: "enrollments",
+                    invalidates: ["list"],
+                }),
+                invalidate({
+                    resource: "sections",
+                    invalidates: ["list"],
+                }),
+                invalidate({
+                    resource: `admin/enrollments/${enrolledSectionId}/roster`,
+                    invalidates: ["list"],
+                }),
+            ]);
         } catch (error) {
             const err = error as HttpError;
             notify?.({
@@ -138,7 +153,10 @@ const FindCourse = ({
                     <Input
                         placeholder="Search courses..."
                         value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        onChange={(e) => {
+                            setSearch(e.target.value);
+                            setSelectedSectionId("");
+                        }}
                     />
 
                     {search.trim().length < 2 ? (

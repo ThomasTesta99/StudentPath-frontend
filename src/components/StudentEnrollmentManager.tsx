@@ -13,6 +13,8 @@ import { useDebouncedValue } from "@/lib/utilsTsx";
 import { Check, Search, UserRound } from "lucide-react";
 import UnenrollStudent from "./UnenrollStudent";
 import FindCourse from "./FindCourse";
+import { formatTime } from "@/lib/utils";
+import PeriodBadge from "./PeriodBadge";
 
 const StudentEnrollmentManager = () => {
     const [studentSearch, setStudentSearch] = useState("");
@@ -103,11 +105,15 @@ const StudentEnrollmentManager = () => {
                 accessorFn: (row) => row.period?.number ?? "",
                 header: () => <p className="column-title">Period</p>,
                 size: 110,
-                cell: ({ row }) => (
-                    <div className="inline-flex min-w-[90px] items-center justify-center rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
-                        {row.original.period?.number ? `Period ${row.original.period.number}` : "—"}
-                    </div>
-                ),
+                cell: ({ row }) => {
+                    const periodNumber = row.original.period?.number;
+                    const startTime = formatTime(row.original.period?.startTime);
+                    const endTime = formatTime(row.original.period?.endTime);
+
+                    return (
+                        <PeriodBadge periodNumber={periodNumber} startTime={startTime} endTime={endTime}/>
+                    );
+                },
             },
             {
                 id: "course",
@@ -253,8 +259,15 @@ const StudentEnrollmentManager = () => {
                                     }
                                 }}
                                 onFocus={() => setIsStudentDropdownOpen(true)}
-                                disabled={studentsQuery.isError}
                             />
+                            
+                            {isStudentDropdownOpen &&
+                                studentSearch.trim().length >= 2 &&
+                                studentsQuery.isError && (
+                                    <div className="absolute z-50 mt-1 w-full rounded-md border bg-popover px-3 py-2 text-sm text-destructive shadow-md">
+                                        Failed to search students. Try again.
+                                    </div>
+                                )}
 
                             {isStudentDropdownOpen && studentSearch.trim().length < 2 && (
                                 <div className="absolute z-50 mt-1 w-full rounded-md border bg-popover px-3 py-2 text-sm text-muted-foreground shadow-md">

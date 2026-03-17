@@ -58,6 +58,10 @@ const EnrollStudent = ({ sectionId }: { sectionId: string}) => {
         });
         await Promise.all([
             invalidate({
+                resource: "enrollments",
+                invalidates: ["all"],
+            }),
+            invalidate({
                 resource: `admin/enrollments/${sectionId}/roster`,
                 invalidates: ["list"],
             }),
@@ -65,6 +69,7 @@ const EnrollStudent = ({ sectionId }: { sectionId: string}) => {
                 resource: "sections",
                 invalidates: ["list"],
             }),
+            
         ]);
     };
 

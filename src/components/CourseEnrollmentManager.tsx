@@ -26,7 +26,7 @@ const CourseEnrollmentManager = () => {
     const debouncedValue = useDebouncedValue(search, 300);
 
     const searchFilters = debouncedValue
-        ? [{ field: "search", operator: "eq" as const, value: debouncedValue }]
+        ? [{ field: "search", operator: "contains" as const, value: debouncedValue.trim() }]
         : [];
 
     const termFilters =
@@ -113,7 +113,7 @@ const CourseEnrollmentManager = () => {
                 header: () => <p className="column-title">Seats</p>,
                 size: 140,
                 cell: ({ row }) => {
-                    const availableSeats = row.original.availableSeats;
+                    const availableSeats = row.original.availableSeats ?? 0;
                     const enrolledCount = row.original.enrolledCount ?? 0;
                     const capacity = row.original.capacity;
 
