@@ -50,3 +50,14 @@ export const formatTime = (time?: string) => {
 
     return `${hour}:${minute} ${suffix}`;
 };
+
+export const formatNameLastFirst = (fullName: string) => {
+    const parts = fullName.trim().split(/\s+/);
+
+    if (parts.length <= 1) return fullName;
+
+    const lastName = parts[parts.length - 1];
+    const firstNames = parts.slice(0, -1).join(" ");
+
+    return `${lastName}, ${firstNames}`;
+};

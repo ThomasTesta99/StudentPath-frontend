@@ -13,6 +13,41 @@
   }
 }
 
+@media print {
+  html,
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  .print\:hidden {
+    display: none !important;
+  }
+
+  .print\:block {
+    display: block !important;
+  }
+
+  .print\:p-8 {
+    padding: 2rem !important;
+  }
+
+  .print\:overflow-visible {
+    overflow: visible !important;
+  }
+
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  th,
+  td {
+    color: black !important;
+    background: white !important;
+  }
+}
+
 @layer components {
     .page-title {
         @apply text-3xl font-bold text-foreground tracking-tight;

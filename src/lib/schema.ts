@@ -69,7 +69,7 @@ export const studentSchema = z.object({
     .min(1, "Date of birth is required")
     .regex(/^\d{4}-\d{2}-\d{2}$/, "Date of birth must be in YYYY-MM-DD format")
     .refine((value) => {
-      isStrictIsoDate(value);
+      return isStrictIsoDate(value);
     }, {
       message: "Date of birth must be a valid date",
     }),

@@ -54,6 +54,7 @@ import EditSection from "./pages/admin/sections/edit";
 import EnrollmentsList from "./pages/admin/enrollments/list";
 import TeacherLayout from "./components/Layouts/TeacherLayout";
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
+import ShowCourseSection from "./pages/teacher/classes/show";
 
 function App() {
   return (
@@ -143,6 +144,9 @@ function App() {
                       <Route element={<RequireRole allow={["teacher"]} />}>
                         <Route path="/teacher" element={<TeacherLayout />}>
                           <Route index element={<TeacherDashboard />} />
+                          <Route path="sections">
+                            <Route path="show/:id" element={<ShowCourseSection />} />
+                          </Route>
                         </Route>
                       </Route>
 
