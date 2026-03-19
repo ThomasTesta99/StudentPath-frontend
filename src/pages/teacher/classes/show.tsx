@@ -2,7 +2,7 @@ import { Breadcrumb } from '@/components/refine-ui/layout/breadcrumb';
 import { ShowView } from '@/components/refine-ui/views/show-view';
 import Tabs from '@/components/Tabs';
 import AssignmentsList from '@/components/teacher/AssignmentsList';
-import Attendence from '@/components/teacher/Attendence';
+import Attendance from '@/components/teacher/Attendance';
 import ClassOverview from '@/components/teacher/ClassOverview';
 import Gradebook from '@/components/teacher/Gradebook';
 import { TeacherSectionDetail } from '@/types';
@@ -10,13 +10,13 @@ import { useShow } from '@refinedev/core';
 import React, { useState } from 'react'
 import { useParams } from 'react-router'
 
-type TeacherTab = "overview" | "assignments" | "attendence" | "gradebook";
+type TeacherTab = "overview" | "assignments" | "attendance" | "gradebook";
 
 const teacherTabs: {key: TeacherTab; label: string}[] = [
     {key: "overview", label: "Overview"},
     {key: "gradebook", label: "Gradebook"}, 
     {key: "assignments", label: "Assignments"},
-    {key: "attendence", label: "Attendence"}, 
+    {key: "attendance", label: "Attendance"}, 
 ]
 
 const ShowCourseSection = () => {
@@ -61,8 +61,8 @@ const ShowCourseSection = () => {
                 <Gradebook />
             ) : activeTab === "assignments" ? (
                 <AssignmentsList />
-            ) : activeTab === "attendence" ? (
-                <Attendence />
+            ) : activeTab === "attendance" ? (
+                <Attendance />
             ) : <></>} 
         </ShowView>
     )

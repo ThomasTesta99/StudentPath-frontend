@@ -30,8 +30,8 @@ export const DetailRow = ({
     <div className="flex items-start gap-3 rounded-lg border p-4">
       <div className="mt-0.5 text-muted-foreground">{icon}</div>
       <div className="space-y-1">
-        <p className="text-sm font-medium text-muted-foreground">{label}</p>
-        <p className="text-sm font-semibold">{value}</p>
+        <div className="text-sm font-medium text-muted-foreground">{label}</div>
+        <div className="text-sm font-semibold">{value}</div>
       </div>
     </div>
   );

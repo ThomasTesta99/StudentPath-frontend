@@ -55,6 +55,7 @@ import EnrollmentsList from "./pages/admin/enrollments/list";
 import TeacherLayout from "./components/Layouts/TeacherLayout";
 import TeacherDashboard from "./pages/teacher/TeacherDashboard";
 import ShowCourseSection from "./pages/teacher/classes/show";
+import ClassesList from "./pages/teacher/classes/list";
 
 function App() {
   return (
@@ -145,6 +146,7 @@ function App() {
                         <Route path="/teacher" element={<TeacherLayout />}>
                           <Route index element={<TeacherDashboard />} />
                           <Route path="sections">
+                            <Route index element={<ClassesList />} />
                             <Route path="show/:id" element={<ShowCourseSection />} />
                           </Route>
                         </Route>

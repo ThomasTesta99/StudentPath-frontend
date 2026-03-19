@@ -36,13 +36,13 @@
     overflow: visible !important;
   }
 
-  table {
+  .print-roster table {
     width: 100% !important;
     border-collapse: collapse !important;
   }
 
-  th,
-  td {
+  .print-roster th,
+  .print-roster td {
     color: black !important;
     background: white !important;
   }

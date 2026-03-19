@@ -20,11 +20,13 @@ const Tabs = <T extends string>({
 } : TabsProps<T>) => {
     
     return (
-        <div className='flex items-center gap-6'>
+        <div className="flex items-center gap-6" role="tablist" aria-label="Section tabs">
             {tabs.map((tab) => (
                 <button
                     key={tab.key}
                     type='button'
+                    role="tab"
+                    aria-selected={activeTab === tab.key}
                     onClick={() => onChange(tab.key)}
                     className={cn(
                         "relative pb-3 font-medium transition-colors cursor-pointer",

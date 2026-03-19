@@ -6,20 +6,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { useList } from "@refinedev/core";
 import React, { useMemo } from "react";
 import {
   BookOpen,
   CalendarRange,
-  ChevronRight,
-  Clock3,
-  DoorOpen,
   GraduationCap,
   Users,
 } from "lucide-react";
 import { Class, TermDetails } from "@/types";
-import { ShowButton } from "@/components/refine-ui/buttons/show";
+import ClassCard from "@/components/teacher/ClassCard";
 
 const TeacherDashboard = () => {
   const { query: termsQuery } = useList<TermDetails>({
@@ -73,13 +69,8 @@ const TeacherDashboard = () => {
     return classes.reduce((sum, item) => sum + (item.studentCount ?? 0), 0);
   }, [classes]);
 
-  const formatPeriodTime = (startTime?: string, endTime?: string) => {
-    if (!startTime || !endTime) return "Time unavailable";
-    return `${startTime.slice(0, 5)} - ${endTime.slice(0, 5)}`;
-  };
-
-  const isLoading = termsQuery.isLoading || (activeTerm && classesQuery.isLoading);
-  const isError = termsQuery.isError || classesQuery.isError;
+  const isLoading = termsQuery.isLoading || (!!activeTerm && classesQuery.isLoading);
+  const isError = termsQuery.isError || (!!activeTerm && classesQuery.isError);
 
   return (
     <div className="space-y-6 p-6">
@@ -206,65 +197,7 @@ const TeacherDashboard = () => {
           ) : (
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               {classes.map((item) => (
-                <Card
-                  key={item.id}
-                  className="flex h-full flex-col justify-between border-border/70"
-                >
-                  <CardHeader className="space-y-3">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="space-y-1">
-                        <CardTitle className="text-xl">{item.course.name}</CardTitle>
-                        <CardDescription>
-                          {item.sectionLabel || "Section"} • {activeTerm.termName}
-                        </CardDescription>
-                      </div>
-                    </div>
-
-                    <Separator />
-
-                    <div className="space-y-2 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-2">
-                        <BookOpen className="h-4 w-4" />
-                        <span>
-                          {item.course.gradeLevel
-                            ? `Grade ${item.course.gradeLevel}`
-                            : "Grade not set"}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <Clock3 className="h-4 w-4" />
-                        <span>
-                          Period {item.period.number} •{" "}
-                          {formatPeriodTime(item.period.startTime, item.period.endTime)}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <DoorOpen className="h-4 w-4" />
-                        <span>
-                          {item.roomNumber ? `Room ${item.roomNumber}` : "Room not assigned"}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <Users className="h-4 w-4" />
-                        <span>{item.studentCount ?? 0} students enrolled</span>
-                      </div>
-                    </div>
-                  </CardHeader>
-
-                  <CardContent>
-                    <ShowButton
-                      className="w-full"
-                      resource="classes"
-                      recordItemId={item.id}
-                    >
-                      Open Class
-                      <ChevronRight className="ml-2 h-4 w-4" />
-                    </ShowButton>
-                  </CardContent>
-                </Card>
+                <ClassCard key={item.id} classDetails={item} />
               ))}
             </div>
           )}
