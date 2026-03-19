@@ -287,7 +287,7 @@ export type Class = {
     course: Course;
     term: TermDetails;
     period: Period;
-    bellSchedule: BellSchedule;
+    bellSchedule: BellSchedule | null;
     studentCount: number;
 }
 
@@ -316,6 +316,6 @@ export type TeacherRosterRow = {
     studentId: string;
     name: string;
     osis: string;
-    gradeLevel: string;
+    gradeLevel: GradeLevel;
     enrollmentCreatedAt: Date;
 }

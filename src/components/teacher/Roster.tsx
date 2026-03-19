@@ -84,7 +84,7 @@ const Roster = ({ section }: { section: TeacherSectionDetail }) => {
 
             <CardContent className="pt-0">
                 <div ref={printRef} className="print:p-8">
-                    <div className="hidden print:block mb-6 border-b border-black pb-4 text-black">
+                    <div className="print-roster hidden print:block mb-6 border-b border-black pb-4 text-black">
                         <PrintRosterTable section={section}/>
                     </div>
 

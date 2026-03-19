@@ -69,8 +69,8 @@ const TeacherDashboard = () => {
     return classes.reduce((sum, item) => sum + (item.studentCount ?? 0), 0);
   }, [classes]);
 
-  const isLoading = termsQuery.isLoading || (activeTerm && classesQuery.isLoading);
-  const isError = termsQuery.isError || classesQuery.isError;
+  const isLoading = termsQuery.isLoading || (!!activeTerm && classesQuery.isLoading);
+  const isError = termsQuery.isError || (!!activeTerm && classesQuery.isError);
 
   return (
     <div className="space-y-6 p-6">

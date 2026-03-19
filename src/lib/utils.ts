@@ -52,9 +52,11 @@ export const formatTime = (time?: string) => {
 };
 
 export const formatNameLastFirst = (fullName: string) => {
-    const parts = fullName.trim().split(/\s+/);
+    const normalized = fullName.trim();
+    if (!normalized) return "";
+    const parts = normalized.split(/\s+/);
 
-    if (parts.length <= 1) return fullName;
+    if (parts.length <= 1) return normalized;
 
     const lastName = parts[parts.length - 1];
     const firstNames = parts.slice(0, -1).join(" ");

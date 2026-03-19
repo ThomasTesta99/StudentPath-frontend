@@ -4,12 +4,10 @@ import { Separator } from '../ui/separator'
 import { BookOpen, ChevronRight, Clock3, DoorOpen, Users } from 'lucide-react'
 import { ShowButton } from '../refine-ui/buttons/show'
 import { Class } from '@/types'
+import { formatTime } from '@/lib/utils'
 
 const ClassCard = ({classDetails} : {classDetails : Class}) => {
-    const formatPeriodTime = (startTime?: string, endTime?: string) => {
-        if (!startTime || !endTime) return "Time unavailable";
-        return `${startTime.slice(0, 5)} - ${endTime.slice(0, 5)}`;
-    };
+    
     return (
         <Card
             className="flex h-full flex-col justify-between border-border/70"
@@ -40,7 +38,7 @@ const ClassCard = ({classDetails} : {classDetails : Class}) => {
                     <Clock3 className="h-4 w-4" />
                     <span>
                         Period {classDetails.period.number} •{" "}
-                        {formatPeriodTime(classDetails.period.startTime, classDetails.period.endTime)}
+                        {formatTime(classDetails.period.startTime)} - {formatTime(classDetails.period.endTime)}
                     </span>
                     </div>
 

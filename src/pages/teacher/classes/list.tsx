@@ -184,7 +184,7 @@ const ClassesList = () => {
                                             </div>
 
                                             <div className="inline-flex w-fit items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                                                {termClasses.length} active
+                                                {termClasses.length} {termClasses.length === 1 ? "class" : "classes"}
                                             </div>
                                         </div>
                                     </CardHeader>
