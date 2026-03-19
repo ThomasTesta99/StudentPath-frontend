@@ -2,26 +2,31 @@ import { cn } from '@/lib/utils'
 import { motion } from 'framer-motion'
 import React from 'react'
 
-export type EnrollmentTab = "course" | "student"
+type TabItem<T extends string> = {
+  key: T;
+  label: string;
+};
 
-const EnrollmentTabs = ({
+type TabsProps<T extends string> = {
+    tabs: TabItem<T>[];
+    activeTab: T;
+    onChange: (tab: T) => void;
+}
+
+const Tabs = <T extends string>({
+    tabs, 
     activeTab, 
     onChange 
-} : {
-    activeTab: EnrollmentTab, 
-    onChange: (tab: EnrollmentTab) => void
-}) => {
-    const tabs: {key: EnrollmentTab; label: string}[] = [
-        {key: "course", label: "Course"},
-        {key: "student", label: "Student"},
-    ]
+} : TabsProps<T>) => {
     
     return (
-        <div className='flex items-center gap-6'>
+        <div className="flex items-center gap-6" role="tablist" aria-label="Section tabs">
             {tabs.map((tab) => (
                 <button
                     key={tab.key}
                     type='button'
+                    role="tab"
+                    aria-selected={activeTab === tab.key}
                     onClick={() => onChange(tab.key)}
                     className={cn(
                         "relative pb-3 font-medium transition-colors cursor-pointer",
@@ -45,4 +50,4 @@ const EnrollmentTabs = ({
     )
 }
 
-export default EnrollmentTabs
+export default Tabs

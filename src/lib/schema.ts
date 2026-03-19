@@ -57,6 +57,14 @@ export const editTeacherSchema = z.object({
   email: z.string().email().optional(), 
 });
 
+const dobSchema = z
+  .string()
+  .min(1, "Date of birth is required")
+  .regex(/^\d{4}-\d{2}-\d{2}$/, "Date of birth must be in YYYY-MM-DD format")
+  .refine((value) => isStrictIsoDate(value), {
+    message: "Date of birth must be a valid date",
+  });
+
 export const studentSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email"),
@@ -64,15 +72,7 @@ export const studentSchema = z.object({
   confirmPassword: z.string().min(1, "Please confirm your password"),
   osis: z.string().regex(/^\d{9}$/, "OSIS must be exactly 9 digits"),
   gradeLevel: z.string().min(1, "Grade level is required").max(2, "Must be a valid grade level"),
-  dob: z
-    .string()
-    .min(1, "Date of birth is required")
-    .regex(/^\d{4}-\d{2}-\d{2}$/, "Date of birth must be in YYYY-MM-DD format")
-    .refine((value) => {
-      isStrictIsoDate(value);
-    }, {
-      message: "Date of birth must be a valid date",
-    }),
+  dob: dobSchema,
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords must match",
   path: ["confirmPassword"],
@@ -83,17 +83,7 @@ export const editStudentSchema = z.object({
   email: z.string().email("Invalid email").optional(),
   osis: z.string().regex(/^\d{9}$/, "OSIS must be exactly 9 digits").optional(),
   gradeLevel: z.string().min(1, "Grade level is required").max(2, "Must be a valid grade level").optional(),
-  dob: z
-    .string()
-    .min(1, "Date of birth is required")
-    .regex(/^\d{4}-\d{2}-\d{2}$/, "Date of birth must be in YYYY-MM-DD format")
-    
-    .refine((value) => {
-      isStrictIsoDate(value)
-    }, {
-      message: "Date of birth must be a valid date",
-    }).optional()
-    ,
+  dob: dobSchema.optional(),
 });
 
 export const parentsSchema = z.object({

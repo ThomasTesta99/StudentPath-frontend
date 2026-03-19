@@ -1,11 +1,17 @@
 import CourseEnrollmentManager from '@/components/CourseEnrollmentManager';
-import EnrollmentTabs, { EnrollmentTab } from '@/components/EnrollmentTabs';
+import Tabs from '@/components/Tabs';
 import { Breadcrumb } from '@/components/refine-ui/layout/breadcrumb';
 import { ListView } from '@/components/refine-ui/views/list-view';
 import StudentEnrollmentManager from '@/components/StudentEnrollmentManager';
 import { Separator } from '@/components/ui/separator';
 import React, { useState } from 'react'
 
+type EnrollmentTab = "course" | "student";
+
+const enrollmentTabs : {key: EnrollmentTab; label: string}[] = [
+    { key: "course", label: "Course" },
+    { key: "student", label: "Student" },
+]
 
 const EnrollmentsList = () => {
     const [activeTab, setActiveTab] = useState<EnrollmentTab>("course");
@@ -22,7 +28,7 @@ const EnrollmentsList = () => {
 
             
             <div className="space-y-6 p-6 w-full flex items-center gap-6 justify-center">
-                <EnrollmentTabs activeTab={activeTab} onChange={setActiveTab} />
+                <Tabs tabs = {enrollmentTabs} activeTab={activeTab} onChange={setActiveTab} />
             </div>
 
             {activeTab === "course" ? (
