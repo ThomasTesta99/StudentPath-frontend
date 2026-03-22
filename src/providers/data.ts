@@ -23,55 +23,81 @@ const buildHttpError = async (response: Response): Promise<HttpError> => {
 const options: CreateDataProviderOptions = {
   getList: {
     getEndpoint: ({resource, meta}) => meta?.path ?? resource,
-    buildQueryParams: async ({resource, pagination, filters}) => {
+    buildQueryParams: async ({ resource, pagination, filters, meta }) => {
       const page = pagination?.currentPage ?? 1;
       const pageSize = pagination?.pageSize ?? 10;
 
-      const params: Record<string, string | number> = {page, limit: pageSize};
+      const params: Record<string, string | number> = { page, limit: pageSize };
+
       filters?.forEach((filter) => {
-        const field = 'field' in filter ? filter.field : '';
+        const field = "field" in filter ? filter.field : "";
         const value = String(filter.value);
-        if(resource === "terms"){
-          if(field === "termName") params.search = value;
-          if(field === "active") params.active = value;
+
+        if (resource === "terms") {
+          if (field === "termName") params.search = value;
+          if (field === "active") params.active = value;
         }
-        if(resource === "departments"){
-          if(field === "name") params.search = value;
+
+        if (resource === "departments") {
+          if (field === "name") params.search = value;
         }
-        if(resource === "teachers"){
-          if(field === "search") params.search = value
+
+        if (resource === "teachers") {
+          if (field === "search") params.search = value;
         }
-        if(resource === "students"){
-          if(field === "search") params.search = value;
-          if(field === "studentId") params.studentId = value;
+
+        if (resource === "students") {
+          if (field === "search") params.search = value;
+          if (field === "studentId") params.studentId = value;
         }
-        if(resource === "parents"){
-          if(field === "search") params.search = value;
-          if(field === "parentId") params.parentId = value;
+
+        if (resource === "parents") {
+          if (field === "search") params.search = value;
+          if (field === "parentId") params.parentId = value;
         }
-        if(resource === "courses"){
-          if(field === "search") params.search = value;
-          if(field === "departmentId") params.departmentId = value;
-          if(field === "termId") params.termId = value;
+
+        if (resource === "courses") {
+          if (field === "search") params.search = value;
+          if (field === "departmentId") params.departmentId = value;
+          if (field === "termId") params.termId = value;
         }
-        if(resource === "enrollments"){
-          if(field === "search") params.search = value;
-          if(field === "gradeLevel") params.gradeLevel = value;
-          if(field === "studentId") params.studentId = value;
-          if(field === "teacherId") params.teacherId = value;
-          if(field === "sectionId") params.sectionId = value;
-          if(field === "termId") params.termId = value;
+
+        if (resource === "enrollments") {
+          if (field === "search") params.search = value;
+          if (field === "gradeLevel") params.gradeLevel = value;
+          if (field === "studentId") params.studentId = value;
+          if (field === "teacherId") params.teacherId = value;
+          if (field === "sectionId") params.sectionId = value;
+          if (field === "termId") params.termId = value;
         }
-        if(resource === "sections"){
-          if(field === "search") params.search = value
-          if(field === "courseId") params.courseId = value;
-          if(field === "periodId") params.periodId = value;
-          if(field === "termId") params.termId = value;
+
+        if (resource === "sections") {
+          if (field === "search") params.search = value;
+          if (field === "courseId") params.courseId = value;
+          if (field === "periodId") params.periodId = value;
+          if (field === "termId") params.termId = value;
         }
-        if(resource === "classes"){
-          if(field === "termId") params.termId = value;
+
+        if (resource === "classes") {
+          if (field === "termId") params.termId = value;
         }
-      })
+
+        if (resource === "assignments") {
+          if (field === "search") params.search = value;
+          if (field === "type") params.type = value;
+          if (field === "status") params.status = value;
+        }
+      });
+
+      const metaQuery = meta?.query as Record<string, string | number | undefined> | undefined;
+
+      if (metaQuery) {
+        Object.entries(metaQuery).forEach(([key, value]) => {
+          if (value !== undefined && value !== null && value !== "") {
+            params[key] = value;
+          }
+        });
+      }
 
       return params;
     },

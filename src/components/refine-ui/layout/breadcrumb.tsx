@@ -3,6 +3,7 @@
 import {
   Breadcrumb as ShadcnBreadcrumb,
   BreadcrumbItem as ShadcnBreadcrumbItem,
+  BreadcrumbLink as ShadcnBreadcrumbLink,
   BreadcrumbList as ShadcnBreadcrumbList,
   BreadcrumbPage as ShadcnBreadcrumbPage,
   BreadcrumbSeparator as ShadcnBreadcrumbSeparator,
@@ -25,51 +26,53 @@ export function Breadcrumb() {
   const breadCrumbItems = useMemo(() => {
     const list: {
       key: string;
-      href: string;
-      Component: React.ReactNode;
+      href?: string;
+      label: React.ReactNode;
+      isCurrent?: boolean;
     }[] = [];
 
     list.push({
       key: "breadcrumb-item-home",
-      href: rootRouteResource.matchedRoute ?? "/",
-      Component: (
-        <Link to={rootRouteResource.matchedRoute ?? "/"}>
-          {rootRouteResource?.resource?.meta?.icon ?? (
-            <Home className="h-4 w-4" />
-          )}
-        </Link>
+      href: rootRouteResource?.matchedRoute ?? "/",
+      label: rootRouteResource?.resource?.meta?.icon ?? (
+        <Home className="h-4 w-4 shrink-0" />
       ),
+      isCurrent: breadcrumbs.length === 0,
     });
 
-    for (const { label, href } of breadcrumbs) {
+    breadcrumbs.forEach(({ label, href }, index) => {
+      const isLast = index === breadcrumbs.length - 1;
+
       list.push({
-        key: `breadcrumb-item-${label}`,
-        href: href ?? "",
-        Component: href ? <Link to={href}>{label}</Link> : <span>{label}</span>,
+        key: `breadcrumb-item-${String(label)}`,
+        href: isLast ? undefined : href ?? undefined,
+        label,
+        isCurrent: isLast,
       });
-    }
+    });
 
     return list;
-  }, [breadcrumbs, Link, rootRouteResource]);
+  }, [breadcrumbs, rootRouteResource]);
 
   return (
     <ShadcnBreadcrumb>
       <ShadcnBreadcrumbList>
         {breadCrumbItems.map((item, index) => {
-          if (index === breadCrumbItems.length - 1) {
-            return (
-              <ShadcnBreadcrumbPage key={item.key}>
-                {item.Component}
-              </ShadcnBreadcrumbPage>
-            );
-          }
+          const isLast = index === breadCrumbItems.length - 1;
 
           return (
             <Fragment key={item.key}>
-              <ShadcnBreadcrumbItem key={item.key}>
-                {item.Component}
+              <ShadcnBreadcrumbItem>
+                {isLast ? (
+                  <ShadcnBreadcrumbPage>{item.label}</ShadcnBreadcrumbPage>
+                ) : (
+                  <ShadcnBreadcrumbLink asChild>
+                    <Link to={item.href ?? "/"}>{item.label}</Link>
+                  </ShadcnBreadcrumbLink>
+                )}
               </ShadcnBreadcrumbItem>
-              <ShadcnBreadcrumbSeparator />
+
+              {!isLast && <ShadcnBreadcrumbSeparator />}
             </Fragment>
           );
         })}

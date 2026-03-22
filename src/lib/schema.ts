@@ -1,5 +1,6 @@
 import * as z from "zod";
 import { isStrictIsoDate } from "./utils";
+import { ASSIGNMENT_TYPE } from "@/types";
 
 export const termSchema = z.object({
     termName: z.string().min(1, "Name is required"),
@@ -188,3 +189,46 @@ export const editSectionSchema = z.object({
   capacity: z.coerce.number({required_error: "Capacity is required", invalid_type_error: "Capacity must be a number"}).int("Capacity must be a whole number").positive("Capacity must be greater than 0").optional(),
   roomNumber: z.string().optional(),
 })
+
+export const assignmentSchema = z.object({
+  title: z.string().trim().min(1, "Title is required"),
+  description: z.string().trim().min(1, "Description is required"),
+  dueDate: z
+    .string()
+    .min(1, "Due date is required")
+    .refine((value) => /^\d{4}-\d{2}-\d{2}$/.test(value), {
+      message: "Due date must be in YYYY-MM-DD format",
+    })
+    .refine((value) => {
+      const [year, month, day] = value.split("-").map(Number);
+      const date = new Date(year, month - 1, day);
+      return (
+        date.getFullYear() === year &&
+        date.getMonth() === month - 1 &&
+        date.getDate() === day
+      );
+    }, {
+      message: "Due date must be a valid date",
+    }),
+  pointsPossible: z.coerce
+    .number({
+      required_error: "Points possible required",
+      invalid_type_error: "Points possible must be a number",
+    })
+    .int("Points possible must be a whole number")
+    .positive("Points possible must be greater than 0"),
+  type: z.enum(ASSIGNMENT_TYPE, {
+    errorMap: () => ({ message: "Assignment type is required" }),
+  }),
+  sectionIds: z
+    .array(z.string().min(1, "Section id is required"))
+    .min(1, "At least one section must be selected"),
+});
+
+export const editAssignmentSchema = assignmentSchema
+  .omit({
+    sectionIds: true,
+  })
+  .extend({
+    allSections: z.boolean(),
+  });

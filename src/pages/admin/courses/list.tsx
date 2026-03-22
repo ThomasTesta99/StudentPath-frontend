@@ -1,9 +1,9 @@
 import { CreateButton } from '@/components/refine-ui/buttons/create';
 import { ShowButton } from '@/components/refine-ui/buttons/show';
 import { DataTable } from '@/components/refine-ui/data-table/data-table';
+import { Breadcrumb } from '@/components/refine-ui/layout/breadcrumb';
 import { ListView } from '@/components/refine-ui/views/list-view';
 import { Badge } from '@/components/ui/badge';
-import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Course, Department} from '@/types';
