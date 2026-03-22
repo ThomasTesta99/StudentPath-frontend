@@ -82,6 +82,7 @@ const EditAssignment = () => {
 
   const assignment = query?.data?.data;
   const isLoading = query?.isLoading;
+  const isError = query?.isError;
 
   const hasLinkedAssignments = Boolean(assignment?.assignmentGroupId);
 
@@ -149,6 +150,12 @@ const EditAssignment = () => {
         <Card className="rounded-2xl border shadow-sm">
           <CardContent className="py-12 text-center text-sm text-muted-foreground">
             Loading assignment...
+          </CardContent>
+        </Card>
+      ) : isError ? (
+        <Card className="rounded-2xl border shadow-sm">
+          <CardContent className="py-12 text-center text-sm text-muted-foreground">
+            Failed to load assignment.
           </CardContent>
         </Card>
       ) : !assignment ? (

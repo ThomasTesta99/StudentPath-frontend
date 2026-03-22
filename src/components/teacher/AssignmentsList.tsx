@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { useDebouncedValue } from "@/lib/utilsTsx";
-import { formatAssignmentType } from "@/lib/utils";
+import { formatAssignmentType, formatDate } from "@/lib/utils";
 
 const AssignmentsList = ({ sectionId, courseId }: { sectionId: string, courseId: string }) => {
   const go = useGo();
@@ -32,7 +32,6 @@ const AssignmentsList = ({ sectionId, courseId }: { sectionId: string, courseId:
     meta: {
       path: `teacher/sections/${sectionId}/assignments`,
       query: {
-        limit: 100,
         ...(debouncedSearch.trim() ? { search: debouncedSearch.trim() } : {}),
         ...(status !== "all" ? { status } : {}),
         ...(selectedType !== "all" ? { type: selectedType } : {}),
@@ -215,9 +214,7 @@ const AssignmentsList = ({ sectionId, courseId }: { sectionId: string, courseId:
                             {assignment.dueDate && (
                               <span>
                                 Due{" "}
-                                {new Date(
-                                  assignment.dueDate
-                                ).toLocaleDateString()}
+                                {formatDate(assignment.dueDate)}
                               </span>
                             )}
                           </div>

@@ -344,6 +344,10 @@ const CreateAssignment = () => {
                                                 <p className="text-sm text-muted-foreground">
                                                     Loading courses...
                                                 </p>
+                                            ) : coursesQuery.isError ? (
+                                                <p className="text-sm text-muted-foreground">
+                                                    Failed to load courses.
+                                                </p>
                                             ) : courses.length === 0 ? (
                                                 <p className="text-sm text-muted-foreground">
                                                     No courses available.
@@ -417,6 +421,10 @@ const CreateAssignment = () => {
                                                 ) : sectionsQuery.isLoading ? (
                                                     <p className="text-sm text-muted-foreground">
                                                         Loading sections...
+                                                    </p>
+                                                ) : sectionsQuery.isError ? (
+                                                    <p className="text-sm text-muted-foreground">
+                                                        Failed to load sections for this course.
                                                     </p>
                                                 ) : sections.length === 0 ? (
                                                     <p className="text-sm text-muted-foreground">
