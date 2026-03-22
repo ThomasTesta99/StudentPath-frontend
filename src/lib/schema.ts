@@ -191,21 +191,28 @@ export const editSectionSchema = z.object({
 })
 
 export const assignmentSchema = z.object({
-  title: z.string().trim().min(1, "Title is required"), 
-  description: z.string().trim().min(1, "Description is required"), 
-  dueDate: z.string().min(1, "Due date is required").refine((value) => !Number.isNaN(Date.parse(value)), {
-    message: "Due date must be a valid date", 
-  }),
-  pointsPossible: z.number({
-    required_error: "Points possible required", 
-    invalid_type_error: "Points possible must be a number", 
-  })
-  .int("Points possible must be a whole number")
-  .positive("Points possible must be greater than 0"),
+  title: z.string().trim().min(1, "Title is required"),
+  description: z.string().trim().min(1, "Description is required"),
+  dueDate: z
+    .string()
+    .min(1, "Due date is required")
+    .refine((value) => /^\d{4}-\d{2}-\d{2}$/.test(value), {
+      message: "Due date must be in YYYY-MM-DD format",
+    })
+    .refine((value) => !Number.isNaN(Date.parse(`${value}T00:00:00`)), {
+      message: "Due date must be a valid date",
+    }),
+  pointsPossible: z.coerce
+    .number({
+      required_error: "Points possible required",
+      invalid_type_error: "Points possible must be a number",
+    })
+    .int("Points possible must be a whole number")
+    .positive("Points possible must be greater than 0"),
   type: z.enum(ASSIGNMENT_TYPE, {
     errorMap: () => ({ message: "Assignment type is required" }),
   }),
-  sectionIds: z.array(
-    z.string().min(1, "Section id is required")
-  ).min(1, "At least one section must be selected"),
-})
+  sectionIds: z
+    .array(z.string().min(1, "Section id is required"))
+    .min(1, "At least one section must be selected"),
+});

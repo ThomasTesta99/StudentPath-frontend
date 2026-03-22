@@ -86,6 +86,7 @@ export const allResources: IResourceItem[] = [
     {
         name: "assignments", 
         list: "/teacher/assignments", 
+        create: "/teacher/assignments/create",
         show: "/teacher/assignments/show/:id", 
         meta: {label: "Assignments", roles: ["teacher"], path: "teacher/assignments"}
     }

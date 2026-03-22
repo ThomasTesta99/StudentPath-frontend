@@ -320,4 +320,31 @@ export type TeacherRosterRow = {
     enrollmentCreatedAt: Date;
 }
 
+export type TeacherCourseRow = {
+    id: string;
+    schoolId: string;
+    departmentId: string;
+    name: string;
+    code: string;
+    gradeLevel: GradeLevel;
+    description: string;
+}
+
+export type TeacherCourseSections = {
+    id: string;
+    courseId: string;
+    sectionLabel: string;
+    roomNumber: string | null;
+    capacity: number;
+    periodId: string;
+    termId: string;
+    termName: string;
+    courseName: string;
+    courseCode: string;
+    gradeLevel: GradeLevel;
+    periodNumber: number | null;
+    periodStartTime: string | null;
+    periodEndTime: string | null;
+}
+
 export const ASSIGNMENT_TYPE = ["HOMEWORK", "QUIZ", "EXAM", "PROJECT", "CLASSWORK", "OTHER"] as const;
