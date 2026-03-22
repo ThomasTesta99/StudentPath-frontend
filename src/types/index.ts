@@ -319,3 +319,5 @@ export type TeacherRosterRow = {
     gradeLevel: GradeLevel;
     enrollmentCreatedAt: Date;
 }
+
+export const ASSIGNMENT_TYPE = ["HOMEWORK", "QUIZ", "EXAM", "PROJECT", "CLASSWORK", "OTHER"] as const;
