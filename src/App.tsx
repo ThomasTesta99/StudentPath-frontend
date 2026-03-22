@@ -59,6 +59,7 @@ import ClassesList from "./pages/teacher/classes/list";
 import CreateAssignment from "./pages/teacher/assignments/create";
 import AssignmentsList from "./pages/teacher/assignments/list";
 import AssignmentShow from "./pages/teacher/assignments/show";
+import EditAssignment from "./pages/teacher/assignments/edit";
 
 function App() {
   return (
@@ -156,7 +157,7 @@ function App() {
                             <Route index element={<AssignmentsList />} />
                             <Route path="create" element={<CreateAssignment />} />
                             <Route path="show/:id" element={<AssignmentShow />} />
-
+                            <Route path="edit/:id" element={<EditAssignment />} />
                           </Route>
                         </Route>
                       </Route>

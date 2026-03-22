@@ -216,3 +216,11 @@ export const assignmentSchema = z.object({
     .array(z.string().min(1, "Section id is required"))
     .min(1, "At least one section must be selected"),
 });
+
+export const editAssignmentSchema = assignmentSchema
+  .omit({
+    sectionIds: true,
+  })
+  .extend({
+    allSections: z.boolean(),
+  });
