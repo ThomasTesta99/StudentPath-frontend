@@ -17,7 +17,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { assignmentSchema } from '@/lib/schema'
-import { cn, formatDate } from '@/lib/utils'
+import { cn, formatDate, toDateOnlyString } from '@/lib/utils'
 import { ASSIGNMENT_TYPE, Section, TeacherCourseRow } from '@/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { HttpError, useList, useNotification } from '@refinedev/core'
@@ -28,13 +28,6 @@ import { useSearchParams } from 'react-router'
 import z from 'zod'
 
 type AssignmentFormValues = z.infer<typeof assignmentSchema>
-
-const toDateOnlyString = (date: Date) => {
-  const year = date.getFullYear()
-  const month = `${date.getMonth() + 1}`.padStart(2, '0')
-  const day = `${date.getDate()}`.padStart(2, '0')
-  return `${year}-${month}-${day}`
-}
 
 const selectionCardClass = (checked: boolean) =>
   cn(

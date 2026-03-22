@@ -63,7 +63,7 @@ export function Breadcrumb() {
           return (
             <Fragment key={item.key}>
               <ShadcnBreadcrumbItem>
-                {item.isCurrent || isLast ? (
+                {isLast ? (
                   <ShadcnBreadcrumbPage>{item.label}</ShadcnBreadcrumbPage>
                 ) : (
                   <ShadcnBreadcrumbLink asChild>

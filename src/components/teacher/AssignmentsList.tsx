@@ -220,12 +220,6 @@ const AssignmentsList = ({ sectionId, courseId }: { sectionId: string, courseId:
                                 ).toLocaleDateString()}
                               </span>
                             )}
-
-                            {"isPublished" in assignment && (
-                              <span>
-                                {assignment.isPublished ? "Published" : "Draft"}
-                              </span>
-                            )}
                           </div>
 
                           {assignment.description && (

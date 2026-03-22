@@ -37,9 +37,14 @@ const AssignmentShow = () => {
     const renderTypeBadge = (type?: string) => {
         if (!type) return <Badge variant="secondary">N/A</Badge>;
 
+        const formattedType = type
+            .replaceAll("_", " ")
+            .toLowerCase()
+            .replace(/\b\w/g, (char) => char.toUpperCase());
+
         return (
-            <Badge variant="secondary" className="capitalize rounded-full px-3 py-1 text-xs">
-                {type.replaceAll("_", " ")}
+            <Badge variant="secondary" className="rounded-full px-3 py-1 text-xs">
+                {formattedType}
             </Badge>
         );
     };

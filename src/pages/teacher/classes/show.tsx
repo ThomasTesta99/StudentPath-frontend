@@ -60,7 +60,7 @@ const ShowCourseSection = () => {
             ) : activeTab === "gradebook" ? (
                 <Gradebook />
             ) : activeTab === "assignments" ? (
-                <AssignmentsList sectionId={section.id} courseId = {section.courseId}/>
+                <AssignmentsList sectionId={section.id} courseId ={section.courseId}/>
             ) : activeTab === "attendance" ? (
                 <Attendance />
             ) : <></>} 

@@ -28,7 +28,7 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { editAssignmentSchema } from "@/lib/schema";
-import { cn, formatDate } from "@/lib/utils";
+import { cn, formatDate, toDateOnlyString } from "@/lib/utils";
 import { ASSIGNMENT_TYPE } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HttpError, useGo, useNotification } from "@refinedev/core";
@@ -39,18 +39,12 @@ import {
   FileText,
   Layers3,
   Save,
-  Users,
 } from "lucide-react";
 import React from "react";
 import { useParams } from "react-router";
 import { z } from "zod";
 
-const toDateOnlyString = (date: Date) => {
-  const year = date.getFullYear();
-  const month = `${date.getMonth() + 1}`.padStart(2, "0");
-  const day = `${date.getDate()}`.padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
+
 
 const EditAssignment = () => {
   const { id } = useParams();
@@ -90,7 +84,6 @@ const EditAssignment = () => {
   const isLoading = query?.isLoading;
 
   const hasLinkedAssignments = Boolean(assignment?.assignmentGroupId);
-  const assignedSections = assignment?.sections ?? [];
 
   const title = watch("title");
   const type = watch("type");
@@ -420,16 +413,6 @@ const EditAssignment = () => {
                   <div>
                     <p className="text-muted-foreground">Points</p>
                     <p className="font-medium">{pointsPossible || 0}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <div className="rounded-xl bg-muted p-2">
-                    <Users className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground">Sections</p>
-                    <p className="font-medium">{assignedSections.length}</p>
                   </div>
                 </div>
 
