@@ -86,7 +86,11 @@ const CreateAssignment = () => {
   const { query: coursesQuery } = useList<TeacherCourseRow>({
       resource: 'courses',
       meta: { path: 'teacher/courses' },
-      pagination: { mode: 'off' },
+      pagination: {
+        mode: 'off',
+        pageSize: 1000,
+        currentPage: 1,
+    },
       queryOptions: {
           enabled: shouldFetchCourses,
       },
@@ -97,7 +101,11 @@ const CreateAssignment = () => {
   const { query: sectionsQuery } = useList<Section>({
       resource: 'classes',
       meta: { path: `teacher/courses/${selectedCourseId}/sections` },
-      pagination: { mode: 'off' },
+      pagination: {
+        mode: 'off',
+        pageSize: 1000,
+        currentPage: 1,
+    },
       queryOptions: {
           enabled: shouldFetchSections,
       },
