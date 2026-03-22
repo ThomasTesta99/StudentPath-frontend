@@ -17,7 +17,7 @@ import {
 import { useDebouncedValue } from "@/lib/utilsTsx";
 import { formatAssignmentType } from "@/lib/utils";
 
-const AssignmentsList = ({ sectionId }: { sectionId: string }) => {
+const AssignmentsList = ({ sectionId, courseId }: { sectionId: string, courseId: string }) => {
   const go = useGo();
 
   const [search, setSearch] = useState("");
@@ -93,7 +93,7 @@ const AssignmentsList = ({ sectionId }: { sectionId: string }) => {
           </p>
         </div>
 
-        <CreateButton resource="assignments" meta={{ query: { sectionId } }}>
+        <CreateButton resource="assignments" meta={{ query: { sectionId, courseId } }}>
           Create Assignment
         </CreateButton>
       </div>
