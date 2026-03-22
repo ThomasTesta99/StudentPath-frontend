@@ -58,6 +58,7 @@ import ShowCourseSection from "./pages/teacher/classes/show";
 import ClassesList from "./pages/teacher/classes/list";
 import CreateAssignment from "./pages/teacher/assignments/create";
 import AssignmentsList from "./pages/teacher/assignments/list";
+import AssignmentShow from "./pages/teacher/assignments/show";
 
 function App() {
   return (
@@ -154,6 +155,8 @@ function App() {
                           <Route path="assignments">
                             <Route index element={<AssignmentsList />} />
                             <Route path="create" element={<CreateAssignment />} />
+                            <Route path="show/:id" element={<AssignmentShow />} />
+
                           </Route>
                         </Route>
                       </Route>
