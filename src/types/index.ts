@@ -347,4 +347,24 @@ export type TeacherCourseSections = {
     periodEndTime: string | null;
 }
 
-export const ASSIGNMENT_TYPE = ["HOMEWORK", "QUIZ", "EXAM", "PROJECT", "CLASSWORK", "OTHER"] as const;
+export const ASSIGNMENT_TYPE = [
+  "HOMEWORK",
+  "QUIZ",
+  "EXAM",
+  "PROJECT",
+  "CLASSWORK",
+  "OTHER",
+] as const;
+
+export type Assignment_Type = (typeof ASSIGNMENT_TYPE)[number];
+
+export type Assignment = {
+    id: string;
+    sectionId: string;
+    title: string;
+    description: string;
+    dueDate: string;
+    pointsPossible: number;
+    type: Assignment_Type;
+    assignmentGroupId: string | null;
+}

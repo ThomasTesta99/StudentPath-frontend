@@ -1,3 +1,4 @@
+import { Assignment_Type } from "@/types";
 import { ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -62,4 +63,23 @@ export const formatNameLastFirst = (fullName: string) => {
     const firstNames = parts.slice(0, -1).join(" ");
 
     return `${lastName}, ${firstNames}`;
+};
+
+export const formatAssignmentType = (type: Assignment_Type) => {
+  switch (type) {
+    case "HOMEWORK":
+      return "Homework";
+    case "QUIZ":
+      return "Quiz";
+    case "EXAM":
+      return "Exam";
+    case "PROJECT":
+      return "Project";
+    case "CLASSWORK":
+      return "Classwork";
+    case "OTHER":
+      return "Other";
+    default:
+      return type;
+  }
 };
